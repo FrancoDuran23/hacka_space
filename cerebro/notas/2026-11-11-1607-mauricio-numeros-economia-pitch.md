@@ -57,3 +57,13 @@ Cifras de mercado para la slide de economía del pitch, más dos temas que surgi
 - Definir el modelo de ingresos: comisión sobre el depósito, parte del rendimiento, o cobro al regulador.
 - Cuánto recauda cada L1 de Avalanche (mirar exploradores por L1 si se quiere el dato).
 - Quiénes firman el proyecto de Ley Espacial Argentina.
+
+## Aporte de mauricio (2026-11-11 16:19)
+
+Segunda búsqueda sobre quién cobra las comisiones en una L1 de Avalanche.
+
+- **El mecanismo está confirmado en la documentación oficial.** El precompile *Reward Manager* de una L1 tiene tres modos excluyentes: quemar las comisiones, mandarlas a una dirección fija (por ejemplo una tesorería, `rewardAddress`) o dejar que cada validador cobre las de sus bloques (`allowFeeRecipients`). Fuente: https://build.avax.network/docs/virtual-machines/default-precompiles/rewardmanager
+- **Redes que usan token propio para el gas:** Beam (BEAM), DeFi Kingdoms (JEWEL), GUNZ (GUN), Henesys de MapleStory (NXPC). Fuentes: https://eco.com/support/en/articles/12168599-what-is-avalanche-avax-l1s-and-subnets-in-2026 y exploradores de subnets.avax.network
+- **Actividad a 30 días (transacciones, no ingresos):** GUNZ 11,0 M; Dexalot 9,8 M; C-Chain 8,4 M; Henesys 3,8 M; Beam 0,2 M (misma fuente de eco.com, sin fecha exacta).
+- **No encontré** ninguna fuente que diga cuánto recaudó un proyecto concreto por comisiones de su L1, ni cuál de los tres modos usa cada uno. No afirmar en el pitch que "X ganó tanto".
+- Referencia de escala: toda la C-Chain cobró unos USD 17.000 de comisiones de red en 24 h (DefiLlama, 10-nov-2026) y USD 680.700 en el primer trimestre de 2026 (Token Terminal). **Interpretación:** las comisiones de gas son un ingreso chico; para OrbitClear rinde más una comisión sobre el depósito que cobrar gas en una red propia.
