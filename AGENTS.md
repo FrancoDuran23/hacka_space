@@ -27,3 +27,19 @@ Para todo lo de blockchain (Avalanche, contratos, wallet, demo on-chain) usamos 
 Orden: `idea/*` → `avalanche` + `hardhat` → `geoespacial` → `ethers` + `wallet-abi` + `frontend`.
 
 Lo que salga de las skills `idea/*` (problemas candidatos, veredictos, modelo de negocio) se guarda en el segundo cerebro con `skills/segundo-cerebro/SKILL.md`, como cualquier otro aporte.
+
+## App web (web/)
+
+La app Next.js vive en `web/` (login Neon Auth + Drizzle; setup en `web/README.md`). Comandos, siempre desde `web/`:
+
+```bash
+cd web
+npm run dev          # dev server
+npm run typecheck    # tsc --noEmit
+npm run lint         # eslint
+npm run build        # build de producción (requiere las env de .env.example)
+npm run db:generate  # drizzle-kit generate → web/drizzle/
+npm run db:migrate   # drizzle-kit migrate contra DATABASE_URL
+```
+
+Las variables de entorno están documentadas en `web/.env.example`.

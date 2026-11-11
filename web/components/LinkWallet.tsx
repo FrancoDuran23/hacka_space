@@ -125,6 +125,7 @@ export default function LinkWallet() {
           value={label}
           onChange={(e) => setLabel(e.target.value)}
           placeholder="Ej.: wallet del operador"
+          maxLength={40}
           disabled={busy}
         />
       </div>

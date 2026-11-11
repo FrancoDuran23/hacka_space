@@ -60,6 +60,11 @@ export async function verifyAndLinkWallet(
   const user = await currentUser();
   if (!user) return { ok: false as const, error: "No autenticado" };
 
+  const trimmedLabel = label?.trim();
+  if (trimmedLabel && trimmedLabel.length > 40) {
+    return { ok: false as const, error: "Etiqueta demasiado larga (máx. 40)" };
+  }
+
   let challenge: WalletChallenge | undefined;
   try {
     [challenge] = await db
@@ -96,7 +101,7 @@ export async function verifyAndLinkWallet(
     .values({
       userId: user.id,
       address: challenge.address,
-      label: label?.trim() || null,
+      label: trimmedLabel || null,
       verifiedAt: new Date(),
     })
     .onConflictDoNothing({ target: [wallets.address, wallets.chainId] })

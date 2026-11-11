@@ -60,7 +60,8 @@ export async function addContractAddress(
       createdBy: user.id,
     });
   } catch (e) {
-    if ((e as { code?: string }).code === "23505") {
+    const err = e as { code?: string; cause?: { code?: string } };
+    if ((err.code ?? err.cause?.code) === "23505") {
       return { ok: false, error: "Esa dirección ya está registrada en Fuji" };
     }
     throw e;
