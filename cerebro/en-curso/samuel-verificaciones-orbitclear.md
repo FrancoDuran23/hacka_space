@@ -1,0 +1,1 @@
+samuel verifica los pendientes de docs/planning.md §13 y de la nota de franco desde 2026-11-11 12:30. Ángulo: campo de decay en CelesTrak, satélites reales para la demo, cifras ESA/Nature para slides, costo de remoción, marco legal argentino, links faltantes.
