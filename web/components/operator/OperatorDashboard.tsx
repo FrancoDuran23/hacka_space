@@ -2,6 +2,8 @@
 
 import { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
+import dynamic from "next/dynamic";
+import { AnimatePresence, motion } from "framer-motion";
 import { formatUSD, shortHash } from "@/lib/format";
 import { computeStats, statusAt } from "@/lib/status";
 import { useRealTime } from "@/lib/store";
@@ -9,13 +11,16 @@ import type { EscrowSnapshot, PublicChain } from "@/lib/types";
 import { connectWallet, type WalletState } from "@/lib/wallet";
 import { Button } from "@/components/ui/button";
 import { SatelliteDetail } from "./SatelliteDetail";
-import { SatelliteTable } from "./SatelliteTable";
+import { SatelliteCards } from "./SatelliteCards";
 import { usdcToUsd, walletErrorText } from "./shared";
 
 /** ESA owns the only real escrow on Fuji (ENVISAT), so the demo opens on live data. */
 const DEFAULT_OPERATOR = "ESA";
 const SOURCE_LABEL = { fuji: "En vivo · Fuji", local: "En vivo · nodo local", demo: "Modo demo" } as const;
 const REFRESH_MS = 20_000;
+
+// three.js only runs in the browser
+const CardCanvas = dynamic(() => import("./CardModel").then((m) => m.CardCanvas), { ssr: false });
 
 export function OperatorDashboard({ initial, chain }: { initial: EscrowSnapshot; chain: PublicChain | null }) {
   const [snap, setSnap] = useState(initial);
@@ -39,6 +44,12 @@ export function OperatorDashboard({ initial, chain }: { initial: EscrowSnapshot;
     return () => clearInterval(h);
   }, []);
 
+  useEffect(() => {
+    const onKey = (e: KeyboardEvent) => e.key === "Escape" && setSelectedId(null);
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, []);
+
   const mine = useMemo(
     () => snap.objects.filter((o) => o.owner === operator).sort((a, b) => Date.parse(a.deadline) - Date.parse(b.deadline)),
     [snap.objects, operator],
@@ -47,7 +58,7 @@ export function OperatorDashboard({ initial, chain }: { initial: EscrowSnapshot;
   const stats = computeStats(mine, t);
   const expiring = mine.filter((o) => statusAt(o, t) === "EXPIRING");
   const onChain = mine.filter((o) => o.onChain).length;
-  const selected = mine.find((o) => o.objectId === selectedId) ?? mine[0] ?? null;
+  const selected = mine.find((o) => o.objectId === selectedId) ?? null;
 
   async function connect() {
     if (!chain) return;
@@ -136,23 +147,48 @@ export function OperatorDashboard({ initial, chain }: { initial: EscrowSnapshot;
           </div>
         </section>
 
-        <div className="mt-5 grid gap-5 lg:grid-cols-[minmax(0,1fr)_400px]">
-          <SatelliteTable objects={mine} now={t} selectedId={selected?.objectId ?? null} onSelect={setSelectedId} />
-          {selected && (
-            <SatelliteDetail
-              key={selected.objectId}
-              object={selected}
-              now={now}
-              explorer={snap.explorer}
-              chain={chain}
-              wallet={wallet}
-              connecting={connecting}
-              onConnect={connect}
-              onWallet={setWallet}
-            />
-          )}
+        <div className="mt-6">
+          <SatelliteCards objects={mine} now={t} onOpen={setSelectedId} />
         </div>
       </div>
+
+      <CardCanvas />
+
+      <AnimatePresence>
+        {selected && (
+          <>
+            <motion.div
+              key="backdrop"
+              className="fixed inset-0 z-30 bg-void/60 backdrop-blur-[2px]"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              onClick={() => setSelectedId(null)}
+            />
+            <motion.aside
+              key={`detail-${selected.objectId}`}
+              role="dialog"
+              aria-label={`Detalle de ${selected.name}`}
+              className="panel scroll-thin fixed top-4 right-4 bottom-4 z-40 !bg-[rgb(6_10_20/0.94)] w-[min(440px,calc(100vw-2rem))] overflow-y-auto"
+              initial={{ opacity: 0, x: 40 }}
+              animate={{ opacity: 1, x: 0, transition: { duration: 0.4, ease: [0.2, 0.8, 0.2, 1] } }}
+              exit={{ opacity: 0, x: 40, transition: { duration: 0.25 } }}
+            >
+              <SatelliteDetail
+                object={selected}
+                now={now}
+                explorer={snap.explorer}
+                chain={chain}
+                wallet={wallet}
+                connecting={connecting}
+                onConnect={connect}
+                onWallet={setWallet}
+                onClose={() => setSelectedId(null)}
+              />
+            </motion.aside>
+          </>
+        )}
+      </AnimatePresence>
     </main>
   );
 }

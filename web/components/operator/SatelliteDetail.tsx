@@ -18,6 +18,7 @@ export function SatelliteDetail({
   connecting,
   onConnect,
   onWallet,
+  onClose,
 }: {
   object: DebrisObject;
   now: number;
@@ -27,6 +28,7 @@ export function SatelliteDetail({
   connecting: boolean;
   onConnect: () => void;
   onWallet: (w: WalletState) => void;
+  onClose: () => void;
 }) {
   const t = now || Date.now();
   const st = statusAt(o, t);
@@ -36,7 +38,10 @@ export function SatelliteDetail({
   const history = [...o.history].sort((a, b) => b.at.localeCompare(a.at));
 
   return (
-    <aside className="panel min-w-0 self-start px-6 py-5 lg:sticky lg:top-6">
+    <div className="px-6 py-5">
+      <button type="button" onClick={onClose} className="mb-4 cursor-pointer text-[12.5px] text-dim hover:text-cyan">
+        ← Volver a los satélites <span className="mono ml-1 text-[10.5px] text-faint">Esc</span>
+      </button>
       <div className="flex items-start justify-between gap-3">
         <div className="min-w-0">
           <div className="truncate text-[18px] font-medium leading-tight text-white">{o.name}</div>
@@ -103,7 +108,7 @@ export function SatelliteDetail({
       {!o.onChain && (st === "ACTIVE" || st === "EXPIRING") && (
         <DepositAction object={o} chain={chain} wallet={wallet} connecting={connecting} onConnect={onConnect} onWallet={onWallet} />
       )}
-    </aside>
+    </div>
   );
 }
 
