@@ -42,3 +42,20 @@ Respuesta a "¿una empresa puede alargar la vida útil de un satélite?": sí, y
 - El **estado** sí: el plazo es un dato en storage. Basta una función `extenderPlazo(noradId, nuevoPlazo, evidenciaHash)` que solo firma el oráculo y emite evento.
 - El bono sigue bloqueado durante la extensión.
 - Riesgo: extensiones infinitas = el bono nunca se ejecuta. Mitigar exigiendo evidencia por extensión o `PLAZO_MAXIMO`. En MVP: evidencia requerida alcanza.
+
+## Aporte de samuel (2026-11-11 14:40) — cuánto extendieron de verdad
+
+Aclaración: ninguna extensión comercial fue por **recarga** de combustible. El MEV se acopla y reemplaza la propulsión del cliente. La recarga real solo existe como demo.
+
+| Satélite (operador) | Lanzado | Servicio | Período | Extensión |
+|---|---|---|---|---|
+| Intelsat 901 (Intelsat) | 2001 | MEV-1 | feb-2020 a abr-2025 | **+5 años** (24 años en total); al terminar, el MEV lo dejó en órbita cementerio |
+| Intelsat 10-02 (Intelsat) | 2004 | MEV-2 | abr-2021 a 2030 | **~9 años**: contrato inicial de 5 + ampliación de 4 firmada en may-2024 |
+| Optus D3 (Optus) | 2009, diseñado para 15 años | MEV-1 (2.º cliente) | may-2025 a ago-2026 | **+1 año** |
+| Optus D3, fase 2 | | MEP instalado por el MRV | desde fines de 2027 | **hasta +6 años** (planeado) |
+
+- Northrop cuenta **~10 años de extensión acumulada** en 3 clientes con 2 vehículos (TechCrunch, ago-2026).
+- Un mismo servicio ya se reutilizó: MEV-1 atendió a 2 satélites. Un contrato ya se amplió una vez (IS-10-02).
+- Recarga real: Orbital Express (DARPA, 2007, LEO, entre naves propias) y China SJ-25→SJ-21 (GEO, jul-nov 2025, ~142 kg de hidracina según COSMIC; China no lo confirmó). Ninguna publicó años de vida ganados.
+- **Interpretación para OrbitClear**: una extensión típica va de **5 a 9 años por satélite**, con cada tramo respaldado por un contrato de servicio que sirve de evidencia. Es la referencia para un `PLAZO_MAXIMO` por extensión. El caso IS-901 muestra que el servicio puede terminar con el retiro responsable del satélite, que es justo lo que el bono busca.
+- Fuentes: space.com (undocking IS-901), Northrop (may-2024, ago-2026), SpaceNews (Intelsat extiende hasta 2030), Via Satellite y Polaris (Optus Aurora), TechCrunch (ago-2026), Ars Technica y COSMIC (SJ-25).
