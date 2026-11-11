@@ -206,9 +206,9 @@ function contractEvents(cfg: ContractConfig, provider: JsonRpcProvider): Promise
 function toHistory(log: EventLog | Log, at: number): { id: number; h: ChainEvent } | null {
   if (!("fragment" in log) || !log.fragment) return null;
   const a = log.args;
-  const map: Record<string, () => { type: HistoryType; amount: number }> = {
-    Registered: () => ({ type: "REGISTERED", amount: usd(a[5]) }),
-    ReentryAttested: () => ({ type: "REENTRY_ATTESTED", amount: 0 }),
+  const map: Record<string, () => { type: HistoryType; amount: number; dataHash?: string }> = {
+    Registered: () => ({ type: "REGISTERED", amount: usd(a[5]), dataHash: String(a[6]) }),
+    ReentryAttested: () => ({ type: "REENTRY_ATTESTED", amount: 0, dataHash: String(a[2]) }),
     Refunded: () => ({ type: "REFUNDED", amount: usd(a[2]) }),
     Forfeited: () => ({ type: "FORFEITED", amount: usd(a[2]) }),
   };

@@ -10,6 +10,8 @@ export interface HistoryItem {
   amount: number;
   by: string;
   txHash: string;
+  /** keccak256 del registro crudo de CelesTrak que adjuntó el relayer (solo on-chain). */
+  dataHash?: string;
 }
 
 export interface DebrisObject {
@@ -40,6 +42,17 @@ export interface DebrisObject {
 }
 
 export type DataSource = "fuji" | "local" | "demo";
+
+/** Public addresses the browser needs to talk to the deployed escrow (never keys). */
+export interface PublicChain {
+  chainId: number;
+  rpcUrl: string;
+  explorer: string | null;
+  escrow: string;
+  usdc: string;
+  /** The deposit token is MockUSDC (open mint), so the dashboard can offer a testnet faucet. */
+  mockUsdc: boolean;
+}
 
 export interface EscrowSnapshot {
   source: DataSource;

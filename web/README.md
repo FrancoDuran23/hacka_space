@@ -21,6 +21,7 @@ Abrí http://localhost:3000. Parámetros útiles: `?boot=0` saltea la boot seque
 |---|---|
 | `components/scene/` | Escena 3D: cielo (nebulosa horneada, 10.000 estrellas, meteoros), Tierra, objetos en órbita, vista de detalle, efecto DEORBIT, cámara y post-procesado |
 | `components/hud/` | HUD: boot sequence, header, panel lateral, panel de detalle, controles |
+| `app/operador`, `components/operator/` | Panel del operador (`/operador`): selector de operador (ESA por defecto), totales, alerta de plazo < 24 h, tabla de satélites y detalle con historial, hash del dato crudo y altitud. Con wallet (`lib/wallet.ts`): saldo, `approve` del depósito exacto de la banda para escrows simulados y faucet de mUSDC si el contrato usa MockUSDC |
 | `lib/store.ts` | Estado de la UI y reloj de simulación (WARP TIME) |
 | `lib/escrow.ts`, `app/api/escrows` | Datos: `escrowOf` de cada NORAD del dataset contra el contrato; lo que no está registrado se muestra con datos de demo |
 | `lib/reentry.ts`, `app/api/relayer` | Botón DEORBIT: verifica el reingreso con SGP4 y llama a `attestReentry` firmado por el relayer (`RELAYER_PRIVATE_KEY`, ver `.env.example`). Sin clave, o si el objeto no está on-chain, el reingreso es simulado |

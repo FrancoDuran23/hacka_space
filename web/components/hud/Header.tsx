@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { motion } from "framer-motion";
 import { utcClock, utcDate } from "@/lib/format";
 import { useApp, useRealTime } from "@/lib/store";
@@ -22,6 +23,9 @@ export function Header() {
         <span className="text-[12.5px] text-dim">Deorbit deposit escrow</span>
       </div>
       <div className="flex items-center gap-5 text-[12.5px]">
+        <Link href="/operador" className="pointer-events-auto text-dim hover:text-cyan">
+          Operator dashboard
+        </Link>
         <span className="mono hidden text-dim md:inline">
           {now ? `${utcDate(now)} · ${utcClock(now)}` : "---------- · --:--:--"} UTC
         </span>
