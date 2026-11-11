@@ -27,3 +27,9 @@ Para todo lo de blockchain (Avalanche, contratos, wallet, demo on-chain) usamos 
 Orden: `idea/*` → `avalanche` + `hardhat` → `geoespacial` → `ethers` + `wallet-abi` + `frontend`.
 
 Lo que salga de las skills `idea/*` (problemas candidatos, veredictos, modelo de negocio) se guarda en el segundo cerebro con `skills/segundo-cerebro/SKILL.md`, como cualquier otro aporte.
+
+## Estructura y verificación
+
+- `contratos/`: el único contrato es `OrbitClearEscrow` (garantía de desorbitado del operador), desplegado en Fuji (ver `contratos/README.md`). Verificar con `npm test` y `npm run typecheck`. `npm run web:config` regenera `web/lib/contract.json`.
+- `web/`: consola Next.js que lee ese contrato. Verificar con `npx tsc --noEmit` y `npx next build`. `npm run dev:demo` corre sin blockchain.
+- El RPC público de Fuji rechaza `eth_getLogs` en batch y corta ráfagas con 429: nada de scans en paralelo.

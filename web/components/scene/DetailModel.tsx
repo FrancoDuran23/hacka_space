@@ -198,7 +198,7 @@ export function DetailModel() {
     const run = s.runs[o.objectId];
     m.tint.value.copy(STATE_RGB[st]);
     g.position.copy(p);
-    g.visible = st !== "CLEANED" && run?.phase !== "burned";
+    g.visible = st !== "REFUNDED" && run?.phase !== "burned";
     g.rotation.x += dt * 0.17;
     g.rotation.y += dt * 0.29;
     // glows hotter as it sinks into the atmosphere
@@ -209,7 +209,7 @@ export function DetailModel() {
       mat.emissive.setRGB(1, 0.42, 0.12);
       mat.emissiveIntensity = m.heat.value * 2.2;
     }
-    m.ringAlpha.value = st === "CLEANED" || falling ? 0.25 : 0.9;
+    m.ringAlpha.value = st === "REFUNDED" || falling ? 0.25 : 0.9;
 
     // full orbit (one revolution), refreshed occasionally: the plane barely moves
     const now = performance.now();

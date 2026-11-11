@@ -1,7 +1,7 @@
 import "server-only";
 import { readFile } from "node:fs/promises";
 import path from "node:path";
-import type { DebrisObject, FunderKind } from "./types";
+import type { DebrisObject } from "./types";
 
 export interface ContractConfig {
   network: string;
@@ -10,19 +10,17 @@ export interface ContractConfig {
   explorer: string | null;
   address: string | null;
   usdc: string | null;
-  oracle: string | null;
+  relayer: string | null;
+  fund: string | null;
   deployBlock: number | null;
 }
 
 export interface EscrowsFile {
   snapshotAt: string;
   source: string;
-  cleaners: string[];
-  funderDirectory: { name: string; kind: FunderKind; country: string; address: string | null }[];
-  cleanerDirectory?: { name: string; address: string }[];
-  ownerDirectory?: { name: string; address: string }[];
-  seeded?: { network: string; address: string; at: string };
-  objects: (DebrisObject & { ownerAddress?: string; cleanerAddress?: string })[];
+  /** Nombre del fondo de remoción, para las etiquetas. */
+  fund: string;
+  objects: Omit<DebrisObject, "onChain">[];
 }
 
 export const FUJI_RPC_DEFAULT = "https://api.avax-test.network/ext/bc/C/rpc";
@@ -43,7 +41,8 @@ export async function loadContractConfig(): Promise<ContractConfig | null> {
       explorer: c.explorer ?? (c.chainId === 43113 ? SNOWTRACE : null),
       address: c.address,
       usdc: c.usdc ?? null,
-      oracle: c.oracle ?? null,
+      relayer: c.relayer ?? null,
+      fund: c.fund ?? null,
       deployBlock: c.deployBlock ?? null,
     };
   } catch {

@@ -43,6 +43,7 @@ const escrow = await ethers.deployContract("OrbitClearEscrow", [
 await escrow.waitForDeployment();
 
 const escrowAddress = await escrow.getAddress();
+const deployReceipt = await escrow.deploymentTransaction()?.wait();
 const { chainId } = await ethers.provider.getNetwork();
 
 const deployment = {
@@ -55,6 +56,7 @@ const deployment = {
   fund: fundAddress,
   bandYears: BAND_YEARS,
   bandAmounts: amounts.map((a) => a.toString()),
+  deployBlock: deployReceipt?.blockNumber ?? null,
   deployedAt: new Date().toISOString(),
 };
 

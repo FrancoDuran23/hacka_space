@@ -77,6 +77,18 @@ Variables de entorno (no hay `.env` versionado; la clave va al keystore):
 USDC de Circle en Fuji: `0x5425890298aed601595a70AB815c96711a31Bc65` (6 decimales).
 **Mainnet usa otra dirección.** No compartas la constante entre redes.
 
+## Frontend
+
+La consola de [`../web/`](../web/README.md) lee este contrato. `npm run web:config` escribe
+`../web/lib/contract.json` a partir de `deployments/<red>.json` (solo datos públicos: direcciones,
+RPC y `deployBlock`). `DEMO=1 npm run web:config` deja la web en modo demo. Para que el botón
+DEORBIT de la web firme `attestReentry`, la web necesita la clave del relayer en
+`RELAYER_PRIVATE_KEY` (`web/.env.local`).
+
+Antes había un segundo contrato, `DebrisEscrow` (bounties a limpiadores), en `contracts/`. Se
+unificó acá porque contradecía `docs/planning.md` §11 ("Queda afuera: recompensas a
+removedores"). Sigue en el historial de git.
+
 ## Relayer
 
 ```bash

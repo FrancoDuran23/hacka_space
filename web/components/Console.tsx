@@ -16,15 +16,14 @@ import { SidePanel } from "./hud/SidePanel";
 const Scene = dynamic(() => import("./scene/Scene"), { ssr: false });
 
 const HISTORY_FEED: Record<HistoryType, { tone: FeedLine["tone"]; label: string }> = {
-  ESCROW_CREATED: { tone: "info", label: "Escrow created" },
-  FUNDS_ADDED: { tone: "info", label: "Funds added" },
-  DEBRIS_DEORBITED: { tone: "ok", label: "Debris deorbited · payout released" },
-  ESCROW_EXPIRED: { tone: "bad", label: "Escrow expired" },
+  REGISTERED: { tone: "info", label: "Satellite registered · deposit locked" },
+  REENTRY_ATTESTED: { tone: "info", label: "Reentry attested by relayer" },
+  REFUNDED: { tone: "ok", label: "Deposit refunded to operator" },
+  FORFEITED: { tone: "bad", label: "Deposit forfeited to removal fund" },
 };
 
 /** Recent on-record events become the first lines of the terminal feed. */
 function seedFeed(snap: EscrowSnapshot): FeedLine[] {
-  const onChain = snap.source !== "demo" && !!snap.explorer;
   return snap.objects
     .flatMap((o) =>
       o.history.map((h, i) => ({
@@ -33,7 +32,7 @@ function seedFeed(snap: EscrowSnapshot): FeedLine[] {
         target: `${o.name} · ${h.by}`,
         amount: h.amount,
         txHash: h.txHash,
-        explorerUrl: onChain ? `${snap.explorer}/tx/${h.txHash}` : null,
+        explorerUrl: o.onChain && snap.explorer ? `${snap.explorer}/tx/${h.txHash}` : null,
         at: Date.parse(h.at),
         live: false,
       })),
@@ -92,8 +91,8 @@ export function Console({ initial }: { initial: EscrowSnapshot }) {
       const was = prev.get(o.objectId);
       const is = next.get(o.objectId);
       if (!was || was === is) continue;
-      if (is === "EXPIRING") pushFeed({ tone: "warn", label: "Escrow expiring · under 24 h", target: `${o.name} #${o.objectId}`, amount: o.locked });
-      if (is === "EXPIRED") pushFeed({ tone: "bad", label: "Escrow expired", target: `${o.name} #${o.objectId} · funds returned`, amount: o.locked });
+      if (is === "EXPIRING") pushFeed({ tone: "warn", label: "Deadline under 24 h", target: `${o.name} #${o.objectId}`, amount: o.deposit });
+      if (is === "FORFEITED") pushFeed({ tone: "bad", label: "Deadline missed · deposit forfeited", target: `${o.name} #${o.objectId} · to removal fund`, amount: o.deposit });
     }
   }, [simTime]);
 

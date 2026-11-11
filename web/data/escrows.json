@@ -2,62 +2,7 @@
   "snapshotAt": "2026-11-11T16:00:00.000Z",
   "source": "CelesTrak GP (TLE) · escrows simulados para la demo",
   "currency": "USD",
-  "cleaners": [
-    "Grúa Orbital",
-    "ClearPath Orbital",
-    "Magellan Salvage",
-    "Deorbit Dynamics"
-  ],
-  "funderDirectory": [
-    {
-      "name": "Andes Orbital Re",
-      "kind": "insurer",
-      "country": "AR",
-      "address": null
-    },
-    {
-      "name": "Kepler Mutual",
-      "kind": "insurer",
-      "country": "GB",
-      "address": null
-    },
-    {
-      "name": "Meridian Space Insurance",
-      "kind": "insurer",
-      "country": "US",
-      "address": null
-    },
-    {
-      "name": "Agencia Espacial Austral",
-      "kind": "agency",
-      "country": "AR",
-      "address": null
-    },
-    {
-      "name": "Nordic Space Office",
-      "kind": "agency",
-      "country": "NO",
-      "address": null
-    },
-    {
-      "name": "Nova Constellations",
-      "kind": "company",
-      "country": "US",
-      "address": null
-    },
-    {
-      "name": "Pampa Sat",
-      "kind": "company",
-      "country": "AR",
-      "address": null
-    },
-    {
-      "name": "Helios Launch Co.",
-      "kind": "company",
-      "country": "FR",
-      "address": null
-    }
-  ],
+  "fund": "Fondo de remoción",
   "objects": [
     {
       "objectId": 22220,
@@ -70,45 +15,21 @@
         "1 22220U 92076B   26315.30012318 -.00000176  00000+0 -63631-4 0  9995",
         "2 22220  71.0020  28.8797 0010438  75.9405 352.1314 14.16888711756762"
       ],
+      "band": 1,
       "createdAt": "2026-10-15T12:20:24.581Z",
       "deadline": "2026-11-15T06:33:05.715Z",
       "status": "ACTIVE",
-      "locked": 335000,
-      "collected": 335000,
-      "netBalance": 201138,
+      "deposit": 300000,
+      "netBalance": 166138,
       "riskPerDay": 4930,
-      "cleaner": null,
       "settledAt": null,
-      "funders": [
-        {
-          "name": "Nova Constellations",
-          "kind": "company",
-          "country": "US",
-          "address": null,
-          "amount": 140000
-        },
-        {
-          "name": "Helios Launch Co.",
-          "kind": "company",
-          "country": "FR",
-          "address": null,
-          "amount": 195000
-        }
-      ],
       "history": [
         {
-          "type": "ESCROW_CREATED",
+          "type": "REGISTERED",
           "at": "2026-10-15T12:20:24.581Z",
-          "amount": 140000,
-          "by": "Nova Constellations",
+          "amount": 300000,
+          "by": "Roscosmos",
           "txHash": "0x846a15b4bce9165324750225f4164e8ff05e233e179e66eedb6f7396b5064cc9"
-        },
-        {
-          "type": "FUNDS_ADDED",
-          "at": "2026-10-19T05:02:59.956Z",
-          "amount": 195000,
-          "by": "Helios Launch Co.",
-          "txHash": "0x6d18bc3fcd8b30995863498403fda7ef0380c20fe3501619b97ccbd7eed2c2f5"
         }
       ]
     },
@@ -123,73 +44,21 @@
         "1 22566U 93016B   26315.30042183 -.00000125  00000+0 -39789-4 0  9997",
         "2 22566  71.0091  57.2176 0012440 301.4149  58.5757 14.15331152737068"
       ],
+      "band": 1,
       "createdAt": "2026-10-24T12:49:51.315Z",
       "deadline": "2026-11-11T23:47:06.271Z",
       "status": "EXPIRING",
-      "locked": 495000,
-      "collected": 495000,
-      "netBalance": 442598,
+      "deposit": 300000,
+      "netBalance": 247598,
       "riskPerDay": 2890,
-      "cleaner": null,
       "settledAt": null,
-      "funders": [
-        {
-          "name": "Helios Launch Co.",
-          "kind": "company",
-          "country": "FR",
-          "address": null,
-          "amount": 270000
-        },
-        {
-          "name": "Pampa Sat",
-          "kind": "company",
-          "country": "AR",
-          "address": null,
-          "amount": 100000
-        },
-        {
-          "name": "Nova Constellations",
-          "kind": "company",
-          "country": "US",
-          "address": null,
-          "amount": 55000
-        },
-        {
-          "name": "Nordic Space Office",
-          "kind": "agency",
-          "country": "NO",
-          "address": null,
-          "amount": 70000
-        }
-      ],
       "history": [
         {
-          "type": "ESCROW_CREATED",
+          "type": "REGISTERED",
           "at": "2026-10-24T12:49:51.315Z",
-          "amount": 270000,
-          "by": "Helios Launch Co.",
+          "amount": 300000,
+          "by": "Roscosmos",
           "txHash": "0xe6deeeef46485ddab5e75198f7796b5db34a704f4338d16122d365dffa504e8f"
-        },
-        {
-          "type": "FUNDS_ADDED",
-          "at": "2026-10-27T14:25:25.697Z",
-          "amount": 100000,
-          "by": "Pampa Sat",
-          "txHash": "0xb38dea8319bce5de2db352253c79597cd601ecb52957ee57bb388222d889190e"
-        },
-        {
-          "type": "FUNDS_ADDED",
-          "at": "2026-10-31T19:11:16.525Z",
-          "amount": 55000,
-          "by": "Nova Constellations",
-          "txHash": "0x535e2604fdc9855e4dea7c3d1d95557e76c6e4bc1b8986bdf7226bd8cb75eecd"
-        },
-        {
-          "type": "FUNDS_ADDED",
-          "at": "2026-11-05T20:25:44.101Z",
-          "amount": 70000,
-          "by": "Nordic Space Office",
-          "txHash": "0x789fbbff3b6ce5a8321f68639c76e992f67f6b10b9deac01dcae596015100fd2"
         }
       ]
     },
@@ -204,37 +73,27 @@
         "1 23088U 94023B   26315.28577299  .00000307  00000+0  18326-3 0  9997",
         "2 23088  70.9993 273.0012 0005486 276.6960  83.3538 14.15036337680977"
       ],
+      "band": 1,
       "createdAt": "2026-10-31T04:51:32.120Z",
       "deadline": "2026-12-02T18:28:38.119Z",
-      "status": "CLEANED",
-      "locked": 0,
-      "collected": 420000,
-      "netBalance": 401193,
+      "status": "REFUNDED",
+      "deposit": 300000,
+      "netBalance": 281193,
       "riskPerDay": 3240,
-      "cleaner": "Magellan Salvage",
       "settledAt": "2026-11-06T00:09:59.864Z",
-      "funders": [
-        {
-          "name": "Andes Orbital Re",
-          "kind": "insurer",
-          "country": "AR",
-          "address": null,
-          "amount": 420000
-        }
-      ],
       "history": [
         {
-          "type": "ESCROW_CREATED",
+          "type": "REGISTERED",
           "at": "2026-10-31T04:51:32.120Z",
-          "amount": 420000,
-          "by": "Andes Orbital Re",
+          "amount": 300000,
+          "by": "Roscosmos",
           "txHash": "0xa6e1baf9fec08a131b7888a3346dad07c88ae1e18b73c269fe98510da5b070a5"
         },
         {
-          "type": "DEBRIS_DEORBITED",
+          "type": "REFUNDED",
           "at": "2026-11-06T00:09:59.864Z",
-          "amount": 420000,
-          "by": "Magellan Salvage",
+          "amount": 300000,
+          "by": "Roscosmos",
           "txHash": "0xfba9c7b411ef902bb2d8489eb4f7c0cc96d228ebbb02df034753ae981a21f36e"
         }
       ]
@@ -250,73 +109,21 @@
         "1 24298U 96051B   26315.40430911  .00000155  00000+0  11019-3 0  9990",
         "2 24298  70.7739  13.1426 0014781 144.3178 215.8933 14.12499333556484"
       ],
+      "band": 1,
       "createdAt": "2026-10-30T20:34:55.150Z",
       "deadline": "2026-11-13T18:31:36.050Z",
       "status": "ACTIVE",
-      "locked": 645000,
-      "collected": 645000,
-      "netBalance": 616304,
+      "deposit": 300000,
+      "netBalance": 271304,
       "riskPerDay": 2430,
-      "cleaner": null,
       "settledAt": null,
-      "funders": [
-        {
-          "name": "Agencia Espacial Austral",
-          "kind": "agency",
-          "country": "AR",
-          "address": null,
-          "amount": 280000
-        },
-        {
-          "name": "Pampa Sat",
-          "kind": "company",
-          "country": "AR",
-          "address": null,
-          "amount": 165000
-        },
-        {
-          "name": "Meridian Space Insurance",
-          "kind": "insurer",
-          "country": "US",
-          "address": null,
-          "amount": 85000
-        },
-        {
-          "name": "Kepler Mutual",
-          "kind": "insurer",
-          "country": "GB",
-          "address": null,
-          "amount": 115000
-        }
-      ],
       "history": [
         {
-          "type": "ESCROW_CREATED",
+          "type": "REGISTERED",
           "at": "2026-10-30T20:34:55.150Z",
-          "amount": 280000,
-          "by": "Agencia Espacial Austral",
+          "amount": 300000,
+          "by": "Roscosmos",
           "txHash": "0x786b07af1729661a862214667af4fac480ef2a834b7b8ad2d02d79239d7fb950"
-        },
-        {
-          "type": "FUNDS_ADDED",
-          "at": "2026-10-31T20:51:02.849Z",
-          "amount": 165000,
-          "by": "Pampa Sat",
-          "txHash": "0x5693ab95e0cbb9a956e0656d5032b8b29988a30203a3f7c3af0b601771a102f9"
-        },
-        {
-          "type": "FUNDS_ADDED",
-          "at": "2026-11-01T11:09:58.356Z",
-          "amount": 115000,
-          "by": "Kepler Mutual",
-          "txHash": "0xd2beeec7b8bea79bbf466cd9f79b2516f023c70688c7249591c419978109983b"
-        },
-        {
-          "type": "FUNDS_ADDED",
-          "at": "2026-11-07T13:35:34.813Z",
-          "amount": 85000,
-          "by": "Meridian Space Insurance",
-          "txHash": "0x8d01a383b61670a21d56eaeabaa6da34fc29423cf0d66d521a44f0a60c728828"
         }
       ]
     },
@@ -331,51 +138,27 @@
         "1 25407U 98045B   26315.29193075  .00000208  00000+0  12896-3 0  9995",
         "2 25407  71.0132  22.9626 0007511 351.3182   8.7810 14.16219195462014"
       ],
+      "band": 1,
       "createdAt": "2026-10-11T21:21:04.940Z",
       "deadline": "2026-11-07T19:59:52.442Z",
-      "status": "EXPIRED",
-      "locked": 0,
-      "collected": 380000,
-      "netBalance": -82790,
+      "status": "FORFEITED",
+      "deposit": 300000,
+      "netBalance": 217210,
       "riskPerDay": 2690,
-      "cleaner": null,
       "settledAt": "2026-11-08T02:17:45.141Z",
-      "funders": [
-        {
-          "name": "Pampa Sat",
-          "kind": "company",
-          "country": "AR",
-          "address": null,
-          "amount": 170000
-        },
-        {
-          "name": "Meridian Space Insurance",
-          "kind": "insurer",
-          "country": "US",
-          "address": null,
-          "amount": 210000
-        }
-      ],
       "history": [
         {
-          "type": "ESCROW_CREATED",
+          "type": "REGISTERED",
           "at": "2026-10-11T21:21:04.940Z",
-          "amount": 170000,
-          "by": "Pampa Sat",
+          "amount": 300000,
+          "by": "Roscosmos",
           "txHash": "0x504119917006e705e047ad8baef49465ada9bcdf25517b0e34cfb25ca05c7681"
         },
         {
-          "type": "FUNDS_ADDED",
-          "at": "2026-10-13T14:59:14.325Z",
-          "amount": 210000,
-          "by": "Meridian Space Insurance",
-          "txHash": "0x9de1afbf42d0a6d72623ba41e790ae1c4ada285211c1e566062f5b5b49870cee"
-        },
-        {
-          "type": "ESCROW_EXPIRED",
+          "type": "FORFEITED",
           "at": "2026-11-08T02:17:45.141Z",
-          "amount": 380000,
-          "by": "protocol",
+          "amount": 300000,
+          "by": "Fondo de remoción",
           "txHash": "0x61ad97dbe1e8026e7178bcd22b3c4643f6e2b32df04018f7ddd2a0fce8feee8c"
         }
       ]
@@ -391,59 +174,21 @@
         "1 27006U 01056F   26315.32798045 -.00000046  00000+0  33152-6 0  9992",
         "2 27006  99.7908 125.5838 0015266  75.1999 348.4675 13.71098136246997"
       ],
+      "band": 2,
       "createdAt": "2026-10-21T07:03:48.383Z",
       "deadline": "2026-11-18T11:33:33.400Z",
       "status": "ACTIVE",
-      "locked": 470000,
-      "collected": 470000,
-      "netBalance": 360574,
+      "deposit": 800000,
+      "netBalance": 690574,
       "riskPerDay": 5120,
-      "cleaner": null,
       "settledAt": null,
-      "funders": [
-        {
-          "name": "Andes Orbital Re",
-          "kind": "insurer",
-          "country": "AR",
-          "address": null,
-          "amount": 175000
-        },
-        {
-          "name": "Nova Constellations",
-          "kind": "company",
-          "country": "US",
-          "address": null,
-          "amount": 170000
-        },
-        {
-          "name": "Agencia Espacial Austral",
-          "kind": "agency",
-          "country": "AR",
-          "address": null,
-          "amount": 125000
-        }
-      ],
       "history": [
         {
-          "type": "ESCROW_CREATED",
+          "type": "REGISTERED",
           "at": "2026-10-21T07:03:48.383Z",
-          "amount": 175000,
-          "by": "Andes Orbital Re",
+          "amount": 800000,
+          "by": "Roscosmos",
           "txHash": "0xd9216f893767c98873530c42476d4ff6f73d9e85121c2d892cf12c05be49f98a"
-        },
-        {
-          "type": "FUNDS_ADDED",
-          "at": "2026-10-25T17:11:00.059Z",
-          "amount": 125000,
-          "by": "Agencia Espacial Austral",
-          "txHash": "0x94bfd93c53a9ff7e7309536aa993119afbbd4673911be66f911e8a2ec9a10132"
-        },
-        {
-          "type": "FUNDS_ADDED",
-          "at": "2026-10-26T18:12:10.271Z",
-          "amount": 170000,
-          "by": "Nova Constellations",
-          "txHash": "0x0024f13b6ffd848e95494bc52064b71596dc7d79b0796d5dbe6af098c641c036"
         }
       ]
     },
@@ -458,45 +203,21 @@
         "1 31792U 07029A   26315.32524848 -.00000293  00000+0 -13112-3 0  9999",
         "2 31792  70.9414  45.5912 0012475 255.5954 104.3783 14.12961675998935"
       ],
+      "band": 1,
       "createdAt": "2026-10-20T09:14:25.785Z",
       "deadline": "2026-11-11T21:07:43.388Z",
       "status": "EXPIRING",
-      "locked": 440000,
-      "collected": 440000,
-      "netBalance": 400784,
+      "deposit": 300000,
+      "netBalance": 260784,
       "riskPerDay": 1760,
-      "cleaner": null,
       "settledAt": null,
-      "funders": [
-        {
-          "name": "Agencia Espacial Austral",
-          "kind": "agency",
-          "country": "AR",
-          "address": null,
-          "amount": 155000
-        },
-        {
-          "name": "Andes Orbital Re",
-          "kind": "insurer",
-          "country": "AR",
-          "address": null,
-          "amount": 285000
-        }
-      ],
       "history": [
         {
-          "type": "ESCROW_CREATED",
+          "type": "REGISTERED",
           "at": "2026-10-20T09:14:25.785Z",
-          "amount": 155000,
-          "by": "Agencia Espacial Austral",
+          "amount": 300000,
+          "by": "VKS · RU MoD",
           "txHash": "0x439d8b2483f5fa8f83d4178773f594992b8f9aa5a139e78baab4d9950fab9248"
-        },
-        {
-          "type": "FUNDS_ADDED",
-          "at": "2026-10-23T14:45:08.075Z",
-          "amount": 285000,
-          "by": "Andes Orbital Re",
-          "txHash": "0x6470e7b80738594b0a36912feff5c3e2a2fb3295be61fb57bd4d971ac3f99ac4"
         }
       ]
     },
@@ -511,59 +232,21 @@
         "1 26070U 00006B   26315.30049509 -.00000016  00000+0  16033-4 0  9992",
         "2 26070  71.0015 299.2884 0016183 174.3104 185.8206 14.15848996383461"
       ],
+      "band": 1,
       "createdAt": "2026-10-05T11:31:38.508Z",
       "deadline": "2026-11-19T03:06:49.526Z",
       "status": "ACTIVE",
-      "locked": 430000,
-      "collected": 430000,
-      "netBalance": 280511,
+      "deposit": 300000,
+      "netBalance": 150511,
       "riskPerDay": 4020,
-      "cleaner": null,
       "settledAt": null,
-      "funders": [
-        {
-          "name": "Andes Orbital Re",
-          "kind": "insurer",
-          "country": "AR",
-          "address": null,
-          "amount": 235000
-        },
-        {
-          "name": "Pampa Sat",
-          "kind": "company",
-          "country": "AR",
-          "address": null,
-          "amount": 100000
-        },
-        {
-          "name": "Helios Launch Co.",
-          "kind": "company",
-          "country": "FR",
-          "address": null,
-          "amount": 95000
-        }
-      ],
       "history": [
         {
-          "type": "ESCROW_CREATED",
+          "type": "REGISTERED",
           "at": "2026-10-05T11:31:38.508Z",
-          "amount": 235000,
-          "by": "Andes Orbital Re",
+          "amount": 300000,
+          "by": "Roscosmos",
           "txHash": "0xfb16b81b7e2cd3465d9b141930cf55535e46f9b9a9e6f047d904d644b9880c71"
-        },
-        {
-          "type": "FUNDS_ADDED",
-          "at": "2026-10-06T10:19:10.751Z",
-          "amount": 100000,
-          "by": "Pampa Sat",
-          "txHash": "0x8c8c37e81fe0a503a49a6ae21a9d1d75de45495ae0b7ff793b536cab7d6d78db"
-        },
-        {
-          "type": "FUNDS_ADDED",
-          "at": "2026-10-07T17:30:59.552Z",
-          "amount": 95000,
-          "by": "Helios Launch Co.",
-          "txHash": "0xcc0a20897e5506a35ec78fcfc822afa07df3652e67c87e80a55a01b397e74091"
         }
       ]
     },
@@ -578,65 +261,27 @@
         "1 16182U 85097B   26315.35766355  .00000132  00000+0  90083-4 0  9993",
         "2 16182  71.0032 341.2363 0009664 247.4647 203.4472 14.16624421122169"
       ],
+      "band": 1,
       "createdAt": "2026-09-27T05:16:03.478Z",
       "deadline": "2026-11-24T15:54:37.411Z",
-      "status": "CLEANED",
-      "locked": 0,
-      "collected": 900000,
-      "netBalance": 689856,
+      "status": "REFUNDED",
+      "deposit": 300000,
+      "netBalance": 89856,
       "riskPerDay": 4810,
-      "cleaner": "Grúa Orbital",
       "settledAt": "2026-11-09T21:48:18.182Z",
-      "funders": [
-        {
-          "name": "Andes Orbital Re",
-          "kind": "insurer",
-          "country": "AR",
-          "address": null,
-          "amount": 400000
-        },
-        {
-          "name": "Agencia Espacial Austral",
-          "kind": "agency",
-          "country": "AR",
-          "address": null,
-          "amount": 310000
-        },
-        {
-          "name": "Kepler Mutual",
-          "kind": "insurer",
-          "country": "GB",
-          "address": null,
-          "amount": 190000
-        }
-      ],
       "history": [
         {
-          "type": "ESCROW_CREATED",
+          "type": "REGISTERED",
           "at": "2026-09-27T05:16:03.478Z",
-          "amount": 400000,
-          "by": "Andes Orbital Re",
+          "amount": 300000,
+          "by": "Roscosmos",
           "txHash": "0x35327f321b095b9e06dfcbad7b075e9a27f1f81a08bc1b82fe6bca84c9af8942"
         },
         {
-          "type": "FUNDS_ADDED",
-          "at": "2026-09-28T15:53:38.773Z",
-          "amount": 310000,
-          "by": "Agencia Espacial Austral",
-          "txHash": "0xf8fe5eda9ad6edb7c375c1ddff1313790874c7909023d4a96d5ffd60ef86e70d"
-        },
-        {
-          "type": "FUNDS_ADDED",
-          "at": "2026-10-05T01:00:15.463Z",
-          "amount": 190000,
-          "by": "Kepler Mutual",
-          "txHash": "0x4e6f8f3e897ac0c43346c9563cb3697e5d89c18da594c4d05e6480b9eccae516"
-        },
-        {
-          "type": "DEBRIS_DEORBITED",
+          "type": "REFUNDED",
           "at": "2026-11-09T21:48:18.182Z",
-          "amount": 900000,
-          "by": "Grúa Orbital",
+          "amount": 300000,
+          "by": "Roscosmos",
           "txHash": "0xf7aecc7ddbcbe9deb70bb02189579a0578e15fb704cbda7dc719166246ca6acb"
         }
       ]
@@ -652,65 +297,27 @@
         "1 23405U 94077B   26315.10070248 -.00000204  00000+0 -79587-4 0  9997",
         "2 23405  70.9826 194.0729 0002522 208.7373 151.3611 14.15586774651100"
       ],
+      "band": 1,
       "createdAt": "2026-10-24T04:25:02.699Z",
       "deadline": "2026-11-08T21:03:28.804Z",
-      "status": "EXPIRED",
-      "locked": 0,
-      "collected": 540000,
-      "netBalance": -62102,
+      "status": "FORFEITED",
+      "deposit": 300000,
+      "netBalance": 237898,
       "riskPerDay": 3360,
-      "cleaner": null,
       "settledAt": "2026-11-09T05:09:15.718Z",
-      "funders": [
-        {
-          "name": "Nova Constellations",
-          "kind": "company",
-          "country": "US",
-          "address": null,
-          "amount": 255000
-        },
-        {
-          "name": "Helios Launch Co.",
-          "kind": "company",
-          "country": "FR",
-          "address": null,
-          "amount": 130000
-        },
-        {
-          "name": "Meridian Space Insurance",
-          "kind": "insurer",
-          "country": "US",
-          "address": null,
-          "amount": 155000
-        }
-      ],
       "history": [
         {
-          "type": "ESCROW_CREATED",
+          "type": "REGISTERED",
           "at": "2026-10-24T04:25:02.699Z",
-          "amount": 255000,
-          "by": "Nova Constellations",
+          "amount": 300000,
+          "by": "Roscosmos",
           "txHash": "0x6995e5c07a327e9444889a48c437264d31a0a47d2e322d028d73109ddec70f46"
         },
         {
-          "type": "FUNDS_ADDED",
-          "at": "2026-10-25T14:16:09.409Z",
-          "amount": 130000,
-          "by": "Helios Launch Co.",
-          "txHash": "0x59672e3ee9160b064c812f12ca7071c0242f005aeb145121947b829725f60ca8"
-        },
-        {
-          "type": "FUNDS_ADDED",
-          "at": "2026-10-27T10:11:18.417Z",
-          "amount": 155000,
-          "by": "Meridian Space Insurance",
-          "txHash": "0x57033b3d6dc5542b8cf1c25f2d6df27af21fc14cdeebff8caef673d97602fa72"
-        },
-        {
-          "type": "ESCROW_EXPIRED",
+          "type": "FORFEITED",
           "at": "2026-11-09T05:09:15.718Z",
-          "amount": 540000,
-          "by": "protocol",
+          "amount": 300000,
+          "by": "Fondo de remoción",
           "txHash": "0x7a3fa0ca1e4edc58ee1b3aebdc9ae367a6177f48597ed47d1396038ee28e136b"
         }
       ]
@@ -726,45 +333,21 @@
         "1 22803U 93059B   26315.15508850 -.00000102  00000+0 -26479-4 0  9996",
         "2 22803  70.9906 211.3611 0017856 202.1449 157.8906 14.17264711714453"
       ],
+      "band": 1,
       "createdAt": "2026-10-25T02:29:27.091Z",
       "deadline": "2026-11-17T02:54:03.159Z",
       "status": "ACTIVE",
-      "locked": 495000,
-      "collected": 495000,
-      "netBalance": 444946,
+      "deposit": 300000,
+      "netBalance": 249946,
       "riskPerDay": 2850,
-      "cleaner": null,
       "settledAt": null,
-      "funders": [
-        {
-          "name": "Agencia Espacial Austral",
-          "kind": "agency",
-          "country": "AR",
-          "address": null,
-          "amount": 220000
-        },
-        {
-          "name": "Kepler Mutual",
-          "kind": "insurer",
-          "country": "GB",
-          "address": null,
-          "amount": 275000
-        }
-      ],
       "history": [
         {
-          "type": "ESCROW_CREATED",
+          "type": "REGISTERED",
           "at": "2026-10-25T02:29:27.091Z",
-          "amount": 220000,
-          "by": "Agencia Espacial Austral",
+          "amount": 300000,
+          "by": "Roscosmos",
           "txHash": "0x4fde011233fd7122c058bb4373aa47547342e54e0de458a0fc57650e327e2d28"
-        },
-        {
-          "type": "FUNDS_ADDED",
-          "at": "2026-10-27T07:35:13.019Z",
-          "amount": 275000,
-          "by": "Kepler Mutual",
-          "txHash": "0xd168f6232e392b7c4b81faee645134ffab268d620899aa60e3c41aed738ab9e9"
         }
       ]
     },
@@ -779,30 +362,20 @@
         "1 28353U 04021B   26315.02926263  .00000163  00000+0  10945-3 0  9996",
         "2 28353  70.9998  75.5161 0004547   0.2173 359.8950 14.14619453157676"
       ],
+      "band": 1,
       "createdAt": "2026-10-07T15:30:41.905Z",
       "deadline": "2026-11-12T01:21:53.472Z",
       "status": "EXPIRING",
-      "locked": 495000,
-      "collected": 495000,
-      "netBalance": 387137,
+      "deposit": 300000,
+      "netBalance": 192137,
       "riskPerDay": 3080,
-      "cleaner": null,
       "settledAt": null,
-      "funders": [
-        {
-          "name": "Andes Orbital Re",
-          "kind": "insurer",
-          "country": "AR",
-          "address": null,
-          "amount": 495000
-        }
-      ],
       "history": [
         {
-          "type": "ESCROW_CREATED",
+          "type": "REGISTERED",
           "at": "2026-10-07T15:30:41.905Z",
-          "amount": 495000,
-          "by": "Andes Orbital Re",
+          "amount": 300000,
+          "by": "Roscosmos",
           "txHash": "0xeb87fb367bea16af7e98c38f157a72666b1a6940ece0d1105cb8064460f08aaa"
         }
       ]
@@ -818,30 +391,20 @@
         "1 27601U 02056E   26315.33356170  .00000217  00000+0  90366-4 0  9991",
         "2 27601  98.3530 266.7860 0070633 146.1427 332.8289 14.33887177249453"
       ],
+      "band": 1,
       "createdAt": "2026-10-11T22:47:59.691Z",
       "deadline": "2026-11-19T02:34:55.064Z",
       "status": "ACTIVE",
-      "locked": 445000,
-      "collected": 445000,
-      "netBalance": 347935,
+      "deposit": 300000,
+      "netBalance": 202935,
       "riskPerDay": 3160,
-      "cleaner": null,
       "settledAt": null,
-      "funders": [
-        {
-          "name": "Kepler Mutual",
-          "kind": "insurer",
-          "country": "GB",
-          "address": null,
-          "amount": 445000
-        }
-      ],
       "history": [
         {
-          "type": "ESCROW_CREATED",
+          "type": "REGISTERED",
           "at": "2026-10-11T22:47:59.691Z",
-          "amount": 445000,
-          "by": "Kepler Mutual",
+          "amount": 300000,
+          "by": "JAXA",
           "txHash": "0xbbb5480e5a3b6ee9019d8000f22ff84ea2ea8ac3741070c24ed2c9862fa6473b"
         }
       ]
@@ -857,79 +420,27 @@
         "1 27386U 02009A   26315.31503427  .00000101  00000+0  46582-4 0  9999",
         "2 27386  98.4038 263.4783 0001280  81.8619  40.2685 14.39093930294648"
       ],
+      "band": 1,
       "createdAt": "2026-09-26T18:54:24.064Z",
       "deadline": "2026-11-09T19:24:28.518Z",
-      "status": "EXPIRED",
-      "locked": 0,
-      "collected": 205000,
-      "netBalance": -162411,
+      "status": "FORFEITED",
+      "deposit": 300000,
+      "netBalance": 137589,
       "riskPerDay": 3540,
-      "cleaner": null,
       "settledAt": "2026-11-10T03:16:06.795Z",
-      "funders": [
-        {
-          "name": "Pampa Sat",
-          "kind": "company",
-          "country": "AR",
-          "address": null,
-          "amount": 75000
-        },
-        {
-          "name": "Kepler Mutual",
-          "kind": "insurer",
-          "country": "GB",
-          "address": null,
-          "amount": 60000
-        },
-        {
-          "name": "Helios Launch Co.",
-          "kind": "company",
-          "country": "FR",
-          "address": null,
-          "amount": 35000
-        },
-        {
-          "name": "Agencia Espacial Austral",
-          "kind": "agency",
-          "country": "AR",
-          "address": null,
-          "amount": 35000
-        }
-      ],
       "history": [
         {
-          "type": "ESCROW_CREATED",
+          "type": "REGISTERED",
           "at": "2026-09-26T18:54:24.064Z",
-          "amount": 75000,
-          "by": "Pampa Sat",
+          "amount": 300000,
+          "by": "ESA",
           "txHash": "0x20355a85accc7f1629e6a39e49bcfcec1b226b6749915ca425d300974e31be6d"
         },
         {
-          "type": "FUNDS_ADDED",
-          "at": "2026-10-01T16:36:49.505Z",
-          "amount": 35000,
-          "by": "Helios Launch Co.",
-          "txHash": "0x8dae06dc957a61317aac9b56be55c32f383ad2b604d97b9dd8019f89ab10b783"
-        },
-        {
-          "type": "FUNDS_ADDED",
-          "at": "2026-10-01T18:48:28.849Z",
-          "amount": 60000,
-          "by": "Kepler Mutual",
-          "txHash": "0x15bcc34ca4f16bd5f4338a28bbcd6f23848721a74d27067f56e626076b93f809"
-        },
-        {
-          "type": "FUNDS_ADDED",
-          "at": "2026-10-04T16:25:00.211Z",
-          "amount": 35000,
-          "by": "Agencia Espacial Austral",
-          "txHash": "0xa648f067d6db3a162f999e626cc41c3bb8f3f0ed8c9922f33edcd76fc685fbd2"
-        },
-        {
-          "type": "ESCROW_EXPIRED",
+          "type": "FORFEITED",
           "at": "2026-11-10T03:16:06.795Z",
-          "amount": 205000,
-          "by": "protocol",
+          "amount": 300000,
+          "by": "Fondo de remoción",
           "txHash": "0x2dff420bdf56b0cd76b07ebea078f603359c99e03cef6e9a57f8ff1a7ffc5b1e"
         }
       ]
@@ -945,65 +456,27 @@
         "1 10967U 78064A   26314.87232499  .00000369  00000+0  14107-3 0  9991",
         "2 10967 108.0159 282.1744 0002627 272.2122  87.8723 14.46327081542105"
       ],
+      "band": 1,
       "createdAt": "2026-09-30T19:33:24.839Z",
       "deadline": "2026-11-19T14:56:32.915Z",
-      "status": "CLEANED",
-      "locked": 0,
-      "collected": 220000,
-      "netBalance": 80730,
+      "status": "REFUNDED",
+      "deposit": 300000,
+      "netBalance": 160730,
       "riskPerDay": 3450,
-      "cleaner": "Magellan Salvage",
       "settledAt": "2026-11-10T04:23:22.035Z",
-      "funders": [
-        {
-          "name": "Andes Orbital Re",
-          "kind": "insurer",
-          "country": "AR",
-          "address": null,
-          "amount": 80000
-        },
-        {
-          "name": "Kepler Mutual",
-          "kind": "insurer",
-          "country": "GB",
-          "address": null,
-          "amount": 90000
-        },
-        {
-          "name": "Nova Constellations",
-          "kind": "company",
-          "country": "US",
-          "address": null,
-          "amount": 50000
-        }
-      ],
       "history": [
         {
-          "type": "ESCROW_CREATED",
+          "type": "REGISTERED",
           "at": "2026-09-30T19:33:24.839Z",
-          "amount": 80000,
-          "by": "Andes Orbital Re",
+          "amount": 300000,
+          "by": "NASA",
           "txHash": "0xb90b29d499fcab10a1a1c8f01fd078d3484808e683865c3ea1eb0e1237299249"
         },
         {
-          "type": "FUNDS_ADDED",
-          "at": "2026-10-02T02:44:12.317Z",
-          "amount": 90000,
-          "by": "Kepler Mutual",
-          "txHash": "0xc5349b9a5870a78593806bee32d86f67d3daca22082a734b252a930c2f633d4a"
-        },
-        {
-          "type": "FUNDS_ADDED",
-          "at": "2026-10-08T20:26:05.538Z",
-          "amount": 50000,
-          "by": "Nova Constellations",
-          "txHash": "0xe2d923fb17f65b64a12b6f7ac5cba07c8af732117e61c808fbb2294de70c63e8"
-        },
-        {
-          "type": "DEBRIS_DEORBITED",
+          "type": "REFUNDED",
           "at": "2026-11-10T04:23:22.035Z",
-          "amount": 220000,
-          "by": "Magellan Salvage",
+          "amount": 300000,
+          "by": "NASA",
           "txHash": "0x33a977daf489bf8fad26b11de046725f0d14c5454568b5533d7c9a5581ad4280"
         }
       ]
@@ -1019,73 +492,21 @@
         "1 25730U 99025A   26315.17720479  .00002682  00000+0  11106-2 0  9994",
         "2 25730  98.8535  30.6009 0013704 190.0355 170.0554 14.27416811418924"
       ],
+      "band": 1,
       "createdAt": "2026-10-22T14:01:32.592Z",
       "deadline": "2026-11-19T07:11:04.153Z",
       "status": "ACTIVE",
-      "locked": 165000,
-      "collected": 165000,
-      "netBalance": 110376,
+      "deposit": 300000,
+      "netBalance": 245376,
       "riskPerDay": 2720,
-      "cleaner": null,
       "settledAt": null,
-      "funders": [
-        {
-          "name": "Pampa Sat",
-          "kind": "company",
-          "country": "AR",
-          "address": null,
-          "amount": 85000
-        },
-        {
-          "name": "Agencia Espacial Austral",
-          "kind": "agency",
-          "country": "AR",
-          "address": null,
-          "amount": 35000
-        },
-        {
-          "name": "Kepler Mutual",
-          "kind": "insurer",
-          "country": "GB",
-          "address": null,
-          "amount": 20000
-        },
-        {
-          "name": "Nordic Space Office",
-          "kind": "agency",
-          "country": "NO",
-          "address": null,
-          "amount": 25000
-        }
-      ],
       "history": [
         {
-          "type": "ESCROW_CREATED",
+          "type": "REGISTERED",
           "at": "2026-10-22T14:01:32.592Z",
-          "amount": 85000,
-          "by": "Pampa Sat",
+          "amount": 300000,
+          "by": "CMA",
           "txHash": "0x51af0b89ff5d9e14a3d803e97f4634509d351de3930b426325c3742aa40b0af3"
-        },
-        {
-          "type": "FUNDS_ADDED",
-          "at": "2026-10-24T22:49:53.970Z",
-          "amount": 20000,
-          "by": "Kepler Mutual",
-          "txHash": "0x890efb0cc3c835aa448ecf81149894f9af91741e25af0f36a8b0001003bb8b7c"
-        },
-        {
-          "type": "FUNDS_ADDED",
-          "at": "2026-10-26T06:24:17.174Z",
-          "amount": 25000,
-          "by": "Nordic Space Office",
-          "txHash": "0x3f9230e9cb1aa2b27853773f1a1d12eb71c35fd2ecf1b9235c71da9ba836d5bf"
-        },
-        {
-          "type": "FUNDS_ADDED",
-          "at": "2026-10-27T10:09:44.371Z",
-          "amount": 35000,
-          "by": "Agencia Espacial Austral",
-          "txHash": "0x6802201ef7bd44f19a28287b8ac21f91e4b09e809cd8f4d0b666688e4c7e2691"
         }
       ]
     },
@@ -1100,45 +521,21 @@
         "1 29733U 99025X   26314.98945454  .00000527  00000+0  92583-3 0  9996",
         "2 29733  99.2001 325.2145 0565592 152.1335 243.4561 12.96986327934397"
       ],
+      "band": 2,
       "createdAt": "2026-10-23T16:21:39.289Z",
       "deadline": "2026-11-12T10:35:32.734Z",
       "status": "EXPIRING",
-      "locked": 70000,
-      "collected": 70000,
-      "netBalance": 57660,
+      "deposit": 800000,
+      "netBalance": 787660,
       "riskPerDay": 650,
-      "cleaner": null,
       "settledAt": null,
-      "funders": [
-        {
-          "name": "Meridian Space Insurance",
-          "kind": "insurer",
-          "country": "US",
-          "address": null,
-          "amount": 35000
-        },
-        {
-          "name": "Andes Orbital Re",
-          "kind": "insurer",
-          "country": "AR",
-          "address": null,
-          "amount": 35000
-        }
-      ],
       "history": [
         {
-          "type": "ESCROW_CREATED",
+          "type": "REGISTERED",
           "at": "2026-10-23T16:21:39.289Z",
-          "amount": 35000,
-          "by": "Meridian Space Insurance",
+          "amount": 800000,
+          "by": "CMA",
           "txHash": "0x8435c3802b43b0180ae27b8b3c48bf3cbaa2d03448478192a438ffb6da5d4d02"
-        },
-        {
-          "type": "FUNDS_ADDED",
-          "at": "2026-10-24T10:37:32.422Z",
-          "amount": 35000,
-          "by": "Andes Orbital Re",
-          "txHash": "0xf902c4f30b0449427ec0fd7306e31707c9ead848fa9254acd5c5a7d816894e13"
         }
       ]
     },
@@ -1153,37 +550,27 @@
         "1 29734U 99025Y   26314.90853191  .00002604  00000+0  41551-2 0  9991",
         "2 29734  99.1635 195.5100 0615640 327.3524  88.5585 12.92361916928502"
       ],
+      "band": 2,
       "createdAt": "2026-10-24T17:34:55.556Z",
       "deadline": "2026-11-08T18:30:03.097Z",
-      "status": "EXPIRED",
-      "locked": 0,
-      "collected": 85000,
-      "netBalance": -20445,
+      "status": "FORFEITED",
+      "deposit": 800000,
+      "netBalance": 779555,
       "riskPerDay": 1140,
-      "cleaner": null,
       "settledAt": "2026-11-08T20:33:01.098Z",
-      "funders": [
-        {
-          "name": "Pampa Sat",
-          "kind": "company",
-          "country": "AR",
-          "address": null,
-          "amount": 85000
-        }
-      ],
       "history": [
         {
-          "type": "ESCROW_CREATED",
+          "type": "REGISTERED",
           "at": "2026-10-24T17:34:55.556Z",
-          "amount": 85000,
-          "by": "Pampa Sat",
+          "amount": 800000,
+          "by": "CMA",
           "txHash": "0x881ca8c4434bee505e8634a422e4b301ffdbb7a411ddbf97c710edde7ed1bd12"
         },
         {
-          "type": "ESCROW_EXPIRED",
+          "type": "FORFEITED",
           "at": "2026-11-08T20:33:01.098Z",
-          "amount": 85000,
-          "by": "protocol",
+          "amount": 800000,
+          "by": "Fondo de remoción",
           "txHash": "0x6e3369da6728549251c65aab21d6a9dd09f4440dff0b618a9d6c2b915ffb786d"
         }
       ]
@@ -1199,45 +586,21 @@
         "1 22675U 93036A   26315.31721890  .00000081  00000+0  38849-4 0  9995",
         "2 22675  74.0399  66.3625 0023748  68.6819 291.6864 14.33278270745522"
       ],
+      "band": 1,
       "createdAt": "2026-10-10T18:20:16.045Z",
       "deadline": "2026-11-18T11:51:33.405Z",
       "status": "ACTIVE",
-      "locked": 420000,
-      "collected": 420000,
-      "netBalance": 318231,
+      "deposit": 300000,
+      "netBalance": 198231,
       "riskPerDay": 3190,
-      "cleaner": null,
       "settledAt": null,
-      "funders": [
-        {
-          "name": "Nordic Space Office",
-          "kind": "agency",
-          "country": "NO",
-          "address": null,
-          "amount": 230000
-        },
-        {
-          "name": "Agencia Espacial Austral",
-          "kind": "agency",
-          "country": "AR",
-          "address": null,
-          "amount": 190000
-        }
-      ],
       "history": [
         {
-          "type": "ESCROW_CREATED",
+          "type": "REGISTERED",
           "at": "2026-10-10T18:20:16.045Z",
-          "amount": 230000,
-          "by": "Nordic Space Office",
+          "amount": 300000,
+          "by": "VKS · RU MoD",
           "txHash": "0x5578300967189a055c7d6b702db96db51b63a543e26c3dfd60bd64f77571777b"
-        },
-        {
-          "type": "FUNDS_ADDED",
-          "at": "2026-10-11T12:28:47.945Z",
-          "amount": 190000,
-          "by": "Agencia Espacial Austral",
-          "txHash": "0xd335464c62db6f9a2c674786c80d9d2944dde18a56e424ca9492eae19b9c86e1"
         }
       ]
     },
@@ -1252,45 +615,21 @@
         "1 33757U 93036E   26315.07073374  .00000069  00000+0  34788-4 0  9992",
         "2 33757  74.0368  75.0708 0014633   7.5192 165.8302 14.32645628927692"
       ],
+      "band": 1,
       "createdAt": "2026-09-25T14:56:12.809Z",
       "deadline": "2026-11-15T20:19:17.080Z",
       "status": "ACTIVE",
-      "locked": 85000,
-      "collected": 85000,
-      "netBalance": 39367,
+      "deposit": 300000,
+      "netBalance": 254367,
       "riskPerDay": 970,
-      "cleaner": null,
       "settledAt": null,
-      "funders": [
-        {
-          "name": "Nova Constellations",
-          "kind": "company",
-          "country": "US",
-          "address": null,
-          "amount": 40000
-        },
-        {
-          "name": "Kepler Mutual",
-          "kind": "insurer",
-          "country": "GB",
-          "address": null,
-          "amount": 45000
-        }
-      ],
       "history": [
         {
-          "type": "ESCROW_CREATED",
+          "type": "REGISTERED",
           "at": "2026-09-25T14:56:12.809Z",
-          "amount": 40000,
-          "by": "Nova Constellations",
+          "amount": 300000,
+          "by": "VKS · RU MoD",
           "txHash": "0x634584b71cad5957c781411473988e2f3c21f1a26f66f0639fec72eb1cfd7d2e"
-        },
-        {
-          "type": "FUNDS_ADDED",
-          "at": "2026-09-29T13:53:21.151Z",
-          "amount": 45000,
-          "by": "Kepler Mutual",
-          "txHash": "0x469a8275c05ca872d47633130fea2628c2dcdf247f610e88e92ddcdb70b322eb"
         }
       ]
     },
@@ -1305,51 +644,27 @@
         "1 33758U 93036F   26315.35275556  .00003068  00000+0  74209-3 0  9993",
         "2 33758  74.0272 305.5499 0018712 290.7821 136.7916 14.53402156931493"
       ],
+      "band": 1,
       "createdAt": "2026-10-17T21:37:44.467Z",
       "deadline": "2026-11-21T00:03:17.513Z",
-      "status": "CLEANED",
-      "locked": 0,
-      "collected": 35000,
-      "netBalance": 20893,
+      "status": "REFUNDED",
+      "deposit": 300000,
+      "netBalance": 285893,
       "riskPerDay": 750,
-      "cleaner": "Deorbit Dynamics",
       "settledAt": "2026-11-05T17:03:28.469Z",
-      "funders": [
-        {
-          "name": "Helios Launch Co.",
-          "kind": "company",
-          "country": "FR",
-          "address": null,
-          "amount": 15000
-        },
-        {
-          "name": "Nordic Space Office",
-          "kind": "agency",
-          "country": "NO",
-          "address": null,
-          "amount": 20000
-        }
-      ],
       "history": [
         {
-          "type": "ESCROW_CREATED",
+          "type": "REGISTERED",
           "at": "2026-10-17T21:37:44.467Z",
-          "amount": 15000,
-          "by": "Helios Launch Co.",
+          "amount": 300000,
+          "by": "VKS · RU MoD",
           "txHash": "0x4c55a4b7c04dce0294028844d7ec4059e60465827c8d26f7158cd631e1f51b3a"
         },
         {
-          "type": "FUNDS_ADDED",
-          "at": "2026-10-20T16:51:57.258Z",
-          "amount": 20000,
-          "by": "Nordic Space Office",
-          "txHash": "0x6f279899555d1bb93db5b8a7b175b8829751d3c53a2585ee109af24d84857ff3"
-        },
-        {
-          "type": "DEBRIS_DEORBITED",
+          "type": "REFUNDED",
           "at": "2026-11-05T17:03:28.469Z",
-          "amount": 35000,
-          "by": "Deorbit Dynamics",
+          "amount": 300000,
+          "by": "VKS · RU MoD",
           "txHash": "0xd9806fe9268ffe5c828abb04f6e8a6054dabed3729d9a90e1f2a1462e4988a1b"
         }
       ]
@@ -1365,73 +680,21 @@
         "1 24946U 97051C   26315.33620315  .00000248  00000+0  80050-4 0  9997",
         "2 24946  86.3831 288.1784 0007154 189.6808 170.4251 14.35195720526191"
       ],
+      "band": 1,
       "createdAt": "2026-10-22T05:59:30.994Z",
       "deadline": "2026-11-12T04:09:41.240Z",
       "status": "EXPIRING",
-      "locked": 160000,
-      "collected": 160000,
-      "netBalance": 109366,
+      "deposit": 300000,
+      "netBalance": 249366,
       "riskPerDay": 2480,
-      "cleaner": null,
       "settledAt": null,
-      "funders": [
-        {
-          "name": "Pampa Sat",
-          "kind": "company",
-          "country": "AR",
-          "address": null,
-          "amount": 80000
-        },
-        {
-          "name": "Nova Constellations",
-          "kind": "company",
-          "country": "US",
-          "address": null,
-          "amount": 30000
-        },
-        {
-          "name": "Nordic Space Office",
-          "kind": "agency",
-          "country": "NO",
-          "address": null,
-          "amount": 25000
-        },
-        {
-          "name": "Helios Launch Co.",
-          "kind": "company",
-          "country": "FR",
-          "address": null,
-          "amount": 25000
-        }
-      ],
       "history": [
         {
-          "type": "ESCROW_CREATED",
+          "type": "REGISTERED",
           "at": "2026-10-22T05:59:30.994Z",
-          "amount": 80000,
-          "by": "Pampa Sat",
+          "amount": 300000,
+          "by": "Iridium",
           "txHash": "0x67cf8b33e6d20dad80eb52d299d8f942f274b7490af7d830ea0b971d1953e577"
-        },
-        {
-          "type": "FUNDS_ADDED",
-          "at": "2026-10-26T12:28:13.960Z",
-          "amount": 30000,
-          "by": "Nova Constellations",
-          "txHash": "0xaaee2743d589a74ca925c98fecb70041b01e732aa47c8f0f02f396450dd8f843"
-        },
-        {
-          "type": "FUNDS_ADDED",
-          "at": "2026-10-29T01:03:32.431Z",
-          "amount": 25000,
-          "by": "Helios Launch Co.",
-          "txHash": "0xc6a200cf511d1982a98b182bbfa190b994bc595eef5a90fbaec6c4589227418b"
-        },
-        {
-          "type": "FUNDS_ADDED",
-          "at": "2026-10-30T09:21:58.080Z",
-          "amount": 25000,
-          "by": "Nordic Space Office",
-          "txHash": "0x8ecd81cbcfe8621a1e5d6e6092cca543ac4ee5ad6e23e687fc8f39fbfb670e87"
         }
       ]
     },
@@ -1446,30 +709,20 @@
         "1 33773U 97051L   26315.33164683  .00000983  00000+0  28279-3 0  9996",
         "2 33773  86.3972 279.1587 0012835 122.0439 238.2011 14.43830357931603"
       ],
+      "band": 1,
       "createdAt": "2026-09-30T01:07:26.923Z",
       "deadline": "2026-11-16T00:08:38.644Z",
       "status": "ACTIVE",
-      "locked": 80000,
-      "collected": 80000,
-      "netBalance": 40790,
+      "deposit": 300000,
+      "netBalance": 260790,
       "riskPerDay": 920,
-      "cleaner": null,
       "settledAt": null,
-      "funders": [
-        {
-          "name": "Pampa Sat",
-          "kind": "company",
-          "country": "AR",
-          "address": null,
-          "amount": 80000
-        }
-      ],
       "history": [
         {
-          "type": "ESCROW_CREATED",
+          "type": "REGISTERED",
           "at": "2026-09-30T01:07:26.923Z",
-          "amount": 80000,
-          "by": "Pampa Sat",
+          "amount": 300000,
+          "by": "Iridium",
           "txHash": "0xd8c94b639a01defd522ba7314ff28413d534da6713faec3c3a005583788787ae"
         }
       ]
@@ -1485,37 +738,27 @@
         "1 33775U 97051N   26315.14568470  .00001082  00000+0  32172-3 0  9997",
         "2 33775  86.3603 267.0938 0013891 132.7234 240.1104 14.42277005929455"
       ],
+      "band": 1,
       "createdAt": "2026-10-05T21:27:18.378Z",
       "deadline": "2026-11-08T11:51:26.961Z",
-      "status": "EXPIRED",
-      "locked": 0,
-      "collected": 30000,
-      "netBalance": -46334,
+      "status": "FORFEITED",
+      "deposit": 300000,
+      "netBalance": 253666,
       "riskPerDay": 1260,
-      "cleaner": null,
       "settledAt": "2026-11-08T16:36:45.380Z",
-      "funders": [
-        {
-          "name": "Helios Launch Co.",
-          "kind": "company",
-          "country": "FR",
-          "address": null,
-          "amount": 30000
-        }
-      ],
       "history": [
         {
-          "type": "ESCROW_CREATED",
+          "type": "REGISTERED",
           "at": "2026-10-05T21:27:18.378Z",
-          "amount": 30000,
-          "by": "Helios Launch Co.",
+          "amount": 300000,
+          "by": "Iridium",
           "txHash": "0xeac57ac389efb1481ff5da715548d26ff0d23780f0e4c24490c2435a8def0758"
         },
         {
-          "type": "ESCROW_EXPIRED",
+          "type": "FORFEITED",
           "at": "2026-11-08T16:36:45.380Z",
-          "amount": 30000,
-          "by": "protocol",
+          "amount": 300000,
+          "by": "Fondo de remoción",
           "txHash": "0x4e38778a11d5bd4d04f72d026cf9f212b7bb511de162e648acfb57139f1b974a"
         }
       ]

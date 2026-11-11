@@ -11,8 +11,8 @@ export interface DeorbitRun {
   txHash: string | null;
   explorerUrl: string | null;
   simulated: boolean;
-  payout: number;
-  cleaner: string;
+  refund: number;
+  operator: string;
   error?: string;
 }
 

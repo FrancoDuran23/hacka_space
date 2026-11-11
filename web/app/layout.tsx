@@ -5,8 +5,8 @@ import { GeistPixelSquare } from "geist/font/pixel";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "OrbitClear · Space Traffic Escrow",
-  description: "Escrow de deorbitado para limpiar basura espacial. Argentina Space 2026.",
+  title: "OrbitClear · Deorbit Deposit Escrow",
+  description: "Garantía de desorbitado verificada con datos públicos, sobre Avalanche. Argentina Space 2026.",
 };
 
 export const viewport: Viewport = { themeColor: "#02040a" };

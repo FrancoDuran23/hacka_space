@@ -120,20 +120,20 @@ export function DebrisField() {
       }
       const selected = s.selectedId === id;
       const hovered = s.hoveredId === id;
-      const shown = st !== "CLEANED" && !byFx;
+      const shown = st !== "REFUNDED" && !byFx;
       const rgb = STATE_RGB[st];
 
       // pulse: amber breathes slowly, red strobes
-      const wave = st === "EXPIRING" ? 0.5 + 0.5 * Math.sin(now * 2.6 + phase[i]) : st === "EXPIRED" ? 0.5 + 0.5 * Math.sin(now * 13 + phase[i]) : 1;
-      const gain = (st === "EXPIRED" ? 3.6 : st === "EXPIRING" ? 3.0 : 2.5) * (0.55 + 0.45 * wave) * (hovered ? 1.7 : 1);
+      const wave = st === "EXPIRING" ? 0.5 + 0.5 * Math.sin(now * 2.6 + phase[i]) : st === "FORFEITED" ? 0.5 + 0.5 * Math.sin(now * 13 + phase[i]) : 1;
+      const gain = (st === "FORFEITED" ? 3.6 : st === "EXPIRING" ? 3.0 : 2.5) * (0.55 + 0.45 * wave) * (hovered ? 1.7 : 1);
       dots.pos.set([pos.x, pos.y, pos.z], i * 3);
       dots.col.set([rgb.r * gain, rgb.g * gain, rgb.b * gain, shown && !selected ? 1 : 0], i * 4);
       dots.size[i] = (selected ? 0.012 : 0.026) * (st === "EXPIRING" ? 0.85 + 0.3 * wave : 1) * (hovered ? 1.45 : 1);
 
-      // expanding alert ring on expired escrows
+      // expanding alert ring on forfeited escrows
       const k = (now * 0.9 + phase[i]) % 1;
       rings.pos.set([pos.x, pos.y, pos.z], i * 3);
-      rings.col.set([rgb.r * 3, rgb.g * 3, rgb.b * 3, st === "EXPIRED" && shown && !selected ? (1 - k) * (1 - k) : 0], i * 4);
+      rings.col.set([rgb.r * 3, rgb.g * 3, rgb.b * 3, st === "FORFEITED" && shown && !selected ? (1 - k) * (1 - k) : 0], i * 4);
       rings.size[i] = 0.014 + k * 0.05;
 
       // trail: re-sample a third of the objects per frame (all of them while warping)
@@ -242,12 +242,12 @@ function Card({ o }: { o: DebrisObject }) {
         <span className="mono ml-auto text-[10.5px] font-normal text-faint">#{o.objectId}</span>
       </div>
       <dl className="holo-card__grid">
-        <dt>Owner</dt>
+        <dt>Operator</dt>
         <dd>
           {o.owner} · {o.country}
         </dd>
-        <dt>Locked</dt>
-        <dd>{formatUSD(st === "EXPIRED" ? 0 : o.locked)}</dd>
+        <dt>Deposit</dt>
+        <dd>{formatUSD(o.deposit)}</dd>
         <dt>Status</dt>
         <dd className="holo-card__status">{STATUS_LABEL[st]}</dd>
       </dl>

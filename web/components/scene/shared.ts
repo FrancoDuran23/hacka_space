@@ -30,8 +30,8 @@ export const fxDriven = new Set<number>();
 export const STATE_RGB = {
   ACTIVE: new THREE.Color("#39ff88"),
   EXPIRING: new THREE.Color("#ffb627"),
-  EXPIRED: new THREE.Color("#ff3355"),
-  CLEANED: new THREE.Color("#38e8ff"),
+  FORFEITED: new THREE.Color("#ff3355"),
+  REFUNDED: new THREE.Color("#38e8ff"),
 } as const;
 
 export const easeInOutCubic = (t: number) => (t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2);

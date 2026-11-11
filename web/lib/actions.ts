@@ -2,27 +2,27 @@
 
 import { shortHash } from "./format";
 import { app, patchObject, patchRun, pushFeed, sim } from "./store";
-import type { EscrowSnapshot, OracleResult } from "./types";
+import type { EscrowSnapshot, ReentryResult } from "./types";
 
-/** Ask the oracle to verify the reentry and release the escrow. The scene plays the fall once it answers. */
+/** Ask the relayer to verify the reentry and settle the escrow. The scene plays the fall once it answers. */
 export async function requestDeorbit(objectId: number) {
   const s = app.get();
   const o = s.objects.find((x) => x.objectId === objectId);
   const running = s.runs[objectId]?.phase;
   if (!o || running === "verifying" || running === "falling" || running === "burned") return;
   app.set({
-    runs: { ...s.runs, [objectId]: { phase: "verifying", txHash: null, explorerUrl: null, simulated: true, payout: o.locked, cleaner: "" } },
+    runs: { ...s.runs, [objectId]: { phase: "verifying", txHash: null, explorerUrl: null, simulated: true, refund: o.deposit, operator: o.owner } },
   });
-  pushFeed({ tone: "info", label: "Oracle verifying reentry", target: `${o.name} #${o.objectId}` });
+  pushFeed({ tone: "info", label: "Relayer verifying reentry", target: `${o.name} #${o.objectId}` });
   try {
-    const res = await fetch("/api/oracle", { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify({ objectId }) });
-    const json = (await res.json()) as OracleResult;
-    if (!res.ok || !json.ok) throw new Error(json.error ?? `oracle responded ${res.status}`);
-    patchRun(objectId, { phase: "falling", txHash: json.txHash, explorerUrl: json.explorerUrl, simulated: json.simulated, payout: json.payout, cleaner: json.cleaner });
+    const res = await fetch("/api/relayer", { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify({ objectId }) });
+    const json = (await res.json()) as ReentryResult;
+    if (!res.ok || !json.ok) throw new Error(json.error ?? `relayer responded ${res.status}`);
+    patchRun(objectId, { phase: "falling", txHash: json.txHash, explorerUrl: json.explorerUrl, simulated: json.simulated, refund: json.refund, operator: json.operator });
   } catch (e) {
     const error = (e as Error).message;
     patchRun(objectId, { phase: "failed", error });
-    pushFeed({ tone: "bad", label: "Oracle rejected", target: `${o.name} · ${error.slice(0, 60)}` });
+    pushFeed({ tone: "bad", label: "Relayer rejected", target: `${o.name} · ${error.slice(0, 60)}` });
   }
 }
 
@@ -34,19 +34,16 @@ export function settleDeorbit(objectId: number) {
   if (!o || !run) return;
   const at = new Date(sim.time).toISOString();
   patchObject(objectId, {
-    status: "CLEANED",
-    locked: 0,
-    collected: run.payout,
-    cleaner: run.cleaner,
+    status: "REFUNDED",
     settledAt: at,
-    history: run.txHash ? [...o.history, { type: "DEBRIS_DEORBITED", at, amount: run.payout, by: run.cleaner, txHash: run.txHash }] : o.history,
+    history: run.txHash ? [...o.history, { type: "REFUNDED", at, amount: run.refund, by: run.operator, txHash: run.txHash }] : o.history,
   });
   patchRun(objectId, { phase: "burned" });
   pushFeed({
     tone: "ok",
-    label: "Debris deorbited · payout released",
-    target: `${o.name} → ${run.cleaner}`,
-    amount: run.payout,
+    label: "Reentry verified · deposit refunded",
+    target: `${o.name} → ${run.operator}`,
+    amount: run.refund,
     txHash: run.txHash,
     explorerUrl: run.explorerUrl,
   });

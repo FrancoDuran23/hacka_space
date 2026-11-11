@@ -19,7 +19,7 @@ export function Header() {
     >
       <div className="flex items-baseline gap-3">
         <h1 className="font-pixel text-[24px] leading-none tracking-[0.12em] text-white">ORBITCLEAR</h1>
-        <span className="text-[12.5px] text-dim">Space traffic escrow</span>
+        <span className="text-[12.5px] text-dim">Deorbit deposit escrow</span>
       </div>
       <div className="flex items-center gap-5 text-[12.5px]">
         <span className="mono hidden text-dim md:inline">

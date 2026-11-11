@@ -119,10 +119,10 @@ body {
 [data-status="EXPIRING"] {
   --st: var(--color-warn);
 }
-[data-status="EXPIRED"] {
+[data-status="FORFEITED"] {
   --st: var(--color-bad);
 }
-[data-status="CLEANED"] {
+[data-status="REFUNDED"] {
   --st: var(--color-cyan);
 }
 
@@ -148,8 +148,8 @@ body {
 .status-chip[data-status="EXPIRING"]::before {
   animation: blink 1.6s ease-in-out infinite;
 }
-[data-status="EXPIRED"] .status-chip::before,
-.status-chip[data-status="EXPIRED"]::before {
+[data-status="FORFEITED"] .status-chip::before,
+.status-chip[data-status="FORFEITED"]::before {
   animation: blink 0.45s steps(2) infinite;
 }
 

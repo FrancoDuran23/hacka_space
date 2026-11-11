@@ -1,19 +1,17 @@
-/** Human-readable ABI of contracts/contracts/DebrisEscrow.sol (public, not a secret). */
-export const DEBRIS_ESCROW_ABI = [
+/** Human-readable ABI of contratos/contracts/OrbitClearEscrow.sol (public, not a secret). */
+export const ORBITCLEAR_ESCROW_ABI = [
   "function usdc() view returns (address)",
-  "function oracle() view returns (address)",
-  "function createEscrow(uint256 objectId, address owner, uint256 amount, uint64 deadline)",
-  "function addFunds(uint256 objectId, uint256 amount)",
-  "function confirmDeorbit(uint256 objectId, address cleaner)",
-  "function expire(uint256 objectId)",
-  "function getEscrow(uint256 objectId) view returns (tuple(address owner, uint64 createdAt, uint64 deadline, uint8 status, uint256 locked, uint256 totalFunded, address cleaner, uint256 paidOut))",
-  "function getFunders(uint256 objectId) view returns (address[] funders, uint256[] amounts)",
-  "function getObjectIds() view returns (uint256[])",
-  "function escrowCount() view returns (uint256)",
-  "event EscrowCreated(uint256 indexed objectId, address indexed owner, address indexed funder, uint256 amount, uint64 deadline)",
-  "event FundsAdded(uint256 indexed objectId, address indexed funder, uint256 amount, uint256 totalLocked)",
-  "event DebrisDeorbited(uint256 indexed objectId, address indexed cleaner, uint256 payout)",
-  "event EscrowExpired(uint256 indexed objectId, uint256 refunded)",
+  "function relayer() view returns (address)",
+  "function fund() view returns (address)",
+  "function register(uint32 noradId, address operator, uint64 launchedAt, uint8 band, bytes32 dataHash)",
+  "function attestReentry(uint32 noradId, uint64 decayDate, bytes32 dataHash)",
+  "function closeExpired(uint32 noradId)",
+  "function escrowOf(uint32 noradId) view returns (tuple(address operator, uint64 launchedAt, uint64 deadline, uint128 deposit, uint8 band, uint8 state))",
+  "function isExpired(uint32 noradId) view returns (bool)",
+  "event Registered(uint32 indexed noradId, address indexed operator, uint8 band, uint64 launchedAt, uint64 deadline, uint128 deposit, bytes32 dataHash)",
+  "event ReentryAttested(uint32 indexed noradId, uint64 decayDate, bytes32 dataHash)",
+  "event Refunded(uint32 indexed noradId, address indexed operator, uint128 amount)",
+  "event Forfeited(uint32 indexed noradId, address indexed fund, uint128 amount, uint8 reason)",
 ] as const;
 
 /** 1 USD = 1 USDC = 10^6 units. */

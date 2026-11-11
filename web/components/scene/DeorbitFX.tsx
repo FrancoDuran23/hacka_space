@@ -22,7 +22,7 @@ interface Fall {
 
 /**
  * DEORBIT: flash, a decaying spiral into the atmosphere with a trail of fire, then the object
- * breaks up into sparks. While the oracle is still verifying, a targeting reticle locks on.
+ * breaks up into sparks. While the relayer is still verifying, a targeting reticle locks on.
  */
 export function DeorbitFX() {
   const fx = useMemo(() => {

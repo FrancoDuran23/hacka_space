@@ -1,27 +1,27 @@
 import "server-only";
 
-export interface DeorbitRecord {
+export interface ReentryRecord {
   objectId: number;
   txHash: string;
   at: string;
-  cleaner: string;
-  payout: number;
+  operator: string;
+  refund: number;
   simulated: boolean;
 }
 
 // Survives hot reloads in dev; resets when the server restarts (the chain is the source of truth).
-const g = globalThis as unknown as { __orbitclearDeorbits?: Map<number, DeorbitRecord>; __orbitclearBust?: number; __orbitclearEpoch?: number };
+const g = globalThis as unknown as { __orbitclearReentries?: Map<number, ReentryRecord>; __orbitclearBust?: number; __orbitclearEpoch?: number };
 g.__orbitclearEpoch ??= Date.now();
-g.__orbitclearDeorbits ??= new Map();
+g.__orbitclearReentries ??= new Map();
 g.__orbitclearBust ??= 0;
 
-export function recordDeorbit(r: DeorbitRecord) {
-  g.__orbitclearDeorbits!.set(r.objectId, r);
+export function recordReentry(r: ReentryRecord) {
+  g.__orbitclearReentries!.set(r.objectId, r);
   g.__orbitclearBust = (g.__orbitclearBust ?? 0) + 1;
 }
 
-export function deorbits(): Map<number, DeorbitRecord> {
-  return g.__orbitclearDeorbits!;
+export function reentries(): Map<number, ReentryRecord> {
+  return g.__orbitclearReentries!;
 }
 
 export function cacheVersion(): number {

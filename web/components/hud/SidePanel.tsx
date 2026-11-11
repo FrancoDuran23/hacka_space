@@ -9,7 +9,7 @@ import { RollingUsd, TxHash, Typed } from "./bits";
 
 const DOT: Record<FeedLine["tone"], string> = { ok: "bg-ok", warn: "bg-warn", bad: "bg-bad", info: "bg-cyan", sys: "bg-faint" };
 
-/** The console at a glance: what is locked, what is at risk, who pays, what just happened. */
+/** The console at a glance: what is locked, what is at risk, who deposits, what just happened. */
 export function SidePanel() {
   const objects = useApp((s) => s.objects);
   const feed = useApp((s) => s.feed);
@@ -20,22 +20,22 @@ export function SidePanel() {
   const view = useMemo(() => {
     const stats = computeStats(objects, minute);
     let atRisk = 0;
-    let next: { id: number; name: string; left: number; locked: number } | null = null;
+    let next: { id: number; name: string; left: number; deposit: number } | null = null;
     for (const o of objects) {
       const st = statusAt(o, minute);
-      if (st === "EXPIRING") atRisk += o.locked;
+      if (st === "EXPIRING") atRisk += o.deposit;
       if (st === "ACTIVE" || st === "EXPIRING") {
         const left = Date.parse(o.deadline) - minute;
-        if (!next || left < next.left) next = { id: o.objectId, name: o.name, left, locked: o.locked };
+        if (!next || left < next.left) next = { id: o.objectId, name: o.name, left, deposit: o.deposit };
       }
     }
     return { stats, atRisk, next };
   }, [objects, minute]);
 
   const { stats, atRisk, next } = view;
-  const funded = stats.active + stats.expiring;
-  const open = Math.max(1, stats.active + stats.expiring + stats.expired);
-  const top = stats.funders.slice(0, 4);
+  const open = stats.active + stats.expiring;
+  const total = Math.max(1, stats.active + stats.expiring + stats.forfeited);
+  const top = stats.operators.slice(0, 4);
 
   return (
     <motion.aside
@@ -47,27 +47,27 @@ export function SidePanel() {
     >
       {/* headline */}
       <div>
-        <div className="label">Locked in escrow</div>
+        <div className="label">Deorbit deposits locked</div>
         <div className="figure mt-1 text-[clamp(32px,2.9vw,42px)] leading-none text-white">
           <RollingUsd value={stats.totalLocked} ms={1400} suffix={false} />
           <span className="ml-2 text-[13px] font-normal tracking-normal text-dim">USD</span>
         </div>
         <div className="mt-2 text-[12.5px] text-dim">
-          across {funded} funded {funded === 1 ? "object" : "objects"} · {objects.length} tracked
+          across {open} open {open === 1 ? "escrow" : "escrows"} · {objects.length} tracked
         </div>
       </div>
 
       {/* one bar for the three states */}
       <div className="mt-6">
         <div className="flex h-[6px] gap-[3px] overflow-hidden rounded-full">
-          <Bar n={stats.active} of={open} className="bg-ok" />
-          <Bar n={stats.expiring} of={open} className="bg-warn" />
-          <Bar n={stats.expired} of={open} className="bg-bad" />
+          <Bar n={stats.active} of={total} className="bg-ok" />
+          <Bar n={stats.expiring} of={total} className="bg-warn" />
+          <Bar n={stats.forfeited} of={total} className="bg-bad" />
         </div>
         <div className="mt-3 grid grid-cols-3 gap-2">
           <Count n={stats.active} label="Active" className="text-ok" />
           <Count n={stats.expiring} label="Under 24 h" className="text-warn" />
-          <Count n={stats.expired} label="Expired" className="text-bad" />
+          <Count n={stats.forfeited} label="Forfeited" className="text-bad" />
         </div>
       </div>
 
@@ -75,9 +75,14 @@ export function SidePanel() {
 
       {/* the numbers worth acting on */}
       <dl className="space-y-3">
-        <Row label="Paid to cleanup crews" hint={`${stats.cleaned} removed`}>
+        <Row label="Refunded to operators" hint={`${stats.refunded} verified ${stats.refunded === 1 ? "reentry" : "reentries"}`}>
           <span className="text-ok">
-            <RollingUsd value={stats.totalPaid} ms={1400} suffix={false} />
+            <RollingUsd value={stats.totalRefunded} ms={1400} suffix={false} />
+          </span>
+        </Row>
+        <Row label="Sent to removal fund" hint={`${stats.forfeited} ${stats.forfeited === 1 ? "deadline" : "deadlines"} missed`}>
+          <span className={stats.totalForfeited > 0 ? "text-bad" : "text-dim"}>
+            <RollingUsd value={stats.totalForfeited} ms={1400} suffix={false} />
           </span>
         </Row>
         <Row label="Expiring within 24 h" hint={`${stats.expiring} ${stats.expiring === 1 ? "escrow" : "escrows"}`}>
@@ -85,7 +90,7 @@ export function SidePanel() {
         </Row>
         {next && (
           <button type="button" className="block w-full cursor-pointer text-left" onClick={() => app.set({ selectedId: next.id, warpTarget: 1 })}>
-            <Row label="Next deadline" hint={`${next.name} · ${formatUSD(next.locked, { suffix: false })}`}>
+            <Row label="Next deadline" hint={`${next.name} · ${formatUSD(next.deposit, { suffix: false })}`}>
               <span className="mono text-[14px] tracking-normal text-ink">{countdown(next.left).replace("T−", "")}</span>
             </Row>
           </button>
@@ -94,7 +99,7 @@ export function SidePanel() {
 
       <div className="hairline my-5" />
 
-      <h2 className="panel-title mb-3">Top funders</h2>
+      <h2 className="panel-title mb-3">Top operators</h2>
       <ol className="space-y-[9px]">
         {top.map((f) => (
           <li key={f.name} className="flex items-baseline justify-between gap-3 text-[13px]">

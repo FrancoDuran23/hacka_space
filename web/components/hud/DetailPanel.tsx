@@ -12,17 +12,18 @@ import { Button } from "@/components/ui/button";
 import { RollingUsd, TxHash } from "./bits";
 
 const EVENT_LABEL: Record<HistoryType, string> = {
-  ESCROW_CREATED: "Escrow created",
-  FUNDS_ADDED: "Funds added",
-  DEBRIS_DEORBITED: "Payout released",
-  ESCROW_EXPIRED: "Escrow expired · refund",
+  REGISTERED: "Registered · deposit locked",
+  REENTRY_ATTESTED: "Reentry attested",
+  REFUNDED: "Deposit refunded",
+  FORFEITED: "Deposit forfeited",
 };
 const EVENT_TONE: Record<HistoryType, string> = {
-  ESCROW_CREATED: "text-ink/90",
-  FUNDS_ADDED: "text-ink/90",
-  DEBRIS_DEORBITED: "text-ok",
-  ESCROW_EXPIRED: "text-bad",
+  REGISTERED: "text-ink/90",
+  REENTRY_ATTESTED: "text-ink/90",
+  REFUNDED: "text-ok",
+  FORFEITED: "text-bad",
 };
+const BAND_LABEL = ["Low band · < 600 km", "Mid band · 600–900 km", "High band · > 900 km"] as const;
 const KIND_LABEL = { "rocket-body": "rocket body", satellite: "defunct satellite", fragment: "fragment" } as const;
 
 export function DetailPanel({ object: o }: { object: DebrisObject }) {
@@ -34,12 +35,12 @@ export function DetailPanel({ object: o }: { object: DebrisObject }) {
 
   const st = statusAt(o, now);
   const net = netBalanceAt(o, now);
-  const lockedNow = st === "ACTIVE" || st === "EXPIRING" ? o.locked : 0;
+  const lockedNow = st === "ACTIVE" || st === "EXPIRING" ? o.deposit : 0;
   const tm = useMemo(() => telemetry(satrecFor(o.tle), new Date(now)), [o.tle, now]);
-  const inFlight = run?.phase === "falling" || run?.phase === "burned" || st === "CLEANED";
+  const inFlight = run?.phase === "falling" || run?.phase === "burned" || st === "REFUNDED";
   const left = Date.parse(o.deadline) - now;
   const canDeorbit = (st === "ACTIVE" || st === "EXPIRING") && (!run || run.phase === "failed");
-  const onChain = source !== "demo" && !!explorer;
+  const onChain = o.onChain && source !== "demo" && !!explorer;
   const txUrl = (hash: string) => (onChain ? `${explorer}/tx/${hash}` : null);
   const history = useMemo(() => [...o.history].sort((a, b) => b.at.localeCompare(a.at)), [o.history]);
 
@@ -76,18 +77,18 @@ export function DetailPanel({ object: o }: { object: DebrisObject }) {
             <span className="ml-2 text-[13px] font-normal tracking-normal opacity-60">USD</span>
           </div>
           <div className="mt-2 text-[11.5px] text-dim">
-            Funds committed minus collision risk accrued, {formatUSD(o.riskPerDay, { suffix: false })} per day
+            Deposit backing the removal minus collision risk accrued, {formatUSD(o.riskPerDay, { suffix: false })} per day
           </div>
           <Sparkline object={o} now={now} positive={net >= 0} />
         </div>
 
         <dl className="mt-5 space-y-[9px]">
           <Stat label="Locked now" value={formatUSD(lockedNow)} />
-          <Stat label={st === "CLEANED" ? "Paid to cleaner" : st === "EXPIRED" ? "Refunded to funders" : "Raised so far"} value={formatUSD(o.collected)} tone={st === "CLEANED" ? "text-ok" : "text-ink"} />
+          <Stat label={st === "REFUNDED" ? "Refunded to operator" : st === "FORFEITED" ? "Sent to removal fund" : "Deorbit deposit"} value={formatUSD(o.deposit)} tone={st === "REFUNDED" ? "text-ok" : st === "FORFEITED" ? "text-bad" : "text-ink"} />
           <Stat
-            label={st === "CLEANED" ? "Settled" : st === "EXPIRED" ? "Overdue by" : "Time to deadline"}
-            value={st === "CLEANED" ? (o.settledAt ? utcDate(Date.parse(o.settledAt)) : "—") : countdown(left).replace("T−", "").replace("−", "")}
-            tone={st === "EXPIRED" ? "text-bad" : st === "EXPIRING" ? "text-warn" : "text-ink"}
+            label={st === "REFUNDED" ? "Settled" : st === "FORFEITED" ? "Overdue by" : "Time to deadline"}
+            value={st === "REFUNDED" ? (o.settledAt ? utcDate(Date.parse(o.settledAt)) : "—") : countdown(left).replace("T−", "").replace("−", "")}
+            tone={st === "FORFEITED" ? "text-bad" : st === "EXPIRING" ? "text-warn" : "text-ink"}
             mono
           />
         </dl>
@@ -102,17 +103,12 @@ export function DetailPanel({ object: o }: { object: DebrisObject }) {
 
         <div className="hairline my-5" />
 
-        <h2 className="panel-title mb-3">Funders</h2>
-        <ul className="space-y-[9px]">
-          {o.funders.map((f) => (
-            <li key={f.name} className="flex items-baseline justify-between gap-3 text-[13px]">
-              <span className="truncate text-ink/90">
-                {f.name} <span className="ml-1 text-[11.5px] text-faint">{f.country}</span>
-              </span>
-              <span className="figure text-ink">{formatUSD(f.amount, { suffix: false })}</span>
-            </li>
-          ))}
-        </ul>
+        <h2 className="panel-title mb-3">Deposit</h2>
+        <dl className="space-y-[9px]">
+          <Stat label="Operator" value={`${o.owner} · ${o.country}`} />
+          <Stat label="Orbital band" value={BAND_LABEL[o.band]} />
+          <Stat label="Deadline" value={utcDate(Date.parse(o.deadline))} mono />
+        </dl>
 
         <div className="hairline my-5" />
 
@@ -121,7 +117,7 @@ export function DetailPanel({ object: o }: { object: DebrisObject }) {
           {history.map((h) => (
             <li key={h.txHash + h.type} className="grid grid-cols-[1fr_auto] items-baseline gap-x-3 text-[12.5px]">
               <span className={`truncate ${EVENT_TONE[h.type]}`}>{EVENT_LABEL[h.type]}</span>
-              <span className="figure text-ink">{formatUSD(h.amount, { suffix: false })}</span>
+              <span className="figure text-ink">{h.amount ? formatUSD(h.amount, { suffix: false }) : "—"}</span>
               <span className="truncate text-[11.5px] text-dim">
                 {h.by} · {utcDate(Date.parse(h.at))}
               </span>
@@ -135,11 +131,11 @@ export function DetailPanel({ object: o }: { object: DebrisObject }) {
       <div className="mt-4 shrink-0">
         {run && run.phase !== "failed" && (
           <div className="mb-3 text-[12.5px]">
-            {run.phase === "verifying" && <span className="blink-soft text-cyan">Oracle verifying reentry against tracking data…</span>}
-            {run.phase === "falling" && <span className="text-[#ffb089]">Reentry confirmed · releasing {formatUSD(run.payout)}</span>}
+            {run.phase === "verifying" && <span className="blink-soft text-cyan">Relayer verifying reentry against tracking data…</span>}
+            {run.phase === "falling" && <span className="text-[#ffb089]">Reentry verified · refunding {formatUSD(run.refund)}</span>}
             {run.phase === "burned" && (
               <span className="text-ok">
-                Payout released · {formatUSD(run.payout)} to {run.cleaner}
+                Deposit refunded · {formatUSD(run.refund)} to {run.operator}
               </span>
             )}
             {run.txHash && (
@@ -149,10 +145,10 @@ export function DetailPanel({ object: o }: { object: DebrisObject }) {
             )}
           </div>
         )}
-        {run?.phase === "failed" && <div className="mb-3 text-[12.5px] text-bad">Oracle: {run.error}</div>}
+        {run?.phase === "failed" && <div className="mb-3 text-[12.5px] text-bad">Relayer: {run.error}</div>}
         <div className="flex items-center gap-2">
           <Button variant="danger" size="lg" className="flex-1" disabled={!canDeorbit} onClick={() => requestDeorbit(o.objectId)}>
-            {run?.phase === "verifying" ? "Verifying…" : st === "CLEANED" || run?.phase === "burned" ? "Orbit cleared" : st === "EXPIRED" ? "Escrow expired" : "Deorbit"}
+            {run?.phase === "verifying" ? "Verifying…" : st === "REFUNDED" || run?.phase === "burned" ? "Deposit refunded" : st === "FORFEITED" ? "Deposit forfeited" : "Deorbit"}
           </Button>
           <Button variant="ghost" size="lg" onClick={() => app.set({ selectedId: null })}>
             Back to orbit <span className="mono ml-1 text-[10.5px] text-faint">Esc</span>

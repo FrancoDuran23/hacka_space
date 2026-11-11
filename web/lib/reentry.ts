@@ -1,15 +1,10 @@
 import "server-only";
 import { twoline2satrec, propagate } from "./sgp4";
-import { keccak256, toUtf8Bytes, getAddress, dataSlice } from "ethers";
+import { keccak256, toUtf8Bytes } from "ethers";
 import { EARTH_RADIUS_KM, perigeeApogeeKm } from "./orbit";
 
 const MU = 398600.4418;
 export const REENTRY_THRESHOLD_KM = 120;
-
-/** Same derivation as contracts/scripts/lib/addresses.ts (public placeholder, nobody holds its key). */
-export function cleanerAddress(name: string): string {
-  return getAddress(dataSlice(keccak256(toUtf8Bytes(`orbitclear:cleaner:${name}`)), 12));
-}
 
 function tleChecksum(line: string): number {
   let sum = 0;
@@ -21,7 +16,7 @@ function tleChecksum(line: string): number {
 }
 
 /**
- * Simulated tracking update after the cleaner's capture + deorbit burn:
+ * Simulated tracking update after the operator's deorbit burn:
  * same apogee, perigee pushed down to `targetPerigeeKm`. Returns a valid TLE line 2.
  */
 export function postBurnLine2(l2: string, apogeeKm: number, targetPerigeeKm: number): string {
@@ -46,7 +41,7 @@ export interface Verification {
 }
 
 /** Verifies with SGP4 that the (post-burn) tracked orbit dips below the reentry threshold. */
-export function verifyDeorbit(tle: [string, string], at = new Date()): Verification {
+export function verifyReentry(tle: [string, string], at = new Date()): Verification {
   const before = twoline2satrec(tle[0], tle[1]);
   const { perigee, apogee } = perigeeApogeeKm(before);
   const l2 = postBurnLine2(tle[1], apogee, 65);
