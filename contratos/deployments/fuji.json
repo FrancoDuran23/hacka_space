@@ -1,0 +1,20 @@
+{
+  "network": "fuji",
+  "chainId": 43113,
+  "mode": "mock",
+  "usdc": "0xD8A34cF239aD17d50a912044E38B15d08D5Befa9",
+  "escrow": "0xA5aeCF58Fac272e9E4CC5D473A2767C56019CbB2",
+  "relayer": "0xdE2d066e6f1831783C1aC43f865EdE88c0d7b9b0",
+  "fund": "0xdE2d066e6f1831783C1aC43f865EdE88c0d7b9b0",
+  "bandYears": [
+    5,
+    10,
+    25
+  ],
+  "bandAmounts": [
+    "100000000000",
+    "300000000000",
+    "800000000000"
+  ],
+  "deployedAt": "2026-11-11T17:51:51.918Z"
+}
