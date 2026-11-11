@@ -6,15 +6,15 @@ import { Trash2, Upload } from "lucide-react"
 import { type ChangeEvent, useRef, useState } from "react"
 import { toast } from "sonner"
 import { UserAvatar } from "@/components/auth/user/user-avatar"
-import { Button, buttonVariants } from "@/components/ui/button"
+import { Button, buttonVariants } from "@/components/cuenta-ui/button"
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger
-} from "@/components/ui/dropdown-menu"
-import { Field, FieldLabel } from "@/components/ui/field"
-import { Spinner } from "@/components/ui/spinner"
+} from "@/components/cuenta-ui/dropdown-menu"
+import { Field, FieldLabel } from "@/components/cuenta-ui/field"
+import { Spinner } from "@/components/cuenta-ui/spinner"
 import { cn } from "cn"
 
 export type ChangeAvatarProps = {

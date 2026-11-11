@@ -12,7 +12,7 @@ import {
 } from "lucide-react"
 import { isValidElement, type ReactElement, type ReactNode } from "react"
 
-import { buttonVariants } from "@/components/ui/button"
+import { buttonVariants } from "@/components/cuenta-ui/button"
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -21,7 +21,7 @@ import {
   DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger
-} from "@/components/ui/dropdown-menu"
+} from "@/components/cuenta-ui/dropdown-menu"
 import { cn } from "cn"
 import { UserAvatar } from "./user-avatar"
 import { UserView } from "./user-view"

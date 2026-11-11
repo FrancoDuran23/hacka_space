@@ -1,0 +1,30 @@
+{
+  "name": "orbitclear-contracts",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "OrbitClear escrow de garantia de desorbitado sobre Avalanche Fuji",
+  "scripts": {
+    "compile": "hardhat compile",
+    "test": "hardhat test",
+    "deploy:fuji": "hardhat run scripts/deploy.ts --network fuji",
+    "web:config": "hardhat run scripts/web-config.ts",
+    "typecheck": "hardhat build && tsc --noEmit"
+  },
+  "dependencies": {
+    "@openzeppelin/contracts": "5.6.1",
+    "ethers": "6.17.0"
+  },
+  "devDependencies": {
+    "@nomicfoundation/hardhat-toolbox-mocha-ethers": "4.0.0",
+    "@types/mocha": "10.0.10",
+    "@types/node": "22.20.5",
+    "hardhat": "3.21.2",
+    "typescript": "5.9.3"
+  },
+  "overrides": {
+    "zod": "4.6.7",
+    "glob": "14.0.4",
+    "minimatch": "11.0.5"
+  }
+}

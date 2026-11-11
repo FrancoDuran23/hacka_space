@@ -24,18 +24,18 @@ import {
 import { Eye, EyeOff } from "lucide-react"
 import { useState } from "react"
 import { toast } from "sonner"
-import { Button } from "@/components/ui/button"
-import { Card, CardContent, CardFooter } from "@/components/ui/card"
-import { Field, FieldError, FieldLabel } from "@/components/ui/field"
-import { Input } from "@/components/ui/input"
+import { Button } from "@/components/cuenta-ui/button"
+import { Card, CardContent, CardFooter } from "@/components/cuenta-ui/card"
+import { Field, FieldError, FieldLabel } from "@/components/cuenta-ui/field"
+import { Input } from "@/components/cuenta-ui/input"
 import {
   InputGroup,
   InputGroupAddon,
   InputGroupButton,
   InputGroupInput
-} from "@/components/ui/input-group"
-import { Skeleton } from "@/components/ui/skeleton"
-import { Spinner } from "@/components/ui/spinner"
+} from "@/components/cuenta-ui/input-group"
+import { Skeleton } from "@/components/cuenta-ui/skeleton"
+import { Spinner } from "@/components/cuenta-ui/spinner"
 import { cn } from "cn"
 import { isAuthFormFieldInvalid, useAuthForm } from "../../auth-form"
 import { OpenEmailButton } from "../../open-email-button"

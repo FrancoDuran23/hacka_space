@@ -9,14 +9,14 @@ import { useAuth } from "@better-auth-ui/react"
 import { CircleCheckIcon, CircleXIcon, TriangleAlertIcon } from "lucide-react"
 import { useEffect, useState } from "react"
 
-import { Button } from "@/components/ui/button"
+import { Button } from "@/components/cuenta-ui/button"
 import {
   Card,
   CardContent,
   CardDescription,
   CardHeader,
   CardTitle
-} from "@/components/ui/card"
+} from "@/components/cuenta-ui/card"
 import { cn } from "cn"
 
 type AuthResultProps = {

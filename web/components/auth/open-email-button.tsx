@@ -6,13 +6,13 @@ import type { VariantProps } from "class-variance-authority"
 import { QrCode } from "lucide-react"
 import { useMemo } from "react"
 
-import { buttonVariants } from "@/components/ui/button"
+import { buttonVariants } from "@/components/cuenta-ui/button"
 import {
   Tooltip,
   TooltipContent,
   TooltipProvider,
   TooltipTrigger
-} from "@/components/ui/tooltip"
+} from "@/components/cuenta-ui/tooltip"
 import { cn } from "cn"
 
 export type OpenEmailButtonProps = {

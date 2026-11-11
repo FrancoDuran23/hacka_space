@@ -20,7 +20,7 @@ import {
 import { useIsMutating } from "@tanstack/react-query"
 import { Eye, EyeOff } from "lucide-react"
 import { useMemo, useState } from "react"
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/cuenta-ui/card"
 import {
   Field,
   FieldDescription,
@@ -28,14 +28,14 @@ import {
   FieldGroup,
   FieldLabel,
   FieldSeparator
-} from "@/components/ui/field"
-import { Input } from "@/components/ui/input"
+} from "@/components/cuenta-ui/field"
+import { Input } from "@/components/cuenta-ui/input"
 import {
   InputGroup,
   InputGroupAddon,
   InputGroupButton,
   InputGroupInput
-} from "@/components/ui/input-group"
+} from "@/components/cuenta-ui/input-group"
 import { cn } from "cn"
 import {
   getAuthAdditionalFieldValidators,

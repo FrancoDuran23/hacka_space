@@ -3,25 +3,25 @@
 import { Check, Copy, ExternalLink, Trash2 } from "lucide-react";
 import { useActionState, useState, useTransition } from "react";
 
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/cuenta-ui/badge";
+import { Button } from "@/components/cuenta-ui/button";
 import {
   Card,
   CardAction,
   CardContent,
   CardHeader,
   CardTitle,
-} from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
+} from "@/components/cuenta-ui/card";
+import { Input } from "@/components/cuenta-ui/input";
+import { Label } from "@/components/cuenta-ui/label";
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/components/ui/select";
-import { Textarea } from "@/components/ui/textarea";
+} from "@/components/cuenta-ui/select";
+import { Textarea } from "@/components/cuenta-ui/textarea";
 import { explorerAddressUrl, explorerTxUrl } from "@/lib/chain";
 import {
   addContractAddress,

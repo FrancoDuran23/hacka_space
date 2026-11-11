@@ -15,6 +15,17 @@ const eslintConfig = defineConfig([
       "react-hooks/preserve-manual-memoization": "off",
     },
   },
+  {
+    // Consola 3D (react-three-fiber): muta objetos de three dentro de useFrame,
+    // patrón normal de r3f que las reglas del React Compiler marcan como error.
+    files: ["components/scene/**", "components/hud/**", "components/Console.tsx"],
+    rules: {
+      "react-hooks/immutability": "off",
+      "react-hooks/purity": "off",
+      "react-hooks/refs": "off",
+      "@typescript-eslint/no-empty-object-type": "off",
+    },
+  },
   // Override default ignores of eslint-config-next.
   globalIgnores([
     // Default ignores of eslint-config-next:

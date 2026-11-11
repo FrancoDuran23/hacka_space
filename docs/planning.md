@@ -139,7 +139,9 @@ Solo si sobra tiempo: gráfico de objetos por franja de altura y garantía varia
 
 Queda afuera: recomendaciones de trayectoria, pagos entre operadores por maniobras, recompensas a removedores, varias fuentes de datos.
 
-Entregables del track (viernes 13/11, 09:00): contrato desplegado con link al explorer, video de 1 a 3 minutos con una acción on-chain, deck de 5 a 7 slides con una de "por qué blockchain", y repo. [Sitio de ayuda del track](https://avalanche-track.vercel.app/)
+Entregables del track (viernes 13/11, 09:00 — tercera jornada): contrato desplegado en Fuji **o en una L1 del equipo**, con link al explorer; video de 1 a 3 minutos con una acción on-chain; deck de 5 a 7 slides con una de "por qué blockchain"; y repo o link del proyecto. Las dos redes son válidas. El track lo dice explícito: *"Un MVP que funciona le gana a algo ambicioso que no corre."* [Sitio del track](https://avalanche-track.vercel.app/), verificado el 11/11/2026.
+
+Estado del MVP al 11/11/2026: el escrow está implementado y desplegado en Fuji, en [`0xA5aeCF58Fac272e9E4CC5D473A2767C56019CbB2`](https://explorer-test.avax.network/c-chain/address/0xA5aeCF58Fac272e9E4CC5D473A2767C56019CbB2). Ver `contratos/README.md`.
 
 ## 12. Ideas que descartamos
 
@@ -150,5 +152,8 @@ Entregables del track (viernes 13/11, 09:00): contrato desplegado con link al ex
 ## 13. Pendientes de verificación
 
 - Cifras de los informes de la ESA tomadas de notas de prensa: confirmar en el informe original antes de ponerlas en una slide.
-- Bases y criterios oficiales del hackathon: no estaban publicados al cierre de este documento.
-- Campos del catálogo de CelesTrak y datos de Envisat.
+
+Resueltos el 11/11/2026:
+
+- **Bases del hackathon.** Verificadas en el sitio del track. El contrato puede desplegarse en Fuji o en una L1 propia. Cuatro entregables: contrato con link al explorer, video de 1 a 3 minutos con una acción on-chain, deck de 5 a 7 slides con una de "por qué blockchain", y repo.
+- **Catálogo de CelesTrak y datos de Envisat.** El reingreso se lee en `satcat/records.php`: `DECAY_DATE` con fecha y `OPS_STATUS_CODE` en `D`. El objeto además desaparece de `gp.php` con HTTP 404, que significa "posible reingreso" y nunca debe tratarse como error reintentable. Envisat es NORAD 27386, lanzado 2002-03-01, apogeo 762 km, sin `DECAY_DATE`.

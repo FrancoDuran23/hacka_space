@@ -1,0 +1,767 @@
+{
+  "snapshotAt": "2026-11-11T16:00:00.000Z",
+  "source": "CelesTrak GP (TLE) · escrows simulados para la demo",
+  "currency": "USD",
+  "fund": "Fondo de remoción",
+  "objects": [
+    {
+      "objectId": 22220,
+      "name": "SL-16 R/B",
+      "kind": "rocket-body",
+      "owner": "Roscosmos",
+      "country": "RU",
+      "massKg": 8300,
+      "tle": [
+        "1 22220U 92076B   26315.30012318 -.00000176  00000+0 -63631-4 0  9995",
+        "2 22220  71.0020  28.8797 0010438  75.9405 352.1314 14.16888711756762"
+      ],
+      "band": 1,
+      "createdAt": "2026-10-15T12:20:24.581Z",
+      "deadline": "2026-11-15T06:33:05.715Z",
+      "status": "ACTIVE",
+      "deposit": 300000,
+      "netBalance": 166138,
+      "riskPerDay": 4930,
+      "settledAt": null,
+      "history": [
+        {
+          "type": "REGISTERED",
+          "at": "2026-10-15T12:20:24.581Z",
+          "amount": 300000,
+          "by": "Roscosmos",
+          "txHash": "0x846a15b4bce9165324750225f4164e8ff05e233e179e66eedb6f7396b5064cc9"
+        }
+      ]
+    },
+    {
+      "objectId": 22566,
+      "name": "SL-16 R/B",
+      "kind": "rocket-body",
+      "owner": "Roscosmos",
+      "country": "RU",
+      "massKg": 8300,
+      "tle": [
+        "1 22566U 93016B   26315.30042183 -.00000125  00000+0 -39789-4 0  9997",
+        "2 22566  71.0091  57.2176 0012440 301.4149  58.5757 14.15331152737068"
+      ],
+      "band": 1,
+      "createdAt": "2026-10-24T12:49:51.315Z",
+      "deadline": "2026-11-11T23:47:06.271Z",
+      "status": "EXPIRING",
+      "deposit": 300000,
+      "netBalance": 247598,
+      "riskPerDay": 2890,
+      "settledAt": null,
+      "history": [
+        {
+          "type": "REGISTERED",
+          "at": "2026-10-24T12:49:51.315Z",
+          "amount": 300000,
+          "by": "Roscosmos",
+          "txHash": "0xe6deeeef46485ddab5e75198f7796b5db34a704f4338d16122d365dffa504e8f"
+        }
+      ]
+    },
+    {
+      "objectId": 23088,
+      "name": "SL-16 R/B",
+      "kind": "rocket-body",
+      "owner": "Roscosmos",
+      "country": "RU",
+      "massKg": 8300,
+      "tle": [
+        "1 23088U 94023B   26315.28577299  .00000307  00000+0  18326-3 0  9997",
+        "2 23088  70.9993 273.0012 0005486 276.6960  83.3538 14.15036337680977"
+      ],
+      "band": 1,
+      "createdAt": "2026-10-31T04:51:32.120Z",
+      "deadline": "2026-12-02T18:28:38.119Z",
+      "status": "REFUNDED",
+      "deposit": 300000,
+      "netBalance": 281193,
+      "riskPerDay": 3240,
+      "settledAt": "2026-11-06T00:09:59.864Z",
+      "history": [
+        {
+          "type": "REGISTERED",
+          "at": "2026-10-31T04:51:32.120Z",
+          "amount": 300000,
+          "by": "Roscosmos",
+          "txHash": "0xa6e1baf9fec08a131b7888a3346dad07c88ae1e18b73c269fe98510da5b070a5"
+        },
+        {
+          "type": "REFUNDED",
+          "at": "2026-11-06T00:09:59.864Z",
+          "amount": 300000,
+          "by": "Roscosmos",
+          "txHash": "0xfba9c7b411ef902bb2d8489eb4f7c0cc96d228ebbb02df034753ae981a21f36e"
+        }
+      ]
+    },
+    {
+      "objectId": 24298,
+      "name": "SL-16 R/B",
+      "kind": "rocket-body",
+      "owner": "Roscosmos",
+      "country": "RU",
+      "massKg": 8300,
+      "tle": [
+        "1 24298U 96051B   26315.40430911  .00000155  00000+0  11019-3 0  9990",
+        "2 24298  70.7739  13.1426 0014781 144.3178 215.8933 14.12499333556484"
+      ],
+      "band": 1,
+      "createdAt": "2026-10-30T20:34:55.150Z",
+      "deadline": "2026-11-13T18:31:36.050Z",
+      "status": "ACTIVE",
+      "deposit": 300000,
+      "netBalance": 271304,
+      "riskPerDay": 2430,
+      "settledAt": null,
+      "history": [
+        {
+          "type": "REGISTERED",
+          "at": "2026-10-30T20:34:55.150Z",
+          "amount": 300000,
+          "by": "Roscosmos",
+          "txHash": "0x786b07af1729661a862214667af4fac480ef2a834b7b8ad2d02d79239d7fb950"
+        }
+      ]
+    },
+    {
+      "objectId": 25407,
+      "name": "SL-16 R/B",
+      "kind": "rocket-body",
+      "owner": "Roscosmos",
+      "country": "RU",
+      "massKg": 8300,
+      "tle": [
+        "1 25407U 98045B   26315.29193075  .00000208  00000+0  12896-3 0  9995",
+        "2 25407  71.0132  22.9626 0007511 351.3182   8.7810 14.16219195462014"
+      ],
+      "band": 1,
+      "createdAt": "2026-10-11T21:21:04.940Z",
+      "deadline": "2026-11-07T19:59:52.442Z",
+      "status": "FORFEITED",
+      "deposit": 300000,
+      "netBalance": 217210,
+      "riskPerDay": 2690,
+      "settledAt": "2026-11-08T02:17:45.141Z",
+      "history": [
+        {
+          "type": "REGISTERED",
+          "at": "2026-10-11T21:21:04.940Z",
+          "amount": 300000,
+          "by": "Roscosmos",
+          "txHash": "0x504119917006e705e047ad8baef49465ada9bcdf25517b0e34cfb25ca05c7681"
+        },
+        {
+          "type": "FORFEITED",
+          "at": "2026-11-08T02:17:45.141Z",
+          "amount": 300000,
+          "by": "Fondo de remoción",
+          "txHash": "0x61ad97dbe1e8026e7178bcd22b3c4643f6e2b32df04018f7ddd2a0fce8feee8c"
+        }
+      ]
+    },
+    {
+      "objectId": 27006,
+      "name": "SL-16 R/B",
+      "kind": "rocket-body",
+      "owner": "Roscosmos",
+      "country": "RU",
+      "massKg": 8300,
+      "tle": [
+        "1 27006U 01056F   26315.32798045 -.00000046  00000+0  33152-6 0  9992",
+        "2 27006  99.7908 125.5838 0015266  75.1999 348.4675 13.71098136246997"
+      ],
+      "band": 2,
+      "createdAt": "2026-10-21T07:03:48.383Z",
+      "deadline": "2026-11-18T11:33:33.400Z",
+      "status": "ACTIVE",
+      "deposit": 800000,
+      "netBalance": 690574,
+      "riskPerDay": 5120,
+      "settledAt": null,
+      "history": [
+        {
+          "type": "REGISTERED",
+          "at": "2026-10-21T07:03:48.383Z",
+          "amount": 800000,
+          "by": "Roscosmos",
+          "txHash": "0xd9216f893767c98873530c42476d4ff6f73d9e85121c2d892cf12c05be49f98a"
+        }
+      ]
+    },
+    {
+      "objectId": 31792,
+      "name": "COSMOS 2428",
+      "kind": "satellite",
+      "owner": "VKS · RU MoD",
+      "country": "RU",
+      "massKg": 1750,
+      "tle": [
+        "1 31792U 07029A   26315.32524848 -.00000293  00000+0 -13112-3 0  9999",
+        "2 31792  70.9414  45.5912 0012475 255.5954 104.3783 14.12961675998935"
+      ],
+      "band": 1,
+      "createdAt": "2026-10-20T09:14:25.785Z",
+      "deadline": "2026-11-11T21:07:43.388Z",
+      "status": "EXPIRING",
+      "deposit": 300000,
+      "netBalance": 260784,
+      "riskPerDay": 1760,
+      "settledAt": null,
+      "history": [
+        {
+          "type": "REGISTERED",
+          "at": "2026-10-20T09:14:25.785Z",
+          "amount": 300000,
+          "by": "VKS · RU MoD",
+          "txHash": "0x439d8b2483f5fa8f83d4178773f594992b8f9aa5a139e78baab4d9950fab9248"
+        }
+      ]
+    },
+    {
+      "objectId": 26070,
+      "name": "SL-16 R/B",
+      "kind": "rocket-body",
+      "owner": "Roscosmos",
+      "country": "RU",
+      "massKg": 8300,
+      "tle": [
+        "1 26070U 00006B   26315.30049509 -.00000016  00000+0  16033-4 0  9992",
+        "2 26070  71.0015 299.2884 0016183 174.3104 185.8206 14.15848996383461"
+      ],
+      "band": 1,
+      "createdAt": "2026-10-05T11:31:38.508Z",
+      "deadline": "2026-11-19T03:06:49.526Z",
+      "status": "ACTIVE",
+      "deposit": 300000,
+      "netBalance": 150511,
+      "riskPerDay": 4020,
+      "settledAt": null,
+      "history": [
+        {
+          "type": "REGISTERED",
+          "at": "2026-10-05T11:31:38.508Z",
+          "amount": 300000,
+          "by": "Roscosmos",
+          "txHash": "0xfb16b81b7e2cd3465d9b141930cf55535e46f9b9a9e6f047d904d644b9880c71"
+        }
+      ]
+    },
+    {
+      "objectId": 16182,
+      "name": "SL-16 R/B",
+      "kind": "rocket-body",
+      "owner": "Roscosmos",
+      "country": "RU",
+      "massKg": 8300,
+      "tle": [
+        "1 16182U 85097B   26315.35766355  .00000132  00000+0  90083-4 0  9993",
+        "2 16182  71.0032 341.2363 0009664 247.4647 203.4472 14.16624421122169"
+      ],
+      "band": 1,
+      "createdAt": "2026-09-27T05:16:03.478Z",
+      "deadline": "2026-11-24T15:54:37.411Z",
+      "status": "REFUNDED",
+      "deposit": 300000,
+      "netBalance": 89856,
+      "riskPerDay": 4810,
+      "settledAt": "2026-11-09T21:48:18.182Z",
+      "history": [
+        {
+          "type": "REGISTERED",
+          "at": "2026-09-27T05:16:03.478Z",
+          "amount": 300000,
+          "by": "Roscosmos",
+          "txHash": "0x35327f321b095b9e06dfcbad7b075e9a27f1f81a08bc1b82fe6bca84c9af8942"
+        },
+        {
+          "type": "REFUNDED",
+          "at": "2026-11-09T21:48:18.182Z",
+          "amount": 300000,
+          "by": "Roscosmos",
+          "txHash": "0xf7aecc7ddbcbe9deb70bb02189579a0578e15fb704cbda7dc719166246ca6acb"
+        }
+      ]
+    },
+    {
+      "objectId": 23405,
+      "name": "SL-16 R/B",
+      "kind": "rocket-body",
+      "owner": "Roscosmos",
+      "country": "RU",
+      "massKg": 8300,
+      "tle": [
+        "1 23405U 94077B   26315.10070248 -.00000204  00000+0 -79587-4 0  9997",
+        "2 23405  70.9826 194.0729 0002522 208.7373 151.3611 14.15586774651100"
+      ],
+      "band": 1,
+      "createdAt": "2026-10-24T04:25:02.699Z",
+      "deadline": "2026-11-08T21:03:28.804Z",
+      "status": "FORFEITED",
+      "deposit": 300000,
+      "netBalance": 237898,
+      "riskPerDay": 3360,
+      "settledAt": "2026-11-09T05:09:15.718Z",
+      "history": [
+        {
+          "type": "REGISTERED",
+          "at": "2026-10-24T04:25:02.699Z",
+          "amount": 300000,
+          "by": "Roscosmos",
+          "txHash": "0x6995e5c07a327e9444889a48c437264d31a0a47d2e322d028d73109ddec70f46"
+        },
+        {
+          "type": "FORFEITED",
+          "at": "2026-11-09T05:09:15.718Z",
+          "amount": 300000,
+          "by": "Fondo de remoción",
+          "txHash": "0x7a3fa0ca1e4edc58ee1b3aebdc9ae367a6177f48597ed47d1396038ee28e136b"
+        }
+      ]
+    },
+    {
+      "objectId": 22803,
+      "name": "SL-16 R/B",
+      "kind": "rocket-body",
+      "owner": "Roscosmos",
+      "country": "RU",
+      "massKg": 8300,
+      "tle": [
+        "1 22803U 93059B   26315.15508850 -.00000102  00000+0 -26479-4 0  9996",
+        "2 22803  70.9906 211.3611 0017856 202.1449 157.8906 14.17264711714453"
+      ],
+      "band": 1,
+      "createdAt": "2026-10-25T02:29:27.091Z",
+      "deadline": "2026-11-17T02:54:03.159Z",
+      "status": "ACTIVE",
+      "deposit": 300000,
+      "netBalance": 249946,
+      "riskPerDay": 2850,
+      "settledAt": null,
+      "history": [
+        {
+          "type": "REGISTERED",
+          "at": "2026-10-25T02:29:27.091Z",
+          "amount": 300000,
+          "by": "Roscosmos",
+          "txHash": "0x4fde011233fd7122c058bb4373aa47547342e54e0de458a0fc57650e327e2d28"
+        }
+      ]
+    },
+    {
+      "objectId": 28353,
+      "name": "SL-16 R/B",
+      "kind": "rocket-body",
+      "owner": "Roscosmos",
+      "country": "RU",
+      "massKg": 8300,
+      "tle": [
+        "1 28353U 04021B   26315.02926263  .00000163  00000+0  10945-3 0  9996",
+        "2 28353  70.9998  75.5161 0004547   0.2173 359.8950 14.14619453157676"
+      ],
+      "band": 1,
+      "createdAt": "2026-10-07T15:30:41.905Z",
+      "deadline": "2026-11-12T01:21:53.472Z",
+      "status": "EXPIRING",
+      "deposit": 300000,
+      "netBalance": 192137,
+      "riskPerDay": 3080,
+      "settledAt": null,
+      "history": [
+        {
+          "type": "REGISTERED",
+          "at": "2026-10-07T15:30:41.905Z",
+          "amount": 300000,
+          "by": "Roscosmos",
+          "txHash": "0xeb87fb367bea16af7e98c38f157a72666b1a6940ece0d1105cb8064460f08aaa"
+        }
+      ]
+    },
+    {
+      "objectId": 27601,
+      "name": "H-2A R/B",
+      "kind": "rocket-body",
+      "owner": "JAXA",
+      "country": "JP",
+      "massKg": 3000,
+      "tle": [
+        "1 27601U 02056E   26315.33356170  .00000217  00000+0  90366-4 0  9991",
+        "2 27601  98.3530 266.7860 0070633 146.1427 332.8289 14.33887177249453"
+      ],
+      "band": 1,
+      "createdAt": "2026-10-11T22:47:59.691Z",
+      "deadline": "2026-11-19T02:34:55.064Z",
+      "status": "ACTIVE",
+      "deposit": 300000,
+      "netBalance": 202935,
+      "riskPerDay": 3160,
+      "settledAt": null,
+      "history": [
+        {
+          "type": "REGISTERED",
+          "at": "2026-10-11T22:47:59.691Z",
+          "amount": 300000,
+          "by": "JAXA",
+          "txHash": "0xbbb5480e5a3b6ee9019d8000f22ff84ea2ea8ac3741070c24ed2c9862fa6473b"
+        }
+      ]
+    },
+    {
+      "objectId": 27386,
+      "name": "ENVISAT",
+      "kind": "satellite",
+      "owner": "ESA",
+      "country": "EU",
+      "massKg": 8211,
+      "tle": [
+        "1 27386U 02009A   26315.31503427  .00000101  00000+0  46582-4 0  9999",
+        "2 27386  98.4038 263.4783 0001280  81.8619  40.2685 14.39093930294648"
+      ],
+      "band": 1,
+      "createdAt": "2026-09-26T18:54:24.064Z",
+      "deadline": "2026-11-09T19:24:28.518Z",
+      "status": "FORFEITED",
+      "deposit": 300000,
+      "netBalance": 137589,
+      "riskPerDay": 3540,
+      "settledAt": "2026-11-10T03:16:06.795Z",
+      "history": [
+        {
+          "type": "REGISTERED",
+          "at": "2026-09-26T18:54:24.064Z",
+          "amount": 300000,
+          "by": "ESA",
+          "txHash": "0x20355a85accc7f1629e6a39e49bcfcec1b226b6749915ca425d300974e31be6d"
+        },
+        {
+          "type": "FORFEITED",
+          "at": "2026-11-10T03:16:06.795Z",
+          "amount": 300000,
+          "by": "Fondo de remoción",
+          "txHash": "0x2dff420bdf56b0cd76b07ebea078f603359c99e03cef6e9a57f8ff1a7ffc5b1e"
+        }
+      ]
+    },
+    {
+      "objectId": 10967,
+      "name": "SEASAT 1",
+      "kind": "satellite",
+      "owner": "NASA",
+      "country": "US",
+      "massKg": 2290,
+      "tle": [
+        "1 10967U 78064A   26314.87232499  .00000369  00000+0  14107-3 0  9991",
+        "2 10967 108.0159 282.1744 0002627 272.2122  87.8723 14.46327081542105"
+      ],
+      "band": 1,
+      "createdAt": "2026-09-30T19:33:24.839Z",
+      "deadline": "2026-11-19T14:56:32.915Z",
+      "status": "REFUNDED",
+      "deposit": 300000,
+      "netBalance": 160730,
+      "riskPerDay": 3450,
+      "settledAt": "2026-11-10T04:23:22.035Z",
+      "history": [
+        {
+          "type": "REGISTERED",
+          "at": "2026-09-30T19:33:24.839Z",
+          "amount": 300000,
+          "by": "NASA",
+          "txHash": "0xb90b29d499fcab10a1a1c8f01fd078d3484808e683865c3ea1eb0e1237299249"
+        },
+        {
+          "type": "REFUNDED",
+          "at": "2026-11-10T04:23:22.035Z",
+          "amount": 300000,
+          "by": "NASA",
+          "txHash": "0x33a977daf489bf8fad26b11de046725f0d14c5454568b5533d7c9a5581ad4280"
+        }
+      ]
+    },
+    {
+      "objectId": 25730,
+      "name": "FENGYUN 1C",
+      "kind": "satellite",
+      "owner": "CMA",
+      "country": "CN",
+      "massKg": 880,
+      "tle": [
+        "1 25730U 99025A   26315.17720479  .00002682  00000+0  11106-2 0  9994",
+        "2 25730  98.8535  30.6009 0013704 190.0355 170.0554 14.27416811418924"
+      ],
+      "band": 1,
+      "createdAt": "2026-10-22T14:01:32.592Z",
+      "deadline": "2026-11-19T07:11:04.153Z",
+      "status": "ACTIVE",
+      "deposit": 300000,
+      "netBalance": 245376,
+      "riskPerDay": 2720,
+      "settledAt": null,
+      "history": [
+        {
+          "type": "REGISTERED",
+          "at": "2026-10-22T14:01:32.592Z",
+          "amount": 300000,
+          "by": "CMA",
+          "txHash": "0x51af0b89ff5d9e14a3d803e97f4634509d351de3930b426325c3742aa40b0af3"
+        }
+      ]
+    },
+    {
+      "objectId": 29733,
+      "name": "FENGYUN 1C DEB",
+      "kind": "fragment",
+      "owner": "CMA",
+      "country": "CN",
+      "massKg": 3,
+      "tle": [
+        "1 29733U 99025X   26314.98945454  .00000527  00000+0  92583-3 0  9996",
+        "2 29733  99.2001 325.2145 0565592 152.1335 243.4561 12.96986327934397"
+      ],
+      "band": 2,
+      "createdAt": "2026-10-23T16:21:39.289Z",
+      "deadline": "2026-11-12T10:35:32.734Z",
+      "status": "EXPIRING",
+      "deposit": 800000,
+      "netBalance": 787660,
+      "riskPerDay": 650,
+      "settledAt": null,
+      "history": [
+        {
+          "type": "REGISTERED",
+          "at": "2026-10-23T16:21:39.289Z",
+          "amount": 800000,
+          "by": "CMA",
+          "txHash": "0x8435c3802b43b0180ae27b8b3c48bf3cbaa2d03448478192a438ffb6da5d4d02"
+        }
+      ]
+    },
+    {
+      "objectId": 29734,
+      "name": "FENGYUN 1C DEB",
+      "kind": "fragment",
+      "owner": "CMA",
+      "country": "CN",
+      "massKg": 3,
+      "tle": [
+        "1 29734U 99025Y   26314.90853191  .00002604  00000+0  41551-2 0  9991",
+        "2 29734  99.1635 195.5100 0615640 327.3524  88.5585 12.92361916928502"
+      ],
+      "band": 2,
+      "createdAt": "2026-10-24T17:34:55.556Z",
+      "deadline": "2026-11-08T18:30:03.097Z",
+      "status": "FORFEITED",
+      "deposit": 800000,
+      "netBalance": 779555,
+      "riskPerDay": 1140,
+      "settledAt": "2026-11-08T20:33:01.098Z",
+      "history": [
+        {
+          "type": "REGISTERED",
+          "at": "2026-10-24T17:34:55.556Z",
+          "amount": 800000,
+          "by": "CMA",
+          "txHash": "0x881ca8c4434bee505e8634a422e4b301ffdbb7a411ddbf97c710edde7ed1bd12"
+        },
+        {
+          "type": "FORFEITED",
+          "at": "2026-11-08T20:33:01.098Z",
+          "amount": 800000,
+          "by": "Fondo de remoción",
+          "txHash": "0x6e3369da6728549251c65aab21d6a9dd09f4440dff0b618a9d6c2b915ffb786d"
+        }
+      ]
+    },
+    {
+      "objectId": 22675,
+      "name": "COSMOS 2251",
+      "kind": "satellite",
+      "owner": "VKS · RU MoD",
+      "country": "RU",
+      "massKg": 900,
+      "tle": [
+        "1 22675U 93036A   26315.31721890  .00000081  00000+0  38849-4 0  9995",
+        "2 22675  74.0399  66.3625 0023748  68.6819 291.6864 14.33278270745522"
+      ],
+      "band": 1,
+      "createdAt": "2026-10-10T18:20:16.045Z",
+      "deadline": "2026-11-18T11:51:33.405Z",
+      "status": "ACTIVE",
+      "deposit": 300000,
+      "netBalance": 198231,
+      "riskPerDay": 3190,
+      "settledAt": null,
+      "history": [
+        {
+          "type": "REGISTERED",
+          "at": "2026-10-10T18:20:16.045Z",
+          "amount": 300000,
+          "by": "VKS · RU MoD",
+          "txHash": "0x5578300967189a055c7d6b702db96db51b63a543e26c3dfd60bd64f77571777b"
+        }
+      ]
+    },
+    {
+      "objectId": 33757,
+      "name": "COSMOS 2251 DEB",
+      "kind": "fragment",
+      "owner": "VKS · RU MoD",
+      "country": "RU",
+      "massKg": 3,
+      "tle": [
+        "1 33757U 93036E   26315.07073374  .00000069  00000+0  34788-4 0  9992",
+        "2 33757  74.0368  75.0708 0014633   7.5192 165.8302 14.32645628927692"
+      ],
+      "band": 1,
+      "createdAt": "2026-09-25T14:56:12.809Z",
+      "deadline": "2026-11-15T20:19:17.080Z",
+      "status": "ACTIVE",
+      "deposit": 300000,
+      "netBalance": 254367,
+      "riskPerDay": 970,
+      "settledAt": null,
+      "history": [
+        {
+          "type": "REGISTERED",
+          "at": "2026-09-25T14:56:12.809Z",
+          "amount": 300000,
+          "by": "VKS · RU MoD",
+          "txHash": "0x634584b71cad5957c781411473988e2f3c21f1a26f66f0639fec72eb1cfd7d2e"
+        }
+      ]
+    },
+    {
+      "objectId": 33758,
+      "name": "COSMOS 2251 DEB",
+      "kind": "fragment",
+      "owner": "VKS · RU MoD",
+      "country": "RU",
+      "massKg": 3,
+      "tle": [
+        "1 33758U 93036F   26315.35275556  .00003068  00000+0  74209-3 0  9993",
+        "2 33758  74.0272 305.5499 0018712 290.7821 136.7916 14.53402156931493"
+      ],
+      "band": 1,
+      "createdAt": "2026-10-17T21:37:44.467Z",
+      "deadline": "2026-11-21T00:03:17.513Z",
+      "status": "REFUNDED",
+      "deposit": 300000,
+      "netBalance": 285893,
+      "riskPerDay": 750,
+      "settledAt": "2026-11-05T17:03:28.469Z",
+      "history": [
+        {
+          "type": "REGISTERED",
+          "at": "2026-10-17T21:37:44.467Z",
+          "amount": 300000,
+          "by": "VKS · RU MoD",
+          "txHash": "0x4c55a4b7c04dce0294028844d7ec4059e60465827c8d26f7158cd631e1f51b3a"
+        },
+        {
+          "type": "REFUNDED",
+          "at": "2026-11-05T17:03:28.469Z",
+          "amount": 300000,
+          "by": "VKS · RU MoD",
+          "txHash": "0xd9806fe9268ffe5c828abb04f6e8a6054dabed3729d9a90e1f2a1462e4988a1b"
+        }
+      ]
+    },
+    {
+      "objectId": 24946,
+      "name": "IRIDIUM 33",
+      "kind": "satellite",
+      "owner": "Iridium",
+      "country": "US",
+      "massKg": 556,
+      "tle": [
+        "1 24946U 97051C   26315.33620315  .00000248  00000+0  80050-4 0  9997",
+        "2 24946  86.3831 288.1784 0007154 189.6808 170.4251 14.35195720526191"
+      ],
+      "band": 1,
+      "createdAt": "2026-10-22T05:59:30.994Z",
+      "deadline": "2026-11-12T04:09:41.240Z",
+      "status": "EXPIRING",
+      "deposit": 300000,
+      "netBalance": 249366,
+      "riskPerDay": 2480,
+      "settledAt": null,
+      "history": [
+        {
+          "type": "REGISTERED",
+          "at": "2026-10-22T05:59:30.994Z",
+          "amount": 300000,
+          "by": "Iridium",
+          "txHash": "0x67cf8b33e6d20dad80eb52d299d8f942f274b7490af7d830ea0b971d1953e577"
+        }
+      ]
+    },
+    {
+      "objectId": 33773,
+      "name": "IRIDIUM 33 DEB",
+      "kind": "fragment",
+      "owner": "Iridium",
+      "country": "US",
+      "massKg": 3,
+      "tle": [
+        "1 33773U 97051L   26315.33164683  .00000983  00000+0  28279-3 0  9996",
+        "2 33773  86.3972 279.1587 0012835 122.0439 238.2011 14.43830357931603"
+      ],
+      "band": 1,
+      "createdAt": "2026-09-30T01:07:26.923Z",
+      "deadline": "2026-11-16T00:08:38.644Z",
+      "status": "ACTIVE",
+      "deposit": 300000,
+      "netBalance": 260790,
+      "riskPerDay": 920,
+      "settledAt": null,
+      "history": [
+        {
+          "type": "REGISTERED",
+          "at": "2026-09-30T01:07:26.923Z",
+          "amount": 300000,
+          "by": "Iridium",
+          "txHash": "0xd8c94b639a01defd522ba7314ff28413d534da6713faec3c3a005583788787ae"
+        }
+      ]
+    },
+    {
+      "objectId": 33775,
+      "name": "IRIDIUM 33 DEB",
+      "kind": "fragment",
+      "owner": "Iridium",
+      "country": "US",
+      "massKg": 3,
+      "tle": [
+        "1 33775U 97051N   26315.14568470  .00001082  00000+0  32172-3 0  9997",
+        "2 33775  86.3603 267.0938 0013891 132.7234 240.1104 14.42277005929455"
+      ],
+      "band": 1,
+      "createdAt": "2026-10-05T21:27:18.378Z",
+      "deadline": "2026-11-08T11:51:26.961Z",
+      "status": "FORFEITED",
+      "deposit": 300000,
+      "netBalance": 253666,
+      "riskPerDay": 1260,
+      "settledAt": "2026-11-08T16:36:45.380Z",
+      "history": [
+        {
+          "type": "REGISTERED",
+          "at": "2026-10-05T21:27:18.378Z",
+          "amount": 300000,
+          "by": "Iridium",
+          "txHash": "0xeac57ac389efb1481ff5da715548d26ff0d23780f0e4c24490c2435a8def0758"
+        },
+        {
+          "type": "FORFEITED",
+          "at": "2026-11-08T16:36:45.380Z",
+          "amount": 300000,
+          "by": "Fondo de remoción",
+          "txHash": "0x4e38778a11d5bd4d04f72d026cf9f212b7bb511de162e648acfb57139f1b974a"
+        }
+      ]
+    }
+  ]
+}

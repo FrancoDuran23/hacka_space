@@ -20,8 +20,8 @@ import {
 import { useIsMutating } from "@tanstack/react-query"
 import type { ComponentProps } from "react"
 
-import { Button } from "@/components/ui/button"
-import { Spinner } from "@/components/ui/spinner"
+import { Button } from "@/components/cuenta-ui/button"
+import { Spinner } from "@/components/cuenta-ui/spinner"
 import { cn } from "cn"
 import { LastUsedBadge } from "./last-login-method/last-used-badge"
 

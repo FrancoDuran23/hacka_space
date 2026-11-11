@@ -3,9 +3,9 @@
 import { useState, useSyncExternalStore } from "react";
 import { BrowserProvider, type Eip1193Provider } from "ethers";
 
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
+import { Button } from "@/components/cuenta-ui/button";
+import { Input } from "@/components/cuenta-ui/input";
+import { Label } from "@/components/cuenta-ui/label";
 import { FUJI, FUJI_CHAIN_ID } from "@/lib/chain";
 import { createWalletChallenge, verifyAndLinkWallet } from "@/lib/wallets/actions";
 

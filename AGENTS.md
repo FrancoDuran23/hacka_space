@@ -28,18 +28,9 @@ Orden: `idea/*` → `avalanche` + `hardhat` → `geoespacial` → `ethers` + `wa
 
 Lo que salga de las skills `idea/*` (problemas candidatos, veredictos, modelo de negocio) se guarda en el segundo cerebro con `skills/segundo-cerebro/SKILL.md`, como cualquier otro aporte.
 
-## App web (web/)
+## Estructura y verificación
 
-La app Next.js vive en `web/` (login Neon Auth + Drizzle; setup en `web/README.md`). Comandos, siempre desde `web/`:
-
-```bash
-cd web
-npm run dev          # dev server
-npm run typecheck    # tsc --noEmit
-npm run lint         # eslint
-npm run build        # build de producción (requiere las env de .env.example)
-npm run db:generate  # drizzle-kit generate → web/drizzle/
-npm run db:migrate   # drizzle-kit migrate contra DATABASE_URL
-```
-
-Las variables de entorno están documentadas en `web/.env.example`.
+- `contratos/`: el único contrato es `OrbitClearEscrow` (garantía de desorbitado del operador), desplegado en Fuji (ver `contratos/README.md`). Verificar con `npm test` y `npm run typecheck`. `npm run web:config` regenera `web/lib/contract.json`.
+- `web/`: una sola app Next.js con dos root layouts. `app/(console)/` es la consola que lee ese contrato (`npm run dev:demo` corre sin blockchain). `app/(cuenta)/` es el login con Neon Auth y la cuenta (wallets verificadas y registro de contratos, persistidos en Neon con Drizzle); setup en `web/README.md`, variables en `web/.env.example`.
+- Verificar `web/` con `npm run typecheck`, `npm run lint` y `npm run build`. Base de datos: `npm run db:generate` (genera en `web/drizzle/`) y `npm run db:migrate` (aplica contra `DATABASE_URL`).
+- El RPC público de Fuji rechaza `eth_getLogs` en batch y corta ráfagas con 429: nada de scans en paralelo.

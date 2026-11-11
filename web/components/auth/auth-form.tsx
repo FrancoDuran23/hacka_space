@@ -21,15 +21,15 @@ import {
   useRef
 } from "react"
 
-import { Button } from "@/components/ui/button"
+import { Button } from "@/components/cuenta-ui/button"
 import {
   Field,
   FieldDescription,
   FieldError,
   FieldLabel
-} from "@/components/ui/field"
-import { Input } from "@/components/ui/input"
-import { Spinner } from "@/components/ui/spinner"
+} from "@/components/cuenta-ui/field"
+import { Input } from "@/components/cuenta-ui/input"
+import { Spinner } from "@/components/cuenta-ui/spinner"
 import { AdditionalField, type AdditionalFieldProps } from "./additional-field"
 
 const { fieldContext, formContext, useFieldContext, useFormContext } =

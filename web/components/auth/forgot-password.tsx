@@ -8,14 +8,14 @@ import {
 } from "@better-auth-ui/react"
 import { useId } from "react"
 
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/cuenta-ui/card"
 import {
   Field,
   FieldDescription,
   FieldGroup,
   FieldLabel
-} from "@/components/ui/field"
-import { Input } from "@/components/ui/input"
+} from "@/components/cuenta-ui/field"
+import { Input } from "@/components/cuenta-ui/input"
 import { cn } from "cn"
 import { isAuthFormFieldInvalid, useAuthForm } from "./auth-form"
 import { RESET_LINK_SENT_STORAGE_KEY } from "./reset-link-sent"

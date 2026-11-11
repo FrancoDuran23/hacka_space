@@ -20,13 +20,13 @@ import type { Account } from "better-auth"
 import { Link2, Link2Off, Plug } from "lucide-react"
 import { toast } from "sonner"
 
-import { Button } from "@/components/ui/button"
+import { Button } from "@/components/cuenta-ui/button"
 import {
   Dialog,
   DialogContent,
   DialogHeader,
   DialogTitle
-} from "@/components/ui/dialog"
+} from "@/components/cuenta-ui/dialog"
 import {
   Item,
   ItemActions,
@@ -34,9 +34,9 @@ import {
   ItemDescription,
   ItemMedia,
   ItemTitle
-} from "@/components/ui/item"
-import { Skeleton } from "@/components/ui/skeleton"
-import { Spinner } from "@/components/ui/spinner"
+} from "@/components/cuenta-ui/item"
+import { Skeleton } from "@/components/cuenta-ui/skeleton"
+import { Spinner } from "@/components/cuenta-ui/spinner"
 import { cn } from "cn"
 import { ReauthenticationAction } from "../../reauthentication"
 

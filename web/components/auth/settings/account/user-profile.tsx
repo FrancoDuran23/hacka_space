@@ -11,10 +11,10 @@ import { useAuth, useSession, useUpdateUser } from "@better-auth-ui/react"
 import { useEffect, useMemo } from "react"
 import { toast } from "sonner"
 
-import { Card, CardContent, CardFooter } from "@/components/ui/card"
-import { Field, FieldLabel } from "@/components/ui/field"
-import { Input } from "@/components/ui/input"
-import { Skeleton } from "@/components/ui/skeleton"
+import { Card, CardContent, CardFooter } from "@/components/cuenta-ui/card"
+import { Field, FieldLabel } from "@/components/cuenta-ui/field"
+import { Input } from "@/components/cuenta-ui/input"
+import { Skeleton } from "@/components/cuenta-ui/skeleton"
 import { cn } from "cn"
 import {
   getAuthAdditionalFieldValidators,

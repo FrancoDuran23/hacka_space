@@ -6,15 +6,15 @@ import {
 } from "@better-auth-ui/core"
 import { useAuth, useListSessions, useSession } from "@better-auth-ui/react"
 import { Fragment } from "react"
-import { Card, CardContent } from "@/components/ui/card"
+import { Card, CardContent } from "@/components/cuenta-ui/card"
 import {
   Item,
   ItemContent,
   ItemGroup,
   ItemMedia,
   ItemSeparator
-} from "@/components/ui/item"
-import { Skeleton } from "@/components/ui/skeleton"
+} from "@/components/cuenta-ui/item"
+import { Skeleton } from "@/components/cuenta-ui/skeleton"
 import { cn } from "cn"
 import { ReauthenticationAction } from "../../reauthentication"
 import { ActiveSession } from "./active-session"

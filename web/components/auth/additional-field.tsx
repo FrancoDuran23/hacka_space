@@ -12,9 +12,9 @@ import { CalendarIcon, Check, ChevronDownIcon, Copy } from "lucide-react"
 import { type ComponentType, useRef, useState } from "react"
 import { toast } from "sonner"
 
-import { buttonVariants } from "@/components/ui/button"
-import { Calendar } from "@/components/ui/calendar"
-import { Checkbox } from "@/components/ui/checkbox"
+import { buttonVariants } from "@/components/cuenta-ui/button"
+import { Calendar } from "@/components/cuenta-ui/calendar"
+import { Checkbox } from "@/components/cuenta-ui/checkbox"
 import {
   Combobox,
   ComboboxContent,
@@ -22,35 +22,35 @@ import {
   ComboboxInput,
   ComboboxItem,
   ComboboxList
-} from "@/components/ui/combobox"
+} from "@/components/cuenta-ui/combobox"
 import {
   Field,
   FieldContent,
   FieldError,
   FieldLabel
-} from "@/components/ui/field"
-import { Input } from "@/components/ui/input"
+} from "@/components/cuenta-ui/field"
+import { Input } from "@/components/cuenta-ui/input"
 import {
   InputGroup,
   InputGroupAddon,
   InputGroupButton,
   InputGroupInput
-} from "@/components/ui/input-group"
+} from "@/components/cuenta-ui/input-group"
 import {
   Popover,
   PopoverContent,
   PopoverTrigger
-} from "@/components/ui/popover"
+} from "@/components/cuenta-ui/popover"
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue
-} from "@/components/ui/select"
-import { Slider } from "@/components/ui/slider"
-import { Switch } from "@/components/ui/switch"
-import { Textarea } from "@/components/ui/textarea"
+} from "@/components/cuenta-ui/select"
+import { Slider } from "@/components/cuenta-ui/slider"
+import { Switch } from "@/components/cuenta-ui/switch"
+import { Textarea } from "@/components/cuenta-ui/textarea"
 import { cn } from "cn"
 
 export type AdditionalFieldProps = {

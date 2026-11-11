@@ -2,7 +2,7 @@
 
 import { useLastLoginMethod } from "@better-auth-ui/react"
 
-import { Badge } from "@/components/ui/badge"
+import { Badge } from "@/components/cuenta-ui/badge"
 
 export type LastUsedBadgeProps = {
   /** Login method IDs that should display the indicator. */

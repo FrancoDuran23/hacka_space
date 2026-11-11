@@ -1,4 +1,16 @@
 node_modules/
+.env
+.env.local
+.env*.local
 .next/
-.env*
+out/
+coverage/
+artifacts/
+cache/
+typechain-types/
+ignition/deployments/chain-31337/
+*.log
+.DS_Store
+next-env.d.ts
+*.tsbuildinfo
 !.env.example

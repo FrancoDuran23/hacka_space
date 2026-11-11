@@ -6,8 +6,8 @@ import Bowser from "bowser"
 import { LogOut, Monitor, Smartphone, X } from "lucide-react"
 import { toast } from "sonner"
 
-import { Badge } from "@/components/ui/badge"
-import { Button } from "@/components/ui/button"
+import { Badge } from "@/components/cuenta-ui/badge"
+import { Button } from "@/components/cuenta-ui/button"
 import {
   Item,
   ItemActions,
@@ -15,8 +15,8 @@ import {
   ItemDescription,
   ItemMedia,
   ItemTitle
-} from "@/components/ui/item"
-import { Spinner } from "@/components/ui/spinner"
+} from "@/components/cuenta-ui/item"
+import { Spinner } from "@/components/cuenta-ui/spinner"
 
 function timeAgo(date: Date) {
   const seconds = Math.floor((Date.now() - date.getTime()) / 1000)

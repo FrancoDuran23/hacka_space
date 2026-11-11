@@ -5,7 +5,7 @@ import { useAuth, useAuthenticate } from "@better-auth-ui/react"
 import { Shield, User2 } from "lucide-react"
 import { useMemo } from "react"
 
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/cuenta-ui/tabs"
 import { cn } from "cn"
 import { AccountSettings } from "./account/account-settings"
 import { SecuritySettings } from "./security/security-settings"
