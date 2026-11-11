@@ -4,11 +4,13 @@ Repo del equipo para la Argentina Space hackathon.
 
 ## Investigación previa → segundo cerebro
 
+El documento principal del proyecto (OrbitClear) es `docs/planning.md`.
+
 Estamos en la etapa de investigación y varias personas commitean al mismo tiempo. Cada vez que alguien comparta o encuentre algo (link, paper, archivo, dato, idea, conclusión), **leé y seguí `skills/segundo-cerebro/SKILL.md`**: se guarda en `cerebro/`, se indexa y se sube a `main` sin pisar lo de los demás. Antes de investigar un tema, revisá `cerebro/INDEX.md` y `cerebro/en-curso/` para no duplicar trabajo de otro.
 
 ## Parte blockchain → skills de skills-track
 
-Para todo lo de blockchain (Avalanche, contratos, wallet, demo on-chain) usamos las skills de **https://github.com/blastonyz/skills-track**. Antes de trabajar en una de estas tareas, leé el `SKILL.md` que corresponde y seguilo. La URL raw es `https://raw.githubusercontent.com/blastonyz/skills-track/main/<ruta>/SKILL.md`.
+Para todo lo de blockchain (Avalanche, contratos, wallet, demo on-chain) usamos las skills de [blastonyz/skills-track](https://github.com/blastonyz/skills-track), copiadas en este repo en `skills/` (índice: `skills/INDEX.md`). Antes de trabajar en una de estas tareas, leé `skills/<ruta>/SKILL.md` y seguilo.
 
 | Tarea | Skill (`<ruta>`) |
 |---|---|
