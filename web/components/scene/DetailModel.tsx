@@ -75,7 +75,11 @@ function loadSpacecraft(url: string): Promise<THREE.Group> {
       // baked textures are very bright next to the dark scene: tone the albedo down
       root.traverse((o) => {
         const mat = (o as THREE.Mesh).material as THREE.MeshStandardMaterial | undefined;
-        if (mat?.color) mat.color.multiplyScalar(0.5);
+        if (!mat?.color) return;
+        mat.color.multiplyScalar(0.42);
+        // no mirror-like hot spots from the camera light: they blow out through the bloom
+        mat.roughness = Math.max(mat.roughness ?? 1, 0.7);
+        mat.metalness = Math.min(mat.metalness ?? 0, 0.25);
       });
       const holder = new THREE.Group();
       holder.add(root);
@@ -229,12 +233,12 @@ export function DetailModel() {
 
     if (fill.current) {
       fill.current.position.copy(camera.position);
-      fill.current.intensity = 0.07 * U.focus.value;
+      fill.current.intensity = (real ? 0.022 : 0.07) * U.focus.value;
     }
     if (shine.current) {
       // earthshine: cool light coming up from the planet
       shine.current.position.copy(p).multiplyScalar(1 - 0.12 / p.length());
-      shine.current.intensity = 0.05 * U.focus.value;
+      shine.current.intensity = (real ? 0.02 : 0.05) * U.focus.value;
     }
   });
 
