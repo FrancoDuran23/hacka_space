@@ -28,9 +28,9 @@ export const positions = new Map<number, THREE.Vector3>();
 export const fxDriven = new Set<number>();
 
 export const STATE_RGB = {
-  ACTIVE: new THREE.Color("#39ff88"),
-  EXPIRING: new THREE.Color("#ffb627"),
-  FORFEITED: new THREE.Color("#ff3355"),
+  ACTIVE: new THREE.Color("#a6e9ff"),
+  EXPIRING: new THREE.Color("#58a6ff"),
+  FORFEITED: new THREE.Color("#6a5cff"),
   REFUNDED: new THREE.Color("#38e8ff"),
 } as const;
 

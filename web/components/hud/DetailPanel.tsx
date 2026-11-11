@@ -20,8 +20,8 @@ const EVENT_LABEL: Record<HistoryType, string> = {
 const EVENT_TONE: Record<HistoryType, string> = {
   REGISTERED: "text-ink/90",
   REENTRY_ATTESTED: "text-ink/90",
-  REFUNDED: "text-ok",
-  FORFEITED: "text-bad",
+  REFUNDED: "text-ink/90",
+  FORFEITED: "text-ink/90",
 };
 const BAND_LABEL = ["Low band · < 600 km", "Mid band · 600–900 km", "High band · > 900 km"] as const;
 const KIND_LABEL = { "rocket-body": "rocket body", satellite: "defunct satellite", fragment: "fragment" } as const;
@@ -84,11 +84,10 @@ export function DetailPanel({ object: o }: { object: DebrisObject }) {
 
         <dl className="mt-5 space-y-[9px]">
           <Stat label="Locked now" value={formatUSD(lockedNow)} />
-          <Stat label={st === "REFUNDED" ? "Refunded to operator" : st === "FORFEITED" ? "Sent to removal fund" : "Deorbit deposit"} value={formatUSD(o.deposit)} tone={st === "REFUNDED" ? "text-ok" : st === "FORFEITED" ? "text-bad" : "text-ink"} />
+          <Stat label={st === "REFUNDED" ? "Refunded to operator" : st === "FORFEITED" ? "Sent to removal fund" : "Deorbit deposit"} value={formatUSD(o.deposit)} />
           <Stat
             label={st === "REFUNDED" ? "Settled" : st === "FORFEITED" ? "Overdue by" : "Time to deadline"}
             value={st === "REFUNDED" ? (o.settledAt ? utcDate(Date.parse(o.settledAt)) : "—") : countdown(left).replace("T−", "").replace("−", "")}
-            tone={st === "FORFEITED" ? "text-bad" : st === "EXPIRING" ? "text-warn" : "text-ink"}
             mono
           />
         </dl>
@@ -134,7 +133,7 @@ export function DetailPanel({ object: o }: { object: DebrisObject }) {
             {run.phase === "verifying" && <span className="blink-soft text-cyan">Relayer verifying reentry against tracking data…</span>}
             {run.phase === "falling" && <span className="text-[#ffb089]">Reentry verified · refunding {formatUSD(run.refund)}</span>}
             {run.phase === "burned" && (
-              <span className="text-ok">
+              <span className="text-ink">
                 Deposit refunded · {formatUSD(run.refund)} to {run.operator}
               </span>
             )}
@@ -193,7 +192,7 @@ function Sparkline({ object, now, positive }: { object: DebrisObject; now: numbe
     const line = pts.map((p, i) => `${i ? "L" : "M"}${x(i).toFixed(1)},${y(p.v).toFixed(1)}`).join(" ");
     return { line, zero: y(0), lastY: y(pts[pts.length - 1].v) };
   }, [object, bucket]);
-  const c = positive ? "#39ff88" : "#ff3355";
+  const c = positive ? "#a6e9ff" : "#6a5cff";
   const gid = `g${object.objectId}`;
   return (
     <svg viewBox={`0 0 ${W} ${H}`} className="mt-3 h-[64px] w-full" preserveAspectRatio="none" role="img" aria-label="Balance neto en el tiempo">

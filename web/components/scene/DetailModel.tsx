@@ -17,7 +17,7 @@ const ORBIT_POINTS = 360;
 
 function useMaterials() {
   const m = useMemo(() => {
-    const tint = uniform(new THREE.Color("#39ff88"));
+    const tint = uniform(new THREE.Color("#a6e9ff"));
     const heat = uniform(0);
     const fire = mix(color("#ff3d0a"), color("#ffb45e"), heat);
 

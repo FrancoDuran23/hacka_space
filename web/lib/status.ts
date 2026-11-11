@@ -70,8 +70,8 @@ export const STATUS_LABEL: Record<EscrowStatus, string> = {
 
 /** Neon state colors (linear-ish hex used by both CSS and three). */
 export const STATUS_COLOR: Record<EscrowStatus, string> = {
-  ACTIVE: "#39ff88",
-  EXPIRING: "#ffb627",
-  FORFEITED: "#ff3355",
+  ACTIVE: "#a6e9ff",
+  EXPIRING: "#58a6ff",
+  FORFEITED: "#6a5cff",
   REFUNDED: "#38e8ff",
 };

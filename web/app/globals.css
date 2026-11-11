@@ -10,9 +10,9 @@
   --color-deep: #060b16;
   --color-cyan: #38e8ff;
   --color-violet: #8b5cff;
-  --color-ok: #39ff88;
-  --color-warn: #ffb627;
-  --color-bad: #ff3355;
+  --color-ok: #a6e9ff;
+  --color-warn: #58a6ff;
+  --color-bad: #6a5cff;
   --color-ink: #d7ecff;
   --color-dim: #7f95b3;
   --color-faint: #45566f;
@@ -308,5 +308,31 @@ body {
   .blink-soft,
   .caret::after {
     animation: none;
+  }
+}
+
+/* escrow about to expire: the frame itself breathes in the mid blue */
+.panel[data-status="EXPIRING"],
+.holo-card[data-status="EXPIRING"],
+.edge-pulse {
+  animation: edge-pulse 1.5s ease-in-out infinite;
+}
+@keyframes edge-pulse {
+  0%,
+  100% {
+    border-color: rgb(255 255 255 / 0.08);
+    box-shadow: 0 24px 60px rgb(0 0 0 / 0.35), 0 0 0 0 rgb(88 166 255 / 0);
+  }
+  50% {
+    border-color: rgb(88 166 255 / 0.95);
+    box-shadow: 0 24px 60px rgb(0 0 0 / 0.35), 0 0 26px 0 rgb(88 166 255 / 0.35);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .panel[data-status="EXPIRING"],
+  .holo-card[data-status="EXPIRING"],
+  .edge-pulse {
+    animation: none;
+    border-color: rgb(88 166 255 / 0.8);
   }
 }

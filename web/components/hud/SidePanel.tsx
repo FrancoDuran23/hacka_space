@@ -3,7 +3,7 @@
 import { useMemo } from "react";
 import { motion } from "framer-motion";
 import { countdown, formatUSD, utcClock, utcDate } from "@/lib/format";
-import { computeStats, statusAt } from "@/lib/status";
+import { computeStats, netBalanceAt, statusAt } from "@/lib/status";
 import { app, useApp, useSimTime, type FeedLine } from "@/lib/store";
 import { RollingUsd, TxHash, Typed } from "./bits";
 
@@ -29,16 +29,26 @@ export function SidePanel() {
         if (!next || left < next.left) next = { id: o.objectId, name: o.name, left, deposit: o.deposit };
       }
     }
-    return { stats, atRisk, next };
+    let net = 0;
+    let winning = 0;
+    let losing = 0;
+    for (const o of objects) {
+      const b = netBalanceAt(o, minute);
+      net += b;
+      if (b >= 0) winning++;
+      else losing++;
+    }
+    return { stats, atRisk, next, net, winning, losing };
   }, [objects, minute]);
 
-  const { stats, atRisk, next } = view;
+  const { stats, atRisk, next, net, winning, losing } = view;
   const open = stats.active + stats.expiring;
   const total = Math.max(1, stats.active + stats.expiring + stats.forfeited);
   const top = stats.operators.slice(0, 4);
 
   return (
     <motion.aside
+      data-status={stats.expiring > 0 ? "EXPIRING" : undefined}
       className="panel pointer-events-auto fixed right-4 top-[76px] bottom-4 z-20 flex w-[27vw] min-w-[320px] max-w-[400px] flex-col px-6 py-6"
       initial={{ opacity: 0, x: 40 }}
       animate={{ opacity: 1, x: 0 }}
@@ -66,7 +76,7 @@ export function SidePanel() {
         </div>
         <div className="mt-3 grid grid-cols-3 gap-2">
           <Count n={stats.active} label="Active" className="text-ok" />
-          <Count n={stats.expiring} label="Under 24 h" className="text-warn" />
+          <Count n={stats.expiring} label="Under 24 h" className="blink-soft text-warn" />
           <Count n={stats.forfeited} label="Forfeited" className="text-bad" />
         </div>
       </div>
@@ -75,18 +85,22 @@ export function SidePanel() {
 
       {/* the numbers worth acting on */}
       <dl className="space-y-3">
-        <Row label="Refunded to operators" hint={`${stats.refunded} verified ${stats.refunded === 1 ? "reentry" : "reentries"}`}>
-          <span className="text-ok">
-            <RollingUsd value={stats.totalRefunded} ms={1400} suffix={false} />
+        {/* light blue = profit, indigo = loss */}
+        <Row label="Net balance" hint={`${winning} in profit · ${losing} at a loss`}>
+          <span className={net >= 0 ? "text-ok" : "text-bad"}>
+            <RollingUsd value={net} ms={1400} sign suffix={false} />
           </span>
         </Row>
+        <Row label="Refunded to operators" hint={`${stats.refunded} verified ${stats.refunded === 1 ? "reentry" : "reentries"}`}>
+          <RollingUsd value={stats.totalRefunded} ms={1400} suffix={false} />
+        </Row>
         <Row label="Sent to removal fund" hint={`${stats.forfeited} ${stats.forfeited === 1 ? "deadline" : "deadlines"} missed`}>
-          <span className={stats.totalForfeited > 0 ? "text-bad" : "text-dim"}>
+          <span>
             <RollingUsd value={stats.totalForfeited} ms={1400} suffix={false} />
           </span>
         </Row>
         <Row label="Expiring within 24 h" hint={`${stats.expiring} ${stats.expiring === 1 ? "escrow" : "escrows"}`}>
-          <span className={atRisk > 0 ? "text-warn" : "text-dim"}>{formatUSD(atRisk, { suffix: false })}</span>
+          {formatUSD(atRisk, { suffix: false })}
         </Row>
         {next && (
           <button type="button" className="block w-full cursor-pointer text-left" onClick={() => app.set({ selectedId: next.id, warpTarget: 1 })}>
@@ -154,7 +168,7 @@ function Row({ label, hint, children }: { label: string; hint?: string; children
         <dt className="text-[13px] text-ink/90">{label}</dt>
         {hint && <div className="truncate text-[11.5px] text-dim">{hint}</div>}
       </div>
-      <dd className="figure shrink-0 text-[17px]">{children}</dd>
+      <dd className="figure shrink-0 text-[17px] text-white">{children}</dd>
     </div>
   );
 }
