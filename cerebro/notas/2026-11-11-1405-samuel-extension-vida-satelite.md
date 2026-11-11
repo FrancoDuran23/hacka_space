@@ -33,3 +33,12 @@ Respuesta a "¿una empresa puede alargar la vida útil de un satélite?": sí, y
 ## Preguntas abiertas
 
 - ¿La verificación de "remoción a órbita cementerio" en GEO se puede hacer con el mismo SATCAT (cambio de PERIGEE/APOGEE) o necesita otra fuente?
+
+## Aporte de samuel (2026-11-11 14:20)
+
+**¿Se actualiza el smart contract cuando se contrata extensión de vida?** Aclaración para el rol escrow:
+
+- El **código** del contrato no se actualiza (inmutable; un proxy upgradeable sería anti-pattern: mata "las reglas quedan fijadas al depositar").
+- El **estado** sí: el plazo es un dato en storage. Basta una función `extenderPlazo(noradId, nuevoPlazo, evidenciaHash)` que solo firma el oráculo y emite evento.
+- El bono sigue bloqueado durante la extensión.
+- Riesgo: extensiones infinitas = el bono nunca se ejecuta. Mitigar exigiendo evidencia por extensión o `PLAZO_MAXIMO`. En MVP: evidencia requerida alcanza.
