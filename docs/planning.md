@@ -63,6 +63,22 @@ Fuentes: [regla FCC](https://spacenexus.us/blog/fcc-5-year-deorbit-rule-satellit
 
 A 400 km un satélite típico cae solo en 1 a 5 años; a 550 km tarda de 5 a 10 ([SpaceNexus](https://spacenexus.us/blog/fcc-5-year-deorbit-rule-satellite-operators)). La garantía sube con la altura y con la cantidad de objetos en esa franja, que se calcula del mismo catálogo. La fórmula del prototipo es ilustrativa.
 
+### Historial público de cumplimiento (propuesta, sin construir)
+
+Cada depósito, devolución y decomiso queda registrado en el contrato con la dirección del operador. Con esos registros se puede mostrar, por operador, un historial visible para cualquiera:
+
+| Dato | Ejemplo |
+|---|---|
+| Satélites con garantía | 12 |
+| Retirados a tiempo | 11 |
+| Garantías perdidas | 1 |
+| Cumplimiento | 92% |
+
+- **No requiere cambiar el contrato.** Se calcula en la web a partir de los eventos `Registered`, `Refunded` y `Forfeited` de `OrbitClearEscrow`.
+- **Para qué sirve.** Es una razón para usar OrbitClear antes de que sea obligatorio: el operador puede demostrar que cumple, una aseguradora puede mirarlo para fijar la prima y un cliente puede pedirlo al contratar. Hipótesis sin validar.
+- **Qué mide y qué no.** Mide si el operador retiró sus satélites dentro del plazo. No mide impacto ambiental ni basura generada por otras vías.
+- **Límites.** Con pocos satélites el porcentaje engaña, así que la cantidad se muestra siempre al lado. En Fuji hoy solo hay casos decomisados; para mostrar un historial bueno hay que registrar un caso que cumplió o usar datos de demo y avisarlo.
+
 ### Diferencia con las propuestas académicas
 
 En los estudios, la garantía la guarda el Estado de lanzamiento. En OrbitClear la guarda un contrato con reglas públicas. El regulador define la regla, pero no administra la plata.
@@ -135,7 +151,7 @@ Entra:
 - Dos casos reales: un satélite que ya reingresó y uno inactivo que sigue en órbita. *Candidato para el segundo: Envisat, a confirmar datos.*
 - Globo 3D con los objetos y el link a cada transacción.
 
-Solo si sobra tiempo: gráfico de objetos por franja de altura y garantía variable.
+Solo si sobra tiempo: gráfico de objetos por franja de altura, garantía variable y panel de historial de cumplimiento por operador (sección 5).
 
 Queda afuera: recomendaciones de trayectoria, pagos entre operadores por maniobras, recompensas a removedores, varias fuentes de datos.
 
