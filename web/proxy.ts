@@ -2,7 +2,7 @@ import { NextResponse, type NextRequest } from "next/server";
 
 import { auth } from "@/lib/auth/server";
 
-const neonAuth = auth.middleware({ loginUrl: "/auth/sign-in" });
+const neonAuth = auth.middleware({ loginUrl: "/login" });
 
 export default function proxy(request: NextRequest) {
   if (request.headers.has("next-action")) {

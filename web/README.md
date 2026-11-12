@@ -45,13 +45,14 @@ La app tiene dos root layouts: `app/(console)/` es la consola de arriba (en `/`)
 
 | Ruta | Qué es |
 |---|---|
-| `/auth/*` | Login, registro y recupero de contraseña (Better Auth UI) |
+| `/login` | Iniciar sesión (`/auth/sign-in` redirige acá) |
+| `/auth/*` | Registro y recupero de contraseña (Better Auth UI) |
 | `/cuenta` | Panel del usuario |
 | `/cuenta/wallets` | Vincular una wallet de Fuji firmando un mensaje (no cuesta gas). Desafío de un solo uso, 10 min, verificado con ethers en el servidor |
 | `/cuenta/contratos` | Registro compartido de direcciones importantes (escrow, oráculo, token, tesorería) |
 | `/account/*` | Perfil y seguridad |
 
-`proxy.ts` protege `/cuenta` y `/account`. `app/api/auth/[...path]` es el proxy al servidor de Auth.
+`proxy.ts` protege `/cuenta` y `/account` y manda a `/login` si no hay sesión. Neon Auth rechaza con "Invalid origin" los pedidos desde un dominio que no esté en su lista de dominios de confianza (Neon Console → Auth → Configuration): `localhost` funciona; para otro host o puerto hay que agregarlo ahí. `app/api/auth/[...path]` es el proxy al servidor de Auth.
 
 ### Setup en Neon (una vez, una persona)
 

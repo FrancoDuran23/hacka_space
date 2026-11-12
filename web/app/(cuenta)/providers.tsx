@@ -25,7 +25,7 @@ export function Providers({ children }: { children: ReactNode }) {
         localization={localization}
         navigate={({ to, replace }) => {
           const path = getSafeRedirectTo(to, window.location.origin);
-          const target = path.startsWith("//") ? "/" : path;
+          const target = path.startsWith("//") ? "/" : path.replace(/^\/auth\/sign-in(?=[?#]|$)/, "/login");
           if (replace) router.replace(target);
           else router.push(target);
         }}
