@@ -14,6 +14,9 @@ import { BAND_LABEL, usdcToUsd, walletErrorText } from "./shared";
 type Busy = "quote" | "mint" | "approve" | "register" | null;
 type Message = { tone: "ok" | "bad"; text: string; txHash?: string; href?: string | null; login?: boolean };
 
+/** The contract counts 365-day years. */
+const YEAR_MS = 365 * 86_400_000;
+
 const OBJECT_TYPE = { PAY: "satélite", "R/B": "cuerpo de cohete", DEB: "fragmento", UNK: "desconocido" } as Record<string, string>;
 
 /**
@@ -26,6 +29,8 @@ export function RegisterSatellite({ chain, onClose, onRegistered }: { chain: Pub
   const [wallets, setWallets] = useState<WalletFunds[]>([]);
   const [chosen, setChosen] = useState<string | null>(null);
   const [acceptExpired, setAcceptExpired] = useState(false);
+  /** Declared end of mission (YYYY-MM-DD): the deadline runs from here (ADR 0004). */
+  const [missionEnd, setMissionEnd] = useState("");
   const [busy, setBusy] = useState<Busy>(null);
   const [msg, setMsg] = useState<Message | null>(null);
   const [done, setDone] = useState(false);
@@ -34,6 +39,11 @@ export function RegisterSatellite({ chain, onClose, onRegistered }: { chain: Pub
   const deposit = quote ? BigInt(quote.deposit) : 0n;
   const short = !!wallet && BigInt(wallet.balance) < deposit;
   const authorized = !!wallet && BigInt(wallet.allowance) >= deposit;
+  const launchDay = quote ? new Date(quote.launchedAt * 1000).toISOString().slice(0, 10) : undefined;
+  // preview only; the server recomputes and validates it before registering
+  const missionEndsAt = /^\d{4}-\d{2}-\d{2}$/.test(missionEnd) ? Date.parse(`${missionEnd}T00:00:00Z`) : NaN;
+  const deadline = quote && !Number.isNaN(missionEndsAt) && missionEndsAt >= quote.launchedAt * 1000 ? missionEndsAt + quote.bandYears * YEAR_MS : null;
+  const expired = deadline !== null && deadline <= Date.now();
   const tx = (hash: string) => (chain?.explorer ? `${chain.explorer}/tx/${hash}` : null);
 
   async function lookUp(id = Number(norad)) {
@@ -82,7 +92,7 @@ export function RegisterSatellite({ chain, onClose, onRegistered }: { chain: Pub
     setBusy("register");
     setMsg(null);
     try {
-      const r = await registerSatellite(quote.norad, wallet.address);
+      const r = await registerSatellite(quote.norad, wallet.address, missionEnd);
       if (!r.ok) {
         setMsg({ tone: "bad", text: r.error, login: r.code === "auth" });
         return;
@@ -146,15 +156,38 @@ export function RegisterSatellite({ chain, onClose, onRegistered }: { chain: Pub
             <Row label="Apogeo" value={`${quote.apogeeKm.toLocaleString("es-AR")} km`} />
             <Row label="Banda orbital" value={BAND_LABEL[quote.band]} />
             <Row label="Depósito de desorbitado" value={formatUSD(quote.depositUsd)} />
-            <Row
-              label="Plazo de retiro"
-              value={`${utcDate(Date.parse(quote.deadline))} (${quote.bandYears} años)`}
-              tone={quote.expired ? "text-bad" : "text-ink"}
-              mono
-            />
           </dl>
 
-          {quote.expired && (
+          <label className="mt-4 block text-[13px] text-ink/90" htmlFor="mission-end">
+            Fin de misión declarado
+          </label>
+          <input
+            id="mission-end"
+            type="date"
+            value={missionEnd}
+            min={launchDay}
+            disabled={done}
+            onChange={(e) => {
+              setMissionEnd(e.target.value);
+              setAcceptExpired(false);
+            }}
+            className="mono mt-1 h-9 w-full rounded-[8px] bg-white/[0.05] px-3 text-[13px] text-ink outline-none [color-scheme:dark] focus:shadow-[inset_0_0_0_1px_rgb(56_232_255/0.5)]"
+          />
+          <p className="mt-1 text-[11.5px] text-faint">
+            La fecha en que el satélite deja de operar. CelesTrak no la publica: la declarás vos y queda registrada en el contrato.
+          </p>
+          {deadline !== null && (
+            <dl className="mt-3 text-[13px]">
+              <Row
+                label="Plazo de retiro"
+                value={`${utcDate(deadline)} (fin de misión + ${quote.bandYears} años)`}
+                tone={expired ? "text-bad" : "text-ink"}
+                mono
+              />
+            </dl>
+          )}
+
+          {expired && (
             <div role="alert" className="mt-4 rounded-[10px] bg-bad/10 px-4 py-3 text-[12.5px] text-bad shadow-[inset_0_0_0_1px_rgb(255_51_85/0.35)]">
               El plazo de retiro ya venció. Al registrarlo, cualquiera puede cerrar el escrow y el depósito pasa al fondo de remoción.
               <label className="mt-2 flex cursor-pointer items-center gap-2 text-ink">
@@ -202,7 +235,7 @@ export function RegisterSatellite({ chain, onClose, onRegistered }: { chain: Pub
               <Button onClick={() => sign("approve")} disabled={busy !== null || short || authorized}>
                 {busy === "approve" ? "Esperando la firma…" : authorized ? "✓ Depósito autorizado" : `${short ? "2" : "1"}. Autorizar depósito de ${formatUSD(quote.depositUsd)}`}
               </Button>
-              <Button variant="danger" onClick={register} disabled={busy !== null || !authorized || short || (quote.expired && !acceptExpired)}>
+              <Button variant="danger" onClick={register} disabled={busy !== null || !authorized || short || deadline === null || (expired && !acceptExpired)}>
                 {busy === "register" ? "Registrando en Fuji…" : "Registrar en Fuji"}
               </Button>
               <p className="text-[11.5px] text-faint">Autorizar se firma con tu wallet. El registro lo firma el relayer y no te cuesta gas.</p>

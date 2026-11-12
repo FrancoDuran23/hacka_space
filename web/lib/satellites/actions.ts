@@ -28,9 +28,8 @@ export interface SatelliteQuote {
   /** USDC units (6 decimals), as a string: bigint does not cross the action boundary. */
   deposit: string;
   depositUsd: number;
-  deadline: string;
-  /** The deadline already passed: once registered, anyone can forfeit the deposit to the removal fund. */
-  expired: boolean;
+  /** Launch as the contract stores it (seconds; anchored to the epoch before 1970). */
+  launchedAt: number;
 }
 
 export interface WalletFunds {
@@ -85,7 +84,6 @@ async function prepare(norad: number) {
   ]);
   if (state !== 0n) return fail("data", `${record.OBJECT_NAME} ya tiene un escrow en el contrato.`);
 
-  const deadline = Number(terms.launchedAt) + Number(years) * YEAR_S;
   const quote: SatelliteQuote = {
     norad,
     name: record.OBJECT_NAME,
@@ -97,10 +95,21 @@ async function prepare(norad: number) {
     bandYears: Number(years),
     deposit: amount.toString(),
     depositUsd: Number(formatUnits(amount, USDC_DECIMALS)),
-    deadline: new Date(deadline * 1000).toISOString(),
-    expired: deadline * 1000 <= Date.now(),
+    launchedAt: Number(terms.launchedAt),
   };
   return { ok: true as const, cfg, quote, terms, amount, escrow, usdc, provider };
+}
+
+/** Max declared mission length: past this a declaration only stretches the deadline. */
+const MAX_MISSION_YEARS = 50;
+
+/** The declared end of mission (ADR 0004) as contract seconds, or the reason it is not acceptable. */
+function missionEndFrom(isoDate: string, launchedAt: bigint): bigint | string {
+  if (!/^\d{4}-\d{2}-\d{2}$/.test(isoDate)) return "Ingresá la fecha de fin de misión.";
+  const at = BigInt(Math.floor(Date.parse(`${isoDate}T00:00:00Z`) / 1000));
+  if (at < launchedAt) return "El fin de misión no puede ser anterior al lanzamiento.";
+  if (at > launchedAt + BigInt(MAX_MISSION_YEARS * YEAR_S)) return `El fin de misión no puede pasar los ${MAX_MISSION_YEARS} años desde el lanzamiento.`;
+  return at;
 }
 
 async function verifiedWallets(userId: string) {
@@ -134,7 +143,7 @@ export async function quoteSatellite(norad: number): Promise<QuoteResult> {
  * Registers `norad` on-chain, signed by the relayer. The deposit is pulled from `walletAddress`, which must be
  * one of the caller's verified wallets: otherwise anyone could spend an allowance someone else granted.
  */
-export async function registerSatellite(norad: number, walletAddress: string): Promise<RegisterResult> {
+export async function registerSatellite(norad: number, walletAddress: string, missionEnd: string): Promise<RegisterResult> {
   const user = await sessionUser();
   if (!user) return fail("auth", "Iniciá sesión para dar de alta un satélite.");
   if (!isAddress(walletAddress)) return fail("input", "Elegí una wallet válida.");
@@ -147,6 +156,8 @@ export async function registerSatellite(norad: number, walletAddress: string): P
 
   const p = await prepare(norad);
   if (!p.ok) return p;
+  const missionEndsAt = missionEndFrom(missionEnd, p.terms.launchedAt);
+  if (typeof missionEndsAt === "string") return fail("input", missionEndsAt);
   const [balance, allowance] = await Promise.all([
     p.usdc.getFunction("balanceOf")(operator) as Promise<bigint>,
     p.usdc.getFunction("allowance")(operator, p.cfg.address) as Promise<bigint>,
@@ -157,7 +168,7 @@ export async function registerSatellite(norad: number, walletAddress: string): P
   try {
     const relayer = new Wallet(key, p.provider);
     const escrow = p.escrow.connect(relayer) as Contract;
-    const args = [norad, operator, p.terms.launchedAt, p.terms.band, p.terms.dataHash] as const;
+    const args = [norad, operator, p.terms.launchedAt, missionEndsAt, p.terms.band, p.terms.dataHash] as const;
     // dry run first, so a revert comes back with its reason instead of a spent transaction
     await escrow.getFunction("register").staticCall(...args);
     const tx = await escrow.getFunction("register")(...args);

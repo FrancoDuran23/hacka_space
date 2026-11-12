@@ -102,6 +102,7 @@ function applyLocalReentry(obj: DebrisObject) {
 interface ChainEscrow {
   operator: string;
   launchedAt: bigint;
+  missionEndsAt: bigint;
   deadline: bigint;
   deposit: bigint;
   band: bigint;
@@ -153,6 +154,7 @@ async function readChain(cfg: ContractConfig, file: EscrowsFile): Promise<Escrow
       band: Number(e.band) as Band,
       createdAt: history.find((h) => h.type === "REGISTERED")?.at ?? new Date(now).toISOString(),
       deadline: new Date(Number(e.deadline) * 1000).toISOString(),
+      missionEndsAt: new Date(Number(e.missionEndsAt) * 1000).toISOString(),
       status,
       deposit: usd(e.deposit),
       settledAt: status === "ACTIVE" ? null : (settled?.at ?? new Date(now).toISOString()),
@@ -321,7 +323,7 @@ function contractEvents(cfg: ContractConfig, provider: JsonRpcProvider): Promise
 
 function toHistory(name: string, a: Result, at: number, txHash: string): { id: number; h: ChainEvent } | null {
   const map: Record<string, () => { type: HistoryType; amount: number; dataHash?: string }> = {
-    Registered: () => ({ type: "REGISTERED", amount: usd(a[5]), dataHash: String(a[6]) }),
+    Registered: () => ({ type: "REGISTERED", amount: usd(a[6]), dataHash: String(a[7]) }),
     ReentryAttested: () => ({ type: "REENTRY_ATTESTED", amount: 0, dataHash: String(a[2]) }),
     Refunded: () => ({ type: "REFUNDED", amount: usd(a[2]) }),
     Forfeited: () => ({ type: "FORFEITED", amount: usd(a[2]) }),

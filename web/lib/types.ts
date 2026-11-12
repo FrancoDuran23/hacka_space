@@ -30,6 +30,8 @@ export interface DebrisObject {
   createdAt: string;
   /** Plazo de retiro. */
   deadline: string;
+  /** Fin de misión declarado por el operador (solo on-chain). */
+  missionEndsAt?: string;
   /** Settled status. EXPIRING (and FORFEITED once the deadline passes) are derived from the clock. */
   status: EscrowStatus;
   /** Depósito de desorbitado, USD (1 USD = 1 USDC on-chain). */

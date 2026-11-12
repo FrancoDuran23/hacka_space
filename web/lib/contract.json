@@ -3,11 +3,11 @@
   "chainId": 43113,
   "rpcUrl": "https://api.avax-test.network/ext/bc/C/rpc",
   "explorer": "https://testnet.snowtrace.io",
-  "address": "0xA5aeCF58Fac272e9E4CC5D473A2767C56019CbB2",
-  "usdc": "0xD8A34cF239aD17d50a912044E38B15d08D5Befa9",
+  "address": "0xeE7C5D5C0D7103C220d640EEb7B2788ab27CEf59",
+  "usdc": "0x8fA9BF84D9C89966dd95e85672412eaA2B6C47EC",
   "mode": "mock",
   "relayer": "0xdE2d066e6f1831783C1aC43f865EdE88c0d7b9b0",
   "fund": "0xdE2d066e6f1831783C1aC43f865EdE88c0d7b9b0",
-  "deployBlock": 60903558,
-  "deployedAt": "2026-11-11T17:51:51.918Z"
+  "deployBlock": 60953694,
+  "deployedAt": "2026-11-12T15:36:35.780Z"
 }

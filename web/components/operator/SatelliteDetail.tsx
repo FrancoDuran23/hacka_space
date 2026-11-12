@@ -61,6 +61,7 @@ export function SatelliteDetail({
       <dl className="mt-5 space-y-[9px]">
         <Stat label="Depósito de desorbitado" value={formatUSD(o.deposit)} />
         <Stat label="Banda orbital" value={BAND_LABEL[o.band]} />
+        {o.missionEndsAt && <Stat label="Fin de misión declarado" value={utcDate(Date.parse(o.missionEndsAt))} mono />}
         <Stat label="Plazo de retiro" value={utcDate(Date.parse(o.deadline))} mono />
         <Stat
           label={st === "REFUNDED" ? "Liquidado" : "Tiempo restante"}

@@ -1,4 +1,5 @@
 import "server-only";
+import { ommToTle, type Omm } from "./omm";
 import { and, eq, inArray, notInArray, sql } from "drizzle-orm";
 import { db } from "./db";
 import { catalogObject, orbitalSatcat, orbitalTle } from "./db/schema";
@@ -507,17 +508,17 @@ export function satcatRecord(norad: number): Promise<SatcatRecord | null> {
 }
 
 /**
- * Current two-line elements of a NORAD id, or null. CelesTrak answers 404 when the object has no
- * current elements (it re-entered or is lost): that is data, not an error to retry.
+ * Current two-line elements of a NORAD id, or null. Asked as OMM (JSON) because CelesTrak no longer serves
+ * TLE for catalog numbers above 99999; lib/omm rebuilds the TLE (Alpha-5). A 404 or an empty answer means
+ * the object has no current elements (it re-entered or is lost): that is data, not an error to retry.
  */
 export function currentTle(norad: number): Promise<[string, string] | null> {
   return cached(`tle:${norad}`, async () => {
-    const res = await get(`${GP_URL}?CATNR=${norad}&FORMAT=TLE`);
+    const res = await get(`${GP_URL}?CATNR=${norad}&FORMAT=JSON`);
     if (res.status === 404) return null;
     if (!res.ok) throw new CelestrakError(`CelesTrak respondió ${res.status} a los elementos orbitales.`);
-    const lines = (await res.text()).split(/\r?\n/).map((l) => l.trimEnd()).filter(Boolean);
-    const l1 = lines.find((l) => l.startsWith("1 "));
-    const l2 = lines.find((l) => l.startsWith("2 "));
-    return l1 && l2 ? [l1, l2] : null;
+    const body = (await res.json().catch(() => null)) as Omm[] | null;
+    const omm = Array.isArray(body) ? body[0] : null;
+    return omm?.NORAD_CAT_ID ? ommToTle(omm) : null;
   });
 }
