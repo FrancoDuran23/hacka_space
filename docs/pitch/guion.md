@@ -21,11 +21,21 @@ Junio de 2024. El Resurs-P1, un satélite ruso de observación, llevaba años mu
 
 Ojo: no decir que fue un choque entre satélites ni que hubo pérdidas de plata.
 
+Fuentes:
+- Resurs-P1: <https://www.aljazeera.com/news/2024/6/28/iss-astronauts-take-cover-as-defunct-russian-satellite-shatters>
+- Shenzhou-20: <https://www.pbs.org/newshour/science/chinese-astronauts-return-from-space-station-after-delay-blamed-on-space-debris-damage>
+
 ## 3. El problema en números
 
 El año pasado se lanzaron más de 4.500 satélites, récord histórico. Cuando se les termina la vida útil deberían bajar de la órbita. Pero en las órbitas donde no caen solos, solo el 40% lo hizo entre 2010 y 2024. El resto queda arriba. Y se esperan 43.000 satélites nuevos de acá a 2034.
 
 Si preguntan por Starlink: fue cerca de tres cuartos de lo lanzado en 2025 y ya desorbita. El problema está en el resto.
+
+Fuentes:
+- Lanzamientos de 2025 (conteo de J. McDowell): <https://e360.yale.edu/digest/2025-satellite-launches>
+- 40% de cumplimiento: Nature Communications 2026, <https://doi.org/10.1038/s41467-026-77660-4>
+- 43.000 a 2034 (Novaspace): <https://payloadspace.com/novaspace-predicts-43000-new-sats-to-launch-by-2034/>
+- Starlink, 73% (KeepTrack): <https://keeptrack.space/live-count/how-many-satellites-are-launched-per-year>
 
 ## 4. Por qué pasa
 
@@ -35,11 +45,20 @@ Ojo: decir "la primera multa", no "la única". Decir "el contrato fue de", no "c
 
 Si preguntan por qué cumpliría alguien si remover cuesta mucho más que la garantía: son dos costos distintos. Los 86 millones son lo que cuesta que un tercero vaya a buscar un satélite muerto. Al operador, bajarlo él mismo mientras funciona le cuesta reservar combustible y terminar la misión a tiempo. La garantía tiene que ser mayor que ese costo, no que el de la remoción. No dar una cifra propia de cuánto cuesta desorbitar: no la tenemos verificada.
 
+Fuentes:
+- Multa de la FCC a DISH: <https://www.space.com/space-debris-fcc-first-fine-dish-deorbit-satellite>
+- Contrato ESA y ClearSpace: <https://spacenews.com/clearspace-contract-signed/>
+- Cambio de objetivo de la misión en 2024: <https://www.satellitetoday.com/sustainability/2024/04/24/clearspace-1-mission-changes-objective-in-response-to-space-debris-collision>
+
 ## 5. La idea
 
 La idea es simple: cobrar antes en vez de multar después. El operador deposita una garantía antes de lanzar, como condición de su licencia. Si baja el satélite a tiempo, la recupera. Si no, la pierde y va a un fondo de remoción. No es idea nuestra: la FCC la consultó en 2020 y un paper de Nature Communications la propone este año, con unos 200.000 dólares por satélite. Según ese mismo paper, un país puede aplicarla solo, y con el bono se lanzan más satélites, no menos. Lo que nadie había hecho es construirla.
 
 Ojo: no decir "el regulador lo exige". Hoy se exige desorbitar, no la garantía. La frase es: la obligación ya existe, nosotros construimos el mecanismo para hacerla cumplir. Y el fondo recibe lo decomisado; el contrato no le paga a un removedor.
+
+Fuentes:
+- Consulta de la FCC sobre la garantía (FCC 20-54): <https://www.govinfo.gov/content/pkg/FR-2020-08-25/html/2020-13185.htm>
+- Bonos de desorbitado, Nature Communications 2026: <https://doi.org/10.1038/s41467-026-77660-4>
 
 ## 6. Qué construimos
 
@@ -55,11 +74,19 @@ Esto no es una maqueta. El contrato está desplegado en Fuji, la red de pruebas 
 
 Aclarar si preguntan: son objetos reales cargados para mostrar los tres caminos; ningún operador depositó de verdad. Los montos están en USDC de prueba.
 
+Fuentes:
+- Contrato en Fuji: <https://explorer-test.avax.network/c-chain/address/0xA5aeCF58Fac272e9E4CC5D473A2767C56019CbB2>
+- Datos de los satélites: catálogo SATCAT de CelesTrak, <https://celestrak.org/satcat/>
+
 ## 8. Por qué blockchain
 
 ¿Por qué blockchain? Porque acá no hay una autoridad común. El operador puede ser de un país, la licencia de otro, y el daño es de todos. Cada Estado ya puede exigirle condiciones a quien licencia, lance donde lance: eso sale de la licencia, no de la tecnología. Lo que no tiene es cómo cobrarle a una empresa extranjera. Con la garantía depositada en el contrato, no hace falta cobrar: ya está. Con el contrato, la garantía no la tiene ninguna de las partes, las reglas quedan fijas al depositar, y cualquiera puede verificar el dato y el pago sin pedirle acceso a un banco extranjero. Y lo decimos nosotros: si todo pasa dentro de un solo país, un fideicomiso en un banco alcanza. Donde esto aporta es cuando las partes son de jurisdicciones distintas y ninguna quiere litigar en la del otro.
 
 Si preguntan si todos los países usan el mismo contrato: no. Cada regulador despliega el suyo, con sus montos y su fondo. Lo compartido es la red y el código.
+
+Fuentes:
+- La regla de 5 años de la FCC alcanza a satélites con licencia de otro país: <https://accesspartnership.com/access-alert-us-fcc-to-set-five-year-deadline-for-deorbiting-leo-satellites>
+Responsabilidad del Estado por sus privados: Tratado del Espacio de 1967, artículo VI.
 
 ## 9. Para quién
 
@@ -71,17 +98,34 @@ Ojo: no decir "el Estado se ahorra 86 millones". Ningún Estado está obligado a
 
 Si preguntan si un operador lo usaría antes de que sea obligatorio: no lo afirmamos. Depende de que un regulador lo exija. El uso voluntario es una hipótesis sin validar.
 
+Fuentes:
+- Costo de protegerse de la basura (OCDE, citado por la ESA): <https://www.esa.int/Space_Safety/Space_Debris/The_cost_of_space_debris>
+- Maniobras de Starlink en 2025: <https://www.newscientist.com/article/2512470-spacexs-starlink-dodged-300000-satellite-collisions-in-2025>
+- Aseguradoras que se retiran de órbita baja: <https://www.insurancejournal.com/news/national/2021/09/01/629684.htm>
+- Misión de remoción del Reino Unido: <https://www.gov.uk/government/news/uk-builds-leadership-in-space-debris-removal-and-in-orbit-manufacturing-with-national-mission-and-funding-boost>
+- Contrato ESA y ClearSpace: <https://spacenews.com/clearspace-contract-signed/>
+- USD 200.000 por satélite: Nature Communications 2026, <https://doi.org/10.1038/s41467-026-77660-4>
+Los USD 180 millones y la comisión son cálculo nuestro.
+
 ## 10. Los límites, dichos por nosotros
 
 Preferimos decirles nosotros lo que esto todavía no resuelve. Uno: depende de una decisión política. Hoy ningún regulador exige la garantía; la FCC la consultó en 2020 y no la adoptó. Dos: no lo validamos con el mercado. Ningún regulador, operador ni aseguradora nos confirmó interés. Tres: la garantía es efectivo inmovilizado sin rendimiento; para plazos de hasta 25 años tiene que estar en un activo que rinda, y eso es el paso siguiente. Cuatro: el dato lo firma hoy una sola clave nuestra y viene de una sola fuente, la red de seguimiento de Estados Unidos; el paso siguiente es una firma de dos de tres entre el regulador, un proveedor independiente de datos y un auditor. Y cubrimos órbita baja, que es donde los satélites reingresan.
 
 No resolvemos la decisión política. Lo que sacamos del medio es el obstáculo práctico: tener que montar la custodia.
 
+Fuentes:
+- Consulta de la FCC sobre la garantía (FCC 20-54): <https://www.govinfo.gov/content/pkg/FR-2020-08-25/html/2020-13185.htm>
+El resto son límites del propio proyecto: ver docs/defensa.md, sección 6.
+
 ## 11. Cierre
 
 Hoy ningún país exige esta garantía, y no sabemos cuándo va a pasar. Pero lo que la empuja ya está: más satélites, bajo cumplimiento y reguladores endureciendo las reglas. Europa tiene su ley espacial en trámite en el Parlamento, y el Reino Unido ata la responsabilidad a la sostenibilidad desde el 1 de diciembre. Cuando un país decida exigir la garantía, va a necesitar dónde custodiarla. Eso ya está construido. Gracias.
 
 Ojo: no decir que el EU Space Act se aprobó ni dar fecha de voto.
+
+Fuentes:
+- EU Space Act: <https://defence-industry-space.ec.europa.eu/eu-space-act_en>
+- Reino Unido, paquete de herramientas financieras: <https://www.gov.uk/government/consultations/consultation-on-orbital-liabilities-insurance-charging-and-space-sustainability/outcome/space-regulatory-financial-tools-package-including-government-response-to-the-liability-insurance-charging-and-space-sustainability-consultation>
 
 ## 12. Respaldo: las preguntas difíciles
 
@@ -97,3 +141,9 @@ Slide de respaldo: no se presenta, se muestra si el jurado pregunta. Otras respu
 ¿Y si el operador vende el satélite o quiebra? Hoy la devolución va a la dirección que depositó. Cambiar el beneficiario no está construido.
 ¿Se premia igual un reingreso descontrolado? Sí: el catálogo dice que cayó, no cómo. Es un límite del dato público.
 ¿El 40% o el 65%? El 40% es de Nature Communications 2026, de 2010 a 2024. El 65% es de un estudio de 2025 con otra población.
+
+Fuentes:
+- 40%: Nature Communications 2026, <https://doi.org/10.1038/s41467-026-77660-4>
+- 65%: estudio ESA y UCL 2025, <https://conference.sdo.esoc.esa.int/proceedings/sdc9/paper/237/SDC9-paper237.pdf>
+Fallas del contrato y preguntas sin preparar: debate de práctica, cerebro/notas/2026-11-12-0137-mauricio-debate-jurado-defensa.md
+Respuestas largas con sus fuentes: docs/defensa.md
