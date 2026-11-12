@@ -7,7 +7,6 @@ import { useApp, useRealTime } from "@/lib/store";
 export function Header() {
   const booted = useApp((s) => s.booted);
   const source = useApp((s) => s.source);
-  const renderer = useApp((s) => s.renderer);
   const now = useRealTime();
   const live = source !== "demo";
   return (
@@ -29,7 +28,6 @@ export function Header() {
           <span className="blink-soft inline-block h-[7px] w-[7px] rounded-full bg-current" />
           {source === "fuji" ? "Live on Fuji" : source === "local" ? "Live · local node" : "Demo mode"}
         </span>
-        <span className="hidden text-faint lg:inline">Settled on Avalanche{renderer ? ` · ${renderer === "WEBGPU" ? "WebGPU" : "WebGL 2"}` : ""}</span>
       </div>
     </motion.header>
   );
