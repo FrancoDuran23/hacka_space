@@ -38,7 +38,8 @@ Contrato en Fuji: `0xA5aeCF58Fac272e9E4CC5D473A2767C56019CbB2`.
 3. **Sacamos del medio el obstáculo práctico.** A un regulador le cuesta exigir la garantía por dos motivos: la decisión política y tener que montar un fondo. No resolvemos el primero, pero eliminamos el segundo.
 4. **Sirve especialmente a países sin estructura.** Argentina no tiene ley espacial integral y hay un proyecto en Diputados. Un país así puede exigir la garantía sin crear un fondo estatal.
 5. **Regulación nacional, infraestructura compartida.** Cada país pone su regla; todos pueden usar el mismo contrato, con las mismas garantías de custodia y un registro que cualquiera audita.
-6. **Hay un uso posible antes de la obligación.** El historial público de cumplimiento le permite a un operador demostrar que cumple, ante clientes y aseguradoras. Es una hipótesis sin validar.
+6. **El costo de la basura existe, pero está repartido.** No hay una sola víctima con una factura grande, y por eso nadie lo arregla solo. Lo pagan los operadores que sí cumplen (la OCDE estima que protegerse de la basura cuesta entre 5 y 10% de una misión geoestacionaria, y más en órbita baja; Starlink informó unas 300.000 maniobras de esquive en 2025), las aseguradoras (varias dejaron de cubrir órbita baja o excluyen el choque con basura) y el contribuyente cuando un gobierno decide limpiar (ESA, EUR 86 millones; Reino Unido, GBP 75,6 millones por dos satélites). La garantía le pasa ese costo a quien deja el satélite.
+7. **Hay un uso posible antes de la obligación.** El historial público de cumplimiento le permite a un operador demostrar que cumple, ante clientes y aseguradoras. Es una hipótesis sin validar.
 
 ## 4. Cómo defenderlo
 
@@ -57,6 +58,9 @@ Contrato en Fuji: `0xA5aeCF58Fac272e9E4CC5D473A2767C56019CbB2`.
 | ¿Por qué blockchain y no una base de datos? | Alguien tendría que administrarla, y ese alguien es justo en quien los demás no confían. Operador, lanzamiento y daño pueden ser de países distintos. |
 | ¿Quién controla el relayer? | En la demo, nosotros, y publica el hash del dato para que cualquiera lo recalcule. Cerrar un caso vencido no depende del relayer. En el roadmap, firma de 2 de 3. |
 | ¿Y si el dato miente? | El reingreso es poco ambiguo: el objeto deja de estar en el catálogo. El límite real es que todo el seguimiento público viene de la red de Estados Unidos. |
+| ¿Quién pierde plata hoy con la basura? | Nadie tiene una factura única, y ese es el problema. El costo se reparte entre los operadores que sí cumplen, las aseguradoras y el contribuyente cuando un gobierno decide limpiar. Ningún Estado está obligado a hacerlo. |
+| ¿La blockchain permite regular a empresas de otro país? | No. La jurisdicción sale de la licencia: un Estado ya puede exigirle condiciones a quien licencia o a quien quiere operar en su mercado, lance donde lance. Lo que aporta el contrato es la ejecución: la garantía ya está depositada y no hay que cobrarle a una empresa extranjera en otro tribunal. |
+| ¿Y si el operador saca la licencia en un país que no exige la garantía? | Es un límite real. La defensa es la regla de acceso al mercado, como hace la FCC con su plazo de 5 años: si querés operar acá, depositás. |
 | ¿Es legal remover un satélite ajeno? | El control lo conserva el Estado de registro. Por eso el consentimiento tiene que estar en la licencia, no solo en el contrato. |
 | ¿Quién haría la remoción? ¿Tienen socios? | No tenemos socios. Hoy trabajan en remoción ClearSpace, Astroscale y Starfish Space, y serían posibles destinatarios del fondo en el roadmap. |
 | ¿Esto ya causó algún daño real? | Sí: Resurs-P1 en 2024, Shenzhou-20 en 2025 y el choque Cosmos-Iridium en 2009. |
@@ -70,6 +74,8 @@ Contrato en Fuji: `0xA5aeCF58Fac272e9E4CC5D473A2767C56019CbB2`.
 - **"La NYSE eligió exclusivamente Avalanche."** Lo anunció Ava Labs, la plataforma maneja varias redes y falta la aprobación regulatoria.
 - **"El fondo paga la remoción."** El contrato desplegado decomisa al fondo; no le paga a un removedor.
 - **"El escrow genera rendimiento."** Es roadmap y tiene límites regulatorios.
+- **"El Estado se ahorra los EUR 86 millones."** Ningún Estado está obligado a limpiar, y ese monto es de una misión de demostración. Decir: "cuando alguien limpia, hoy lo paga el contribuyente".
+- **"Gracias a la blockchain cada país regula a sus empresas en cualquier lado."** Eso lo da la licencia, no la tecnología. La cadena aporta custodia neutral y ejecución sin cobrar afuera.
 - **"La estación espacial se refugió por un choque de satélites."** El Resurs-P1 se partió solo y la causa no se confirmó. Tampoco hay datos de pérdidas de plata.
 - **"En 2030 habrá 300.000 satélites."** Esa cifra sale de una solicitud en papel de Ruanda para una constelación, no de una proyección. Usar la de Novaspace.
 - **"Nos asociamos con RemoveDEBRIS."** Fue una misión de prueba de la Universidad de Surrey (2018 y 2019) que ya terminó. No es una empresa.
@@ -102,6 +108,11 @@ Conviene nombrarlos antes de que los nombre el jurado.
 - [Resurs-P1, Al Jazeera](https://www.aljazeera.com/news/2024/6/28/iss-astronauts-take-cover-as-defunct-russian-satellite-shatters)
 - [Shenzhou-20, PBS](https://www.pbs.org/newshour/science/chinese-astronauts-return-from-space-station-after-delay-blamed-on-space-debris-damage)
 - [Choque Cosmos 2251 e Iridium 33, análisis de la NASA](https://ntrs.nasa.gov/api/citations/20150003820/downloads/20150003820.pdf)
+- [ESA, el costo de la basura espacial (cifras de la OCDE)](https://www.esa.int/Space_Safety/Space_Debris/The_cost_of_space_debris)
+- [Maniobras de Starlink en 2025, New Scientist](https://www.newscientist.com/article/2512470-spacexs-starlink-dodged-300000-satellite-collisions-in-2025)
+- [Aseguradoras que se retiran de órbita baja, Insurance Journal](https://www.insurancejournal.com/news/national/2021/09/01/629684.htm)
+- [Reino Unido, misión nacional de remoción](https://www.gov.uk/government/news/uk-builds-leadership-in-space-debris-removal-and-in-orbit-manufacturing-with-national-mission-and-funding-boost)
+- [FCC, regla de 5 años y acceso al mercado](https://accesspartnership.com/access-alert-us-fcc-to-set-five-year-deadline-for-deorbiting-leo-satellites)
 - [KeepTrack, satélites lanzados por año](https://keeptrack.space/live-count/how-many-satellites-are-launched-per-year)
 - [Novaspace, 43.000 satélites a 2034](https://payloadspace.com/novaspace-predicts-43000-new-sats-to-launch-by-2034/)
 - [Récord de lanzamientos en 2025](https://e360.yale.edu/digest/2025-satellite-launches)

@@ -57,13 +57,17 @@ Aclarar si preguntan: son objetos reales cargados para mostrar los tres caminos;
 
 ## 8. Por qué blockchain
 
-¿Por qué blockchain? Porque acá no hay una autoridad común. El operador puede ser de un país, la licencia de otro, y el daño es de todos. Con el contrato, la garantía no la tiene ninguna de las partes, las reglas quedan fijas al depositar, y cualquiera puede verificar el dato y el pago sin pedirle acceso a un banco extranjero. Y lo decimos nosotros: si todo pasa dentro de un solo país, un fideicomiso en un banco alcanza. Donde esto aporta es cuando las partes son de jurisdicciones distintas y ninguna quiere litigar en la del otro.
+¿Por qué blockchain? Porque acá no hay una autoridad común. El operador puede ser de un país, la licencia de otro, y el daño es de todos. Cada Estado ya puede exigirle condiciones a quien licencia, lance donde lance: eso sale de la licencia, no de la tecnología. Lo que no tiene es cómo cobrarle a una empresa extranjera. Con la garantía depositada en el contrato, no hace falta cobrar: ya está. Con el contrato, la garantía no la tiene ninguna de las partes, las reglas quedan fijas al depositar, y cualquiera puede verificar el dato y el pago sin pedirle acceso a un banco extranjero. Y lo decimos nosotros: si todo pasa dentro de un solo país, un fideicomiso en un banco alcanza. Donde esto aporta es cuando las partes son de jurisdicciones distintas y ninguna quiere litigar en la del otro.
 
 Si preguntan si todos los países usan el mismo contrato: no. Cada regulador despliega el suyo, con sus montos y su fondo. Lo compartido es la red y el código.
 
 ## 9. Para quién
 
 ¿Para quién es? Quien lo adopta es el regulador que da la licencia: fija la regla, los montos y el fondo, y se ahorra montar la custodia. Quien deposita es el operador o su aseguradora. Sirve sobre todo a países sin estructura propia: Argentina no tiene una ley espacial integral y hay un proyecto en Diputados. En números: si el 20% de los lanzamientos depositara 200.000 dólares por satélite, serían unos 180 millones de dólares por año en garantías. Con una comisión de 0,5%, unos 900.000 por año. Eso es un supuesto nuestro, no un modelo cerrado.
+
+Si preguntan quién pierde plata hoy: no hay una sola víctima con una factura grande, y por eso nadie lo arregla solo. El costo está repartido en tres lugares. Los operadores que sí cumplen: la OCDE estima que protegerse de la basura cuesta entre 5 y 10% de una misión geoestacionaria, y más en órbita baja; Starlink informó a la FCC unas 300.000 maniobras para esquivar objetos en 2025. Las aseguradoras: varias dejaron de cubrir órbita baja o excluyen el choque con basura. Y el contribuyente, cuando un gobierno decide limpiar: la ESA con 86 millones de euros, el Reino Unido con 75,6 millones de libras para retirar dos satélites.
+
+Ojo: no decir "el Estado se ahorra 86 millones". Ningún Estado está obligado a limpiar; cuando lo hace es por decisión propia.
 
 Si preguntan si un operador lo usaría antes de que sea obligatorio: no lo afirmamos. Depende de que un regulador lo exija. El uso voluntario es una hipótesis sin validar.
 
