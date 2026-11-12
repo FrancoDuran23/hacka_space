@@ -82,6 +82,8 @@ Fuentes:
 
 ¿Por qué blockchain? Porque acá no hay una autoridad común. El operador puede ser de un país, la licencia de otro, y el daño es de todos. Cada Estado ya puede exigirle condiciones a quien licencia, lance donde lance: eso sale de la licencia, no de la tecnología. Lo que no tiene es cómo cobrarle a una empresa extranjera. Con la garantía depositada en el contrato, no hace falta cobrar: ya está. Con el contrato, la garantía no la tiene ninguna de las partes, las reglas quedan fijas al depositar, y cualquiera puede verificar el dato y el pago sin pedirle acceso a un banco extranjero. Y lo decimos nosotros: si todo pasa dentro de un solo país, un fideicomiso en un banco alcanza. Donde esto aporta es cuando las partes son de jurisdicciones distintas y ninguna quiere litigar en la del otro.
 
+Si preguntan por qué confiar en nosotros: no hace falta, y eso es lo que da la blockchain. Son cuatro cosas que cualquiera puede comprobar en el contrato publicado. Uno: la plata solo puede salir hacia dos lugares, el operador o la billetera del regulador; no existe ninguna función para que nosotros ni nadie la retire. Dos: no hay administrador; los montos, los plazos y la dirección del fondo quedaron fijos al desplegar y nadie los puede cambiar, tampoco nosotros. Tres: cerrar un caso vencido lo puede hacer cualquiera, no depende de que nosotros queramos. Cuatro: cada depósito, cada dato usado y cada pago quedan públicos, con la huella del dato para que cualquiera lo recalcule. El límite, dicho por nosotros: hoy el dato de reingreso lo firma una sola clave nuestra. Si esa clave fallara o mintiera, lo peor que puede pasar es que la plata vaya al operador o al regulador cuando no correspondía; nunca a nosotros.
+
 Si preguntan si todos los países usan el mismo contrato: no. Cada regulador despliega el suyo, con sus montos y su fondo. Lo compartido es la red y el código.
 
 Fuentes:
@@ -90,9 +92,11 @@ Responsabilidad del Estado por sus privados: Tratado del Espacio de 1967, artíc
 
 ## 9. Para quién
 
-¿Para quién es? Quien lo adopta es el regulador que da la licencia: fija la regla, los montos y el fondo, y se ahorra montar la custodia. Quien deposita es el operador o su aseguradora. Sirve sobre todo a países sin estructura propia: Argentina no tiene una ley espacial integral y hay un proyecto en Diputados. En números: si el 20% de los lanzamientos depositara 200.000 dólares por satélite, serían unos 180 millones de dólares por año en garantías. Con una comisión de 0,5%, unos 900.000 por año. Eso es un supuesto nuestro, no un modelo cerrado.
+¿Para quién es? Quien lo adopta es el regulador que da la licencia: fija la regla, los montos y el fondo, y se ahorra montar la custodia. Quien deposita es el operador o su aseguradora. Sirve sobre todo a países sin estructura propia: Argentina no tiene una ley espacial integral y hay un proyecto en Diputados. En números: si el 20% de los lanzamientos depositara 200.000 dólares por satélite, serían unos 180 millones de dólares por año en garantías. ¿Y nosotros de qué vivimos? De dos cosas. Una comisión de 0,5% por depósito: unos 900.000 por año. Y un porcentaje de lo que genere el escrow: cuando la garantía esté en un activo de bajo riesgo que rinda, el rendimiento es del operador, que deja de tener plata muerta, y nosotros cobramos una parte de ese rendimiento. Con un 4% anual sobre esos 180 millones y quedándonos con el 10% de lo generado, son unos 720.000 por año, y crece porque los depósitos se acumulan año tras año. Hoy el contrato no genera rendimiento: es el paso siguiente. Los porcentajes son un supuesto nuestro, no un modelo cerrado.
 
 Si preguntan quién pierde plata hoy: no hay una sola víctima con una factura grande, y por eso nadie lo arregla solo. El costo está repartido en tres lugares. Los operadores que sí cumplen: la OCDE estima que protegerse de la basura cuesta entre 5 y 10% de una misión geoestacionaria, y más en órbita baja; Starlink informó a la FCC unas 300.000 maniobras para esquivar objetos en 2025. Las aseguradoras: varias dejaron de cubrir órbita baja o excluyen el choque con basura. Y el contribuyente, cuando un gobierno decide limpiar: la ESA con 86 millones de euros, el Reino Unido con 75,6 millones de libras para retirar dos satélites.
+
+Si preguntan quién paga: el gobierno no pone un peso. Paga el operador, que deposita la garantía al lanzar y la recupera si cumple. Nuestra comisión sale de ese depósito, y la otra parte de nuestro ingreso sale del rendimiento de la plata depositada, no del bolsillo de nadie. Si el operador no cumple, la garantía va a la billetera del regulador. Ojo: la garantía no paga la limpieza. Una remoción tuvo un contrato de 86 millones de euros y la garantía ronda los 200.000 dólares. Es un incentivo para que nadie deje basura, y reemplaza a las multas, que llegan tarde y no asustan a nadie. El regulador solo pone la regla.
 
 Ojo: no decir "el Estado se ahorra 86 millones". Ningún Estado está obligado a limpiar; cuando lo hace es por decisión propia.
 
@@ -105,7 +109,7 @@ Fuentes:
 - Misión de remoción del Reino Unido: <https://www.gov.uk/government/news/uk-builds-leadership-in-space-debris-removal-and-in-orbit-manufacturing-with-national-mission-and-funding-boost>
 - Contrato ESA y ClearSpace: <https://spacenews.com/clearspace-contract-signed/>
 - USD 200.000 por satélite: Nature Communications 2026, <https://doi.org/10.1038/s41467-026-77660-4>
-Los USD 180 millones y la comisión son cálculo nuestro.
+Los USD 180 millones, la comisión, el 4% de rendimiento y el 10% que cobraríamos son cálculo y supuesto nuestro.
 
 ## 10. Los límites, dichos por nosotros
 

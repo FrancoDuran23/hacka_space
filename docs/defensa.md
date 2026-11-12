@@ -49,6 +49,9 @@ Contrato en Fuji: `0xeE7C5D5C0D7103C220d640EEb7B2788ab27CEf59`.
 | ¿Cómo saben que se va a exigir? | No lo sabemos. Lo que la empuja ya está pasando: más satélites, bajo cumplimiento y reguladores endureciendo reglas. |
 | ¿Por qué lo usarían antes? | Para respaldar con plata un compromiso público (hay más de 200 firmantes del Zero Debris Charter) o negociar una prima de seguro más baja. Hipótesis sin validar. |
 | ¿Quién es el usuario? | El operador o su aseguradora usan la app. El regulador la adopta y fija las reglas. |
+| ¿Cuál es el modelo de negocio? | Dos ingresos: una comisión por depósito y un porcentaje del rendimiento que genere el escrow. El rendimiento es del operador y nosotros cobramos una parte. Lo segundo es roadmap: el contrato de hoy no genera rendimiento. |
+| ¿Quién paga? ¿El gobierno? | No, el gobierno no pone plata. Paga el operador: deposita la garantía y la recupera si cumple. Nuestra comisión sale de ese depósito y el resto de nuestro ingreso, del rendimiento. Si no cumple, la garantía va a la billetera del regulador. No paga la limpieza (EUR 86 millones contra USD 200.000): es un incentivo que reemplaza a las multas. El regulador solo pone la regla. |
+| ¿Por qué confiar en ustedes con la plata? | No hace falta confiar, se comprueba en el contrato. La plata solo puede ir al operador o a la billetera del regulador: no hay función para que nosotros la retiremos. No hay administrador: montos, plazos y billetera de destino quedaron fijos al desplegar. Cerrar un caso vencido lo puede hacer cualquiera. Todo depósito, dato y pago es público. Límite: el dato de reingreso lo firma hoy una sola clave nuestra; si fallara, la plata iría al operador o al regulador, nunca a nosotros. |
 | ¿Quién fija los montos? | El regulador. Los de la demo (USD 100.000, 300.000 y 800.000 según la altura) están dentro del rango de los estudios y quedan fijos al desplegar. |
 | ¿Los operadores chicos pueden pagarlo? | El bono lo puede poner una aseguradora a cambio de una prima, y en órbita baja el monto es el mínimo. |
 | ¿Y si el satélite falla sin culpa del operador? | Pierde la garantía igual. Los que mueren sin poder maniobrar son los que dejan basura. Para eso está el seguro. |
@@ -88,7 +91,7 @@ Conviene nombrarlos antes de que los nombre el jurado.
 1. **Depende de una decisión política.** La FCC consultó el bono en 2020 y no lo adoptó. Fuentes: [FCC 20-54](https://www.govinfo.gov/content/pkg/FR-2020-08-25/html/2020-13185.htm).
 2. **No validamos con nadie.** Ningún regulador, operador ni aseguradora nos confirmó interés.
 3. **El volumen está concentrado.** Starlink fue cerca de tres cuartos de lo lanzado en 2025 (73% según KeepTrack: 3.171 de 4.323) y ya desorbita; el impacto está en el resto. Fuentes: [KeepTrack](https://keeptrack.space/live-count/how-many-satellites-are-launched-per-year).
-4. **El modelo de ingresos es un supuesto.** La comisión de 0,5% por depósito no está decidida.
+4. **El modelo de ingresos es un supuesto.** Son dos fuentes: una comisión de 0,5% por depósito y un porcentaje del rendimiento que genere el escrow (ejemplo del guion: 10% de un rendimiento de 4% anual). Ningún porcentaje está decidido, y la segunda depende de que la garantía esté en un activo que rinda, que hoy no está construido.
 5. **Solo cubre órbita baja.** En la geoestacionaria los satélites no reingresan, y el caso DISH fue ahí. Fuentes: [Space.com](https://www.space.com/space-debris-fcc-first-fine-dish-deorbit-satellite).
 
 ## 7. Pendientes antes de grabar
