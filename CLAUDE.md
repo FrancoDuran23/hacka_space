@@ -32,4 +32,5 @@ Lo que salga de las skills `idea/*` (problemas candidatos, veredictos, modelo de
 
 - `contratos/`: el único contrato es `OrbitClearEscrow` (garantía de desorbitado del operador), desplegado en Fuji (ver `contratos/README.md`). Verificar con `npm test` y `npm run typecheck`. `npm run web:config` regenera `web/lib/contract.json`.
 - `web/`: consola Next.js que lee ese contrato. Verificar con `npx tsc --noEmit` y `npx next build`. `npm run dev:demo` corre sin blockchain.
+- Los modelos 3D de `web/public/assets/modelos-3d/` van por **Git LFS**. Después de clonar o hacer pull verificá que los `.glb` no sean punteros de ~1 KB (`file web/public/assets/modelos-3d/sac-c.glb` debe decir "data", no ASCII). Si `git lfs` no existe, instalalo (`apt install git-lfs` o el binario oficial en `~/.local/bin`), después `git lfs install && git lfs pull`.
 - El RPC público de Fuji rechaza `eth_getLogs` en batch y corta ráfagas con 429: nada de scans en paralelo.
