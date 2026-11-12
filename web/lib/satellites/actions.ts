@@ -136,13 +136,11 @@ export async function operatorSatellites(owner: string): Promise<OperatorSatelli
 /** Max declared mission length: past this a declaration only stretches the deadline. */
 const MAX_MISSION_YEARS = 50;
 
-/** The declared end of mission (ADR 0004) as contract seconds, or the reason it is not acceptable. */
-function missionEndFrom(isoDate: string, launchedAt: bigint): bigint | string {
-  if (!/^\d{4}-\d{2}-\d{2}$/.test(isoDate)) return "Ingresá la fecha de fin de misión.";
-  const at = BigInt(Math.floor(Date.parse(`${isoDate}T00:00:00Z`) / 1000));
-  if (at < launchedAt) return "El fin de misión no puede ser anterior al lanzamiento.";
-  if (at > launchedAt + BigInt(MAX_MISSION_YEARS * YEAR_S)) return `El fin de misión no puede pasar los ${MAX_MISSION_YEARS} años desde el lanzamiento.`;
-  return at;
+/** Declared operating life (years from launch) → end of mission in contract seconds (ADR 0004), or why not. */
+function missionEndFrom(lifeYears: number, launchedAt: bigint): bigint | string {
+  if (!Number.isFinite(lifeYears) || lifeYears < 0) return "Ingresá la vida útil de operación en años.";
+  if (lifeYears > MAX_MISSION_YEARS) return `La vida útil no puede pasar los ${MAX_MISSION_YEARS} años.`;
+  return launchedAt + BigInt(Math.round(lifeYears * YEAR_S));
 }
 
 async function verifiedWallets(userId: string) {
@@ -176,7 +174,7 @@ export async function quoteSatellite(norad: number): Promise<QuoteResult> {
  * Registers `norad` on-chain, signed by the relayer. The deposit is pulled from `walletAddress`, which must be
  * one of the caller's verified wallets: otherwise anyone could spend an allowance someone else granted.
  */
-export async function registerSatellite(norad: number, walletAddress: string, missionEnd: string): Promise<RegisterResult> {
+export async function registerSatellite(norad: number, walletAddress: string, lifeYears: number): Promise<RegisterResult> {
   const user = await sessionUser();
   if (!user) return fail("auth", "Iniciá sesión para dar de alta un satélite.");
   if (!isAddress(walletAddress)) return fail("input", "Elegí una wallet válida.");
@@ -189,7 +187,7 @@ export async function registerSatellite(norad: number, walletAddress: string, mi
 
   const p = await prepare(norad);
   if (!p.ok) return p;
-  const missionEndsAt = missionEndFrom(missionEnd, p.terms.launchedAt);
+  const missionEndsAt = missionEndFrom(lifeYears, p.terms.launchedAt);
   if (typeof missionEndsAt === "string") return fail("input", missionEndsAt);
   const [balance, allowance] = await Promise.all([
     p.usdc.getFunction("balanceOf")(operator) as Promise<bigint>,

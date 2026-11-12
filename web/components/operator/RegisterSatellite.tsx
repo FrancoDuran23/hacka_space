@@ -17,6 +17,8 @@ type Message = { tone: "ok" | "bad"; text: string; txHash?: string; href?: strin
 
 /** The contract counts 365-day years. */
 const YEAR_MS = 365 * 86_400_000;
+/** Same cap the server applies. */
+const MAX_LIFE_YEARS = 50;
 
 const OBJECT_TYPE = { PAY: "satélite", "R/B": "cuerpo de cohete", DEB: "fragmento", UNK: "desconocido" } as Record<string, string>;
 
@@ -41,8 +43,8 @@ export function RegisterSatellite({
   const [wallets, setWallets] = useState<WalletFunds[]>([]);
   const [chosen, setChosen] = useState<string | null>(null);
   const [acceptExpired, setAcceptExpired] = useState(false);
-  /** Declared end of mission (YYYY-MM-DD): the deadline runs from here (ADR 0004). */
-  const [missionEnd, setMissionEnd] = useState("");
+  /** Declared operating life in years: end of mission = launch + this (ADR 0004). */
+  const [lifeYears, setLifeYears] = useState("");
   const [busy, setBusy] = useState<Busy>(null);
   const [msg, setMsg] = useState<Message | null>(null);
   const [done, setDone] = useState(false);
@@ -51,10 +53,11 @@ export function RegisterSatellite({
   const deposit = quote ? BigInt(quote.deposit) : 0n;
   const short = !!wallet && BigInt(wallet.balance) < deposit;
   const authorized = !!wallet && BigInt(wallet.allowance) >= deposit;
-  const launchDay = quote ? new Date(quote.launchedAt * 1000).toISOString().slice(0, 10) : undefined;
   // preview only; the server recomputes and validates it before registering
-  const missionEndsAt = /^\d{4}-\d{2}-\d{2}$/.test(missionEnd) ? Date.parse(`${missionEnd}T00:00:00Z`) : NaN;
-  const deadline = quote && !Number.isNaN(missionEndsAt) && missionEndsAt >= quote.launchedAt * 1000 ? missionEndsAt + quote.bandYears * YEAR_MS : null;
+  const years = lifeYears.trim() === "" ? NaN : Number(lifeYears);
+  const validYears = Number.isFinite(years) && years >= 0 && years <= MAX_LIFE_YEARS;
+  const missionEndsAt = quote && validYears ? quote.launchedAt * 1000 + Math.round(years * YEAR_MS) : null;
+  const deadline = missionEndsAt !== null && quote ? missionEndsAt + quote.bandYears * YEAR_MS : null;
   const expired = deadline !== null && deadline <= Date.now();
   const tx = (hash: string) => (chain?.explorer ? `${chain.explorer}/tx/${hash}` : null);
 
@@ -104,7 +107,7 @@ export function RegisterSatellite({
     setBusy("register");
     setMsg(null);
     try {
-      const r = await registerSatellite(quote.norad, wallet.address, missionEnd);
+      const r = await registerSatellite(quote.norad, wallet.address, years);
       if (!r.ok) {
         setMsg({ tone: "bad", text: r.error, login: r.code === "auth" });
         return;
@@ -181,26 +184,35 @@ export function RegisterSatellite({
             <Row label="Depósito de desorbitado" value={formatUSD(quote.depositUsd)} />
           </dl>
 
-          <label className="mt-4 block text-[13px] text-ink/90" htmlFor="mission-end">
-            Fin de misión declarado
+          <label className="mt-4 block text-[13px] text-ink/90" htmlFor="life-years">
+            Vida útil de operación
           </label>
-          <input
-            id="mission-end"
-            type="date"
-            value={missionEnd}
-            min={launchDay}
-            disabled={done}
-            onChange={(e) => {
-              setMissionEnd(e.target.value);
-              setAcceptExpired(false);
-            }}
-            className="mono mt-1 h-9 w-full rounded-[8px] bg-white/[0.05] px-3 text-[13px] text-ink outline-none [color-scheme:dark] focus:shadow-[inset_0_0_0_1px_rgb(56_232_255/0.5)]"
-          />
+          <div className="mt-1 flex items-center gap-2">
+            <input
+              id="life-years"
+              type="number"
+              inputMode="decimal"
+              min={0}
+              max={MAX_LIFE_YEARS}
+              step={0.5}
+              placeholder="ej. 15"
+              value={lifeYears}
+              disabled={done}
+              onChange={(e) => {
+                setLifeYears(e.target.value);
+                setAcceptExpired(false);
+              }}
+              className="mono h-9 w-28 rounded-[8px] bg-white/[0.05] px-3 text-[13px] text-ink outline-none placeholder:text-faint focus:shadow-[inset_0_0_0_1px_rgb(56_232_255/0.5)]"
+            />
+            <span className="text-[13px] text-dim">años desde el lanzamiento</span>
+          </div>
           <p className="mt-1 text-[11.5px] text-faint">
-            La fecha en que el satélite deja de operar. CelesTrak no la publica: la declarás vos y queda registrada en el contrato.
+            Cuánto opera el satélite. CelesTrak no lo publica: lo declarás vos y queda registrado en el contrato.
           </p>
-          {deadline !== null && (
-            <dl className="mt-3 text-[13px]">
+          {lifeYears !== "" && !validYears && <p className="mt-1 text-[12px] text-bad">Ingresá entre 0 y {MAX_LIFE_YEARS} años.</p>}
+          {deadline !== null && missionEndsAt !== null && (
+            <dl className="mt-3 space-y-[8px] text-[13px]">
+              <Row label="Fin de misión declarado" value={utcDate(missionEndsAt)} mono />
               <Row
                 label="Plazo de retiro"
                 value={`${utcDate(deadline)} (fin de misión + ${quote.bandYears} años)`}

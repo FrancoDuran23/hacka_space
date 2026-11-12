@@ -20,9 +20,13 @@ _Avoid_: cliente, usuario, dueño
 La fecha límite para que el satélite reingrese: su fin de misión declarado más los años de su banda orbital.
 _Avoid_: vencimiento, deadline, fecha de retiro
 
+**Vida útil de operación**:
+Los años que el operador declara que el satélite opera desde su lanzamiento. Es una declaración, no un dato verificable.
+_Avoid_: vida útil de diseño, expected lifetime, duración de misión
+
 **Fin de misión declarado**:
-La fecha en que el operador declara que el satélite deja de operar. Es una declaración, no un dato verificable; queda registrada junto al escrow.
-_Avoid_: vida útil, fin de vida, end of life
+La fecha de lanzamiento más la vida útil de operación. Queda registrada junto al escrow y desde ahí corre el plazo de retiro.
+_Avoid_: fin de vida, end of life
 
 **Banda orbital**:
 Franja de altitud que fija el plazo de retiro y el monto del depósito. Más arriba, el satélite tarda más en caer solo y la zona está más cargada, así que el depósito sube.
