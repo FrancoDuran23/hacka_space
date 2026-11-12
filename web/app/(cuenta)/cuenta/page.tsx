@@ -1,4 +1,4 @@
-import { FileCode, Wallet } from "lucide-react";
+import { FileCode, ShieldCheck, SlidersHorizontal, Wallet } from "lucide-react";
 import Link from "next/link";
 import { Suspense } from "react";
 
@@ -8,6 +8,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/cuenta-ui/card";
+import { isAdminEmail } from "@/lib/admin";
 import { requireUser } from "@/lib/auth/session";
 
 export const dynamic = "force-dynamic";
@@ -24,6 +25,12 @@ const sections = [
     title: "Direcciones de contratos",
     description: "Contratos importantes en Avalanche Fuji",
     icon: FileCode,
+  },
+  {
+    href: "/regulador",
+    title: "Panel de regulador",
+    description: "Escrows supervisados por tu agencia",
+    icon: ShieldCheck,
   },
 ];
 
@@ -51,8 +58,28 @@ export default function CuentaPage() {
             </Card>
           </Link>
         ))}
+        <Suspense fallback={null}>
+          <AdminSection />
+        </Suspense>
       </div>
     </main>
+  );
+}
+
+/** El panel de administración solo se ofrece a emails en ADMIN_EMAILS. */
+async function AdminSection() {
+  const user = await requireUser();
+  if (!isAdminEmail(user.email)) return null;
+  return (
+    <Link href="/admin" className="group outline-none">
+      <Card className="h-full transition-colors group-hover:bg-muted/50 group-focus-visible:ring-2 group-focus-visible:ring-ring">
+        <CardHeader>
+          <SlidersHorizontal className="size-5 text-muted-foreground" />
+          <CardTitle className="text-base">Administración</CardTitle>
+          <CardDescription>Vista global y checks de funcionamiento</CardDescription>
+        </CardHeader>
+      </Card>
+    </Link>
   );
 }
 
