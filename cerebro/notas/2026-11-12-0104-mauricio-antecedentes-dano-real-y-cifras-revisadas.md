@@ -49,3 +49,11 @@ Franco trajo tres datos para el pitch: la estación espacial refugiada por un ch
 - Fecha y resultado del voto en comisión del EU Space Act, en la agenda del Parlamento Europeo.
 - Si la solicitud de Ruanda fue ante la UIT y por cuántos satélites, por si alguien del jurado trae la cifra.
 - Si el guion del pitch abre con Resurs-P1 en lugar del dato de lanzamientos.
+
+## Aporte de mauricio (2026-11-12 10:19)
+
+Búsqueda sobre "la estación espacial canceló una misión por fragmentos de una nave vieja". No hubo misión cancelada; lo que existe son dos caminatas espaciales postergadas.
+
+- **30 de noviembre de 2021.** La NASA postergó horas antes una caminata (Marshburn y Barron, cambio de una antena) por un aviso de basura que no llegó a evaluar. Se hizo el 2 de diciembre. Varios medios la describen como la primera caminata suspendida por basura espacial. Fue dos semanas después de que Rusia destruyera con un misil su satélite muerto Cosmos 1408 (15-nov-2021, lanzado en 1982), prueba que obligó a la tripulación a refugiarse varias horas. **Ojo:** las fuentes no confirman que el resto del 30 de noviembre fuera del Cosmos 1408. Fuentes: https://www.cbsnews.com/news/nasa-spacewalk-called-off-possible-risk-space-debris-notification , https://www.twz.com/43317/nasa-calls-off-spacewalk-as-concerns-over-russian-anti-satellite-test-debris-continue
+- **21 de diciembre de 2022.** La NASA frenó una caminata porque se acercaba un fragmento de una etapa rusa Fregat-SB. La estación encendió motores para esquivarlo; sin la maniobra habría pasado a menos de 400 metros. La caminata se hizo al día siguiente. Fuentes: https://www.nasa.gov/blogs/spacestation/2022/12/21/nasa-spacewalk-postponed-due-to-debris-avoidance , https://space.com/russian-space-debris-cancels-nasa-spacewalk
+- **Interpretación:** sirven para mostrar que la basura ya interrumpe operaciones tripuladas. Ninguno es un caso que OrbitClear habría evitado: el Cosmos 1408 fue destruido a propósito con un misil y la Fregat es una etapa de cohete, no un satélite con operador y licencia. Decir "postergó una caminata", no "canceló una misión".
