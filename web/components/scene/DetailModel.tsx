@@ -10,6 +10,7 @@ import { eciScene, periodMinutes, satrecFor } from "@/lib/orbit";
 import { statusAt } from "@/lib/status";
 import { app, sim, useApp } from "@/lib/store";
 import type { DebrisObject, ObjectKind } from "@/lib/types";
+import { modelForObject } from "@/lib/models";
 import { STATE_RGB, U, clamp01, positions } from "./shared";
 
 const MODEL_SCALE = 0.011;
@@ -54,29 +55,6 @@ function useMaterials() {
 
 type Mats = ReturnType<typeof useMaterials>;
 
-/** Real spacecraft models (public/assets/modelos-3d) matched to each tracked object. */
-const MODELS = {
-  radarsat: "/assets/modelos-3d/radarsat-1.glb",
-  sacc: "/assets/modelos-3d/sac-c.glb",
-  tdrs: "/assets/modelos-3d/tdrs-a.glb",
-  agena: "/assets/modelos-3d/agena-stage.glb",
-  landsat: "/assets/modelos-3d/landsat.glb",
-  acrimsat: "/assets/modelos-3d/acrimsat.glb",
-} as const;
-
-/** Satellite-kit pieces — a detached panel / bus / dish reads as a real fragment. */
-const FRAG_MODELS = ["/assets/modelos-3d/frag-panel.glb", "/assets/modelos-3d/frag-bus.glb", "/assets/modelos-3d/frag-dish.glb"] as const;
-
-/** Model closest to the real object: radar sats, comm sats, stages, fragments. */
-function modelForObject(o: DebrisObject): string {
-  const n = o.name.toUpperCase();
-  if (o.kind === "rocket-body") return MODELS.agena;
-  if (o.kind === "fragment") return FRAG_MODELS[o.objectId % FRAG_MODELS.length];
-  if (/ENVISAT|SEASAT/.test(n)) return MODELS.radarsat;
-  if (/SAOCOM/.test(n)) return MODELS.sacc;
-  if (/IRIDIUM|COSMOS/.test(n)) return MODELS.tdrs;
-  return o.objectId % 2 ? MODELS.landsat : MODELS.acrimsat;
-}
 const modelCache = new Map<string, Promise<THREE.Group>>();
 
 function loadSpacecraft(url: string): Promise<THREE.Group> {

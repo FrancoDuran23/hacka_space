@@ -35,7 +35,7 @@ export function SatelliteCards({ objects, now, onOpen, onAdd }: { objects: Debri
               className="panel group cursor-pointer overflow-hidden text-left transition-[box-shadow,transform] duration-200 hover:-translate-y-0.5 hover:shadow-[inset_0_0_0_1px_var(--st),0_18px_40px_rgb(0_0_0/0.4)] focus-visible:outline-none focus-visible:shadow-[inset_0_0_0_1px_var(--st)]"
             >
               <div className="relative h-[150px] bg-[radial-gradient(ellipse_at_center,rgb(56_232_255/0.08),transparent_70%)]">
-                <CardModel kind={o.kind} objectId={o.objectId} status={st} />
+                <CardModel object={o} status={st} />
                 <span className="status-chip absolute top-3 left-3" data-status={st}>
                   {STATUS_LABEL[st]}
                 </span>
