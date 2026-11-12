@@ -16,7 +16,6 @@ import { usdcToUsd, walletErrorText } from "./shared";
 
 /** ESA owns the only real escrow on Fuji (ENVISAT), so the demo opens on live data. */
 const DEFAULT_OPERATOR = "ESA";
-const SOURCE_LABEL = { fuji: "En vivo · Fuji", local: "En vivo · nodo local", demo: "Modo demo" } as const;
 const REFRESH_MS = 20_000;
 
 // three.js only runs in the browser
@@ -84,10 +83,6 @@ export function OperatorDashboard({ initial, chain }: { initial: EscrowSnapshot;
             <span className="text-[12.5px] text-dim">Panel del operador</span>
           </div>
           <div className="flex flex-wrap items-center gap-4 text-[12.5px]">
-            <span className={`flex items-center gap-2 font-medium ${snap.source === "demo" ? "text-warn" : "text-ok"}`}>
-              <span className="blink-soft inline-block h-[7px] w-[7px] rounded-full bg-current" />
-              {SOURCE_LABEL[snap.source]}
-            </span>
             <Link href="/" className="text-dim hover:text-cyan">
               Consola orbital
             </Link>
