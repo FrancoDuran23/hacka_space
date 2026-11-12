@@ -5,14 +5,19 @@ import { useFrame, useThree } from "@react-three/fiber";
 import { Html } from "@react-three/drei";
 import * as THREE from "three/webgpu";
 import { eciScene, satrecFor, telemetry, tleFields } from "@/lib/orbit";
+import { ownerLabel } from "@/lib/owners";
 import { utcDate, utcClock } from "@/lib/format";
 import { app, sim, useApp, useSimTime } from "@/lib/store";
-import type { CatalogObject } from "@/lib/types";
+import type { CatalogKind, CatalogObject } from "@/lib/types";
 import { behindEarth, createSprites, positions } from "./shared";
 
 const PICK_RADIUS_PX = 13;
-/** Soft blue-white, dimmer than escrow objects: context, not the product. */
-const DOT = { r: 0.62, g: 0.82, b: 1.0 };
+/** SATCAT status colors, dimmer than escrow objects: context, not the product. */
+const KIND_RGB: Record<CatalogKind, [number, number, number]> = {
+  active: [0.5, 0.95, 1.15],
+  debris: [1.2, 0.5, 0.35],
+  out: [0.45, 0.45, 0.5],
+};
 
 /**
  * Live CelesTrak group as a cloud of small points orbiting in real time.
@@ -71,14 +76,18 @@ export function CatalogField() {
       let pos = positions.get(o.objectId);
       if (!pos) positions.set(o.objectId, (pos = new THREE.Vector3(2, 0, 0)));
       tmp.date.setTime(sim.time);
+      let alive = true;
       try {
-        if (!eciScene(satrecFor(o.tle), tmp.date, pos)) pos.set(2, 0, 0);
+        alive = eciScene(satrecFor(o.tle), tmp.date, pos);
       } catch {
-        pos.set(2, 0, 0); // bad element set: park it instead of killing the layer
+        alive = false; // bad element set: hide it instead of killing the layer
       }
+      if (!alive) pos.set(2, 0, 0);
       const hovered = s.hoveredCatalog === o.objectId;
+      const [r, g, b] = KIND_RGB[o.kind ?? "debris"];
+      const boost = hovered ? 2.4 : 1.1;
       batch.pos.set([pos.x, pos.y, pos.z], i * 3);
-      batch.col.set([DOT.r * (hovered ? 2.4 : 1.1), DOT.g * (hovered ? 2.4 : 1.1), DOT.b * (hovered ? 2.4 : 1.1), hovered ? 0.95 : 0.5], i * 4);
+      batch.col.set([r * boost, g * boost, b * boost, !alive ? 0 : hovered ? 0.95 : 0.5], i * 4);
       batch.size[i] = hovered ? 0.02 : 0.013;
 
       if (canPick) {
@@ -130,6 +139,9 @@ function CatalogHover({ items }: { items: CatalogObject[] }) {
   );
 }
 
+const KIND_LABEL: Record<CatalogKind, string> = { active: "Activo", debris: "Basura espacial", out: "Fuera de órbita" };
+const TYPE_LABEL: Record<string, string> = { PAY: "satélite", "R/B": "etapa de cohete", DEB: "fragmento", UNK: "desconocido" };
+
 function Card({ o, now }: { o: CatalogObject; now: number }) {
   let tm = null;
   let f = null;
@@ -147,8 +159,21 @@ function Card({ o, now }: { o: CatalogObject; now: number }) {
         <span className="mono ml-auto text-[10.5px] font-normal text-faint">#{o.objectId}</span>
       </div>
       <dl className="holo-card__grid">
+        <dt>Status</dt>
+        <dd>
+          {KIND_LABEL[o.kind ?? "debris"]}
+          {o.objectType ? ` · ${TYPE_LABEL[o.objectType] ?? o.objectType}` : ""}
+        </dd>
+        <dt>Responsable</dt>
+        <dd>{ownerLabel(o.owner)}</dd>
+        <dt>Launched</dt>
+        <dd>{o.launchDate ? utcDate(Date.parse(o.launchDate + "T00:00:00Z")) : "—"}</dd>
+        <dt>Size (RCS)</dt>
+        <dd>{o.rcs != null ? `${o.rcs.toFixed(2)} m²` : "—"}</dd>
+        <dt>Intl. des.</dt>
+        <dd>{o.intlDes || "—"}</dd>
         <dt>Source</dt>
-        <dd>CelesTrak GP · live TLE</dd>
+        <dd>CelesTrak GP+SATCAT · live TLE</dd>
         <dt>Altitude</dt>
         <dd>{tm ? `${tm.altitudeKm.toFixed(0)} km` : "—"}</dd>
         <dt>Velocity</dt>

@@ -1,0 +1,71 @@
+/**
+ * CelesTrak SATCAT OWNER codes → display name. The catalog carries a code, not
+ * the legal entity name (Starlink is "US", not "SpaceX"); this maps the common
+ * ones, the rest fall back to the raw code.
+ */
+const OWNER_NAMES: Record<string, string> = {
+  US: "Estados Unidos",
+  CIS: "Rusia / CEI (ex-URSS)",
+  PRC: "China",
+  JPN: "Japón",
+  FR: "Francia",
+  UK: "Reino Unido",
+  GER: "Alemania",
+  IT: "Italia",
+  IND: "India",
+  CA: "Canadá",
+  ARGN: "Argentina",
+  SPN: "España",
+  SKOR: "Corea del Sur",
+  AUS: "Australia",
+  ISRA: "Israel",
+  TURK: "Turquía",
+  ROC: "Taiwán",
+  FIN: "Finlandia",
+  IRAN: "Irán",
+  UAE: "Emiratos Árabes",
+  BRAZ: "Brasil",
+  POL: "Polonia",
+  NOR: "Noruega",
+  SING: "Singapur",
+  GREC: "Grecia",
+  LUXE: "Luxemburgo",
+  NZ: "Nueva Zelanda",
+  INDO: "Indonesia",
+  SWTZ: "Suiza",
+  NETH: "Países Bajos",
+  BELG: "Bélgica",
+  DEN: "Dinamarca",
+  SWED: "Suecia",
+  PAKI: "Pakistán",
+  NIG: "Nigeria",
+  MEX: "México",
+  CHLE: "Chile",
+  COL: "Colombia",
+  PER: "Perú",
+  VENZ: "Venezuela",
+  ESA: "European Space Agency",
+  EUME: "EUMETSAT",
+  NATO: "NATO",
+  ISS: "ISS (programa internacional)",
+  CHBZ: "China–Brasil (CBERS)",
+  ITSO: "Intelsat",
+  EUTE: "Eutelsat",
+  SES: "SES S.A. (Luxemburgo)",
+  ORB: "ORBCOMM",
+  GLOB: "Globalstar",
+  O3B: "O3b Networks",
+  IM: "Inmarsat",
+  AB: "Arabsat",
+  AC: "AsiaSat",
+  SEAL: "Sea Launch",
+  STCT: "Singapur–Taiwán (ST)",
+  NICO: "Nigeria Comsat",
+  TBD: "Por determinar",
+};
+
+export function ownerLabel(code: string | undefined): string {
+  if (!code) return "—";
+  const name = OWNER_NAMES[code];
+  return name ? `${name} (${code})` : code;
+}

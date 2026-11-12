@@ -72,12 +72,30 @@ export interface Stats {
   operators: { name: string; amount: number }[];
 }
 
+/** SATCAT-derived status of a catalog object. */
+export type CatalogKind = "active" | "debris" | "out";
+
 /** Object from a live CelesTrak group — tracked on the globe but not escrowed. */
 export interface CatalogObject {
   objectId: number;
   name: string;
   tle: [string, string];
   tleEpoch?: string;
+  /** activo / basura / fuera de órbita, según SATCAT */
+  kind?: CatalogKind;
+  /** PAY | R/B | DEB | UNK */
+  objectType?: string;
+  /** OPS_STATUS_CODE (+,-,P,B,S,X,D,?) */
+  opsStatus?: string;
+  /** SATCAT OWNER code — país/organización responsable */
+  owner?: string;
+  /** International designator (OBJECT_ID, ej. 1963-047A) */
+  intlDes?: string;
+  /** LAUNCH_DATE ISO */
+  launchDate?: string;
+  launchSite?: string;
+  /** Radar cross-section en m² — proxy de tamaño → costo de remoción */
+  rcs?: number;
 }
 
 export interface CatalogSnapshot {

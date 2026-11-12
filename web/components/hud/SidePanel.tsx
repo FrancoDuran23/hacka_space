@@ -46,6 +46,17 @@ export function SidePanel() {
   }, [objects, minute]);
 
   const { stats, atRisk, next, net, winning, losing } = view;
+  const kinds = useMemo(() => {
+    let active = 0;
+    let debris = 0;
+    let out = 0;
+    for (const o of catalog) {
+      if (o.kind === "active") active++;
+      else if (o.kind === "out") out++;
+      else debris++;
+    }
+    return { active, debris, out };
+  }, [catalog]);
   const open = stats.active + stats.expiring;
   const total = Math.max(1, stats.active + stats.expiring + stats.forfeited);
   const top = stats.operators.slice(0, 4);
@@ -154,6 +165,17 @@ export function SidePanel() {
           Orbit data · <span className={tle?.live ? "text-cyan" : undefined}>CelesTrak GP{tle ? ` · ${tle.live}/${tle.total} live TLEs` : " snapshot"}</span>
           {catalog.length > 0 && <span> · {catalog.length} {catalogGroup} catalog</span>} · SGP4
         </div>
+        {catalog.length > 0 && (
+          <div>
+            <span style={{ color: "#5fd4ff" }}>●</span> {kinds.active} active · <span style={{ color: "#ff8a5c" }}>●</span> {kinds.debris} debris
+            {kinds.out > 0 && (
+              <>
+                {" "}
+                · <span className="text-faint">●</span> {kinds.out} decayed
+              </>
+            )}
+          </div>
+        )}
         <div>Ledger · {source === "fuji" ? "Avalanche Fuji" : source === "local" ? "local node" : "demo dataset"}</div>
       </div>
     </motion.aside>
