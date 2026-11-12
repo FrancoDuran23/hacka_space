@@ -113,7 +113,7 @@ export function RegisterSatellite({
         return;
       }
       setDone(true);
-      setMsg({ tone: "ok", text: `${quote.name} quedó registrado en Fuji. Aparece en el panel en unos segundos.`, txHash: r.txHash, href: r.explorerUrl });
+      setMsg({ tone: "ok", text: `${quote.name} quedó registrado. Aparece en el panel en unos segundos.`, txHash: r.txHash, href: r.explorerUrl });
       onRegistered();
     } catch (e) {
       setMsg({ tone: "bad", text: walletErrorText(e) });
@@ -271,7 +271,7 @@ export function RegisterSatellite({
                 {busy === "approve" ? "Esperando la firma…" : authorized ? "✓ Depósito autorizado" : `${short ? "2" : "1"}. Autorizar depósito de ${formatUSD(quote.depositUsd)}`}
               </Button>
               <Button variant="danger" onClick={register} disabled={busy !== null || !authorized || short || deadline === null || (expired && !acceptExpired)}>
-                {busy === "register" ? "Registrando en Fuji…" : "Registrar en Fuji"}
+                {busy === "register" ? "Registrando…" : "Registrar"}
               </Button>
               <p className="text-[11.5px] text-faint">Autorizar se firma con tu wallet. El registro lo firma el relayer y no te cuesta gas.</p>
             </div>
