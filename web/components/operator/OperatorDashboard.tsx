@@ -14,8 +14,8 @@ import { SatelliteDetail } from "./SatelliteDetail";
 import { SatelliteCards } from "./SatelliteCards";
 import { usdcToUsd, walletErrorText } from "./shared";
 
-/** ESA owns the only real escrow on Fuji (ENVISAT), so the demo opens on live data. */
-const DEFAULT_OPERATOR = "ESA";
+/** The dashboard belongs to one operator. ESA owns the only real escrow on Fuji (ENVISAT), so the demo shows live data. */
+const OPERATOR = "ESA";
 const REFRESH_MS = 20_000;
 
 // three.js only runs in the browser
@@ -23,8 +23,6 @@ const CardCanvas = dynamic(() => import("./CardModel").then((m) => m.CardCanvas)
 
 export function OperatorDashboard({ initial, chain }: { initial: EscrowSnapshot; chain: PublicChain | null }) {
   const [snap, setSnap] = useState(initial);
-  const operators = useMemo(() => computeStats(snap.objects, Date.parse(snap.fetchedAt)).operators.map((o) => o.name), [snap]);
-  const [operator, setOperator] = useState(() => (operators.includes(DEFAULT_OPERATOR) ? DEFAULT_OPERATOR : (operators[0] ?? "")));
   const [selectedId, setSelectedId] = useState<number | null>(null);
   const [wallet, setWallet] = useState<WalletState | null>(null);
   const [walletError, setWalletError] = useState<string | null>(null);
@@ -50,8 +48,8 @@ export function OperatorDashboard({ initial, chain }: { initial: EscrowSnapshot;
   }, []);
 
   const mine = useMemo(
-    () => snap.objects.filter((o) => o.owner === operator).sort((a, b) => Date.parse(a.deadline) - Date.parse(b.deadline)),
-    [snap.objects, operator],
+    () => snap.objects.filter((o) => o.owner === OPERATOR).sort((a, b) => Date.parse(a.deadline) - Date.parse(b.deadline)),
+    [snap.objects],
   );
   const t = now || Date.parse(snap.fetchedAt);
   const stats = computeStats(mine, t);
@@ -100,26 +98,11 @@ export function OperatorDashboard({ initial, chain }: { initial: EscrowSnapshot;
         {walletError && <p className="mt-2 text-right text-[12.5px] text-bad">{walletError}</p>}
 
         <section className="mt-6">
-          <div className="label mb-2">Operador</div>
-          <div className="flex flex-wrap gap-2" role="radiogroup" aria-label="Operador">
-            {operators.map((name) => (
-              <button
-                key={name}
-                type="button"
-                role="radio"
-                aria-checked={name === operator}
-                onClick={() => {
-                  setOperator(name);
-                  setSelectedId(null);
-                }}
-                className={`cursor-pointer rounded-full px-3 py-[5px] text-[12.5px] transition-colors ${
-                  name === operator ? "bg-cyan/15 text-cyan shadow-[inset_0_0_0_1px_rgb(56_232_255/0.5)]" : "bg-white/[0.04] text-dim hover:text-ink"
-                }`}
-              >
-                {name}
-              </button>
-            ))}
-          </div>
+          <div className="label">Operador</div>
+          <h1 className="mt-1 text-[22px] font-medium leading-tight text-white">
+            {OPERATOR}
+            {mine[0] && <span className="ml-2 text-[13px] font-normal text-dim">{mine[0].country}</span>}
+          </h1>
         </section>
 
         {expiring.length > 0 && (
