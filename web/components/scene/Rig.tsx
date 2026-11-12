@@ -198,8 +198,8 @@ export function Rig() {
     cam.up.copy(v.up);
     cam.lookAt(v.look);
 
-    // ── shift the optical centre left so the globe sits in the area not covered by the side panel
-    const wantShift = size.width < 900 ? 0 : st.mode === "detail" ? 0.19 : 0.15;
+    // ── the side panel has its own column now: keep the globe centred in its area
+    const wantShift = 0;
     st.shift += (wantShift - st.shift) * (1 - Math.exp(-dt * 4));
     cam.setViewOffset(size.width, size.height, st.shift * size.width, 0, size.width, size.height);
     U.warpCenter.value.set(0.5 - st.shift, 0.5);

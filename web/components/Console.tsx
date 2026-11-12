@@ -7,6 +7,7 @@ import { applySnapshot } from "@/lib/actions";
 import { statusAt } from "@/lib/status";
 import { app, pushFeed, sim, useApp, useSimTime, type FeedLine } from "@/lib/store";
 import type { EscrowSnapshot, EscrowStatus, HistoryType } from "@/lib/types";
+import { AccountSection } from "./hud/AccountSection";
 import { Boot } from "./hud/Boot";
 import { Controls, Hint } from "./hud/Controls";
 import { DetailPanel } from "./hud/DetailPanel";
@@ -97,18 +98,24 @@ export function Console({ initial }: { initial: EscrowSnapshot }) {
   }, [simTime]);
 
   return (
-    <main className="fixed inset-0 bg-void">
-      <Scene />
+    <main className="fixed inset-0 flex flex-col overflow-y-auto bg-void lg:flex-row lg:overflow-hidden">
+      {/* the planet gets its own area; the panel never covers it */}
+      <section className="relative h-[62vh] shrink-0 overflow-hidden lg:h-auto lg:min-w-0 lg:flex-1">
+        <Scene />
+        <Header />
+        <AnimatePresence>
+          {booted && !selected && <Controls key="controls" />}
+          {booted && !selected && <Hint key="hint" />}
+        </AnimatePresence>
+      </section>
+      <aside className="scroll-thin relative z-20 flex shrink-0 flex-col border-t border-white/[0.07] bg-[rgb(5_9_18/0.96)] lg:h-full lg:w-[min(420px,34vw)] lg:min-w-[340px] lg:overflow-y-auto lg:border-t-0 lg:border-l">
+        {booted && <AccountSection />}
+        <AnimatePresence mode="wait">
+          {booted && (selected ? <DetailPanel key={`d${selected.objectId}`} object={selected} /> : <SidePanel key="side" />)}
+        </AnimatePresence>
+      </aside>
       <div className="screen-scan" />
       <div className="screen-noise" />
-      <Header />
-      <AnimatePresence mode="wait">
-        {booted && (selected ? <DetailPanel key={`d${selected.objectId}`} object={selected} /> : <SidePanel key="side" />)}
-      </AnimatePresence>
-      <AnimatePresence>
-        {booted && !selected && <Controls key="controls" />}
-        {booted && !selected && <Hint key="hint" />}
-      </AnimatePresence>
       <Boot />
     </main>
   );
