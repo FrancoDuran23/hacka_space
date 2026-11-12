@@ -72,6 +72,11 @@ export async function readWallet(chain: PublicChain, address: string): Promise<W
   return { address, balance, allowance };
 }
 
+/** Personal-sign `message` with the connected wallet (proves ownership, no gas). */
+export async function signMessage(chain: PublicChain, message: string): Promise<string> {
+  return (await signer(chain)).signMessage(message);
+}
+
 /** The exact deposit the contract charges for a band (fixed in its constructor). */
 export async function bandDeposit(chain: PublicChain, band: Band): Promise<bigint> {
   const escrow = new Contract(chain.escrow, BAND_ABI, (await signer(chain)).provider);

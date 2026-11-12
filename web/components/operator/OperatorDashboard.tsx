@@ -8,7 +8,9 @@ import { formatUSD, shortHash } from "@/lib/format";
 import { computeStats, statusAt } from "@/lib/status";
 import { useRealTime } from "@/lib/store";
 import type { EscrowSnapshot, PublicChain } from "@/lib/types";
-import { connectWallet, type WalletState } from "@/lib/wallet";
+import { getAddress } from "ethers";
+import { createWalletChallenge, listMyWallets, verifyAndLinkWallet } from "@/lib/wallets/actions";
+import { connectWallet, signMessage, type WalletState } from "@/lib/wallet";
 import { Button } from "@/components/ui/button";
 import { SatelliteDetail } from "./SatelliteDetail";
 import { RegisterSatellite } from "./RegisterSatellite";
@@ -28,6 +30,8 @@ export function OperatorDashboard({ initial, chain, account }: { initial: Escrow
   const [adding, setAdding] = useState(false);
   const [wallet, setWallet] = useState<WalletState | null>(null);
   const [walletError, setWalletError] = useState<string | null>(null);
+  /** The connected wallet is saved to the signed-in account (verified by signature). */
+  const [saved, setSaved] = useState(false);
   const [connecting, setConnecting] = useState(false);
   const now = useRealTime();
 
@@ -65,18 +69,36 @@ export function OperatorDashboard({ initial, chain, account }: { initial: Escrow
   const onChain = mine.filter((o) => o.onChain).length;
   const selected = mine.find((o) => o.objectId === selectedId) ?? null;
 
+  /** Links the wallet to the account with the same signed challenge as /cuenta/wallets, unless it already is. */
+  async function saveToAccount(address: string) {
+    if (!chain) return;
+    const mine = await listMyWallets();
+    if (mine.some((w) => getAddress(w.address) === getAddress(address))) return;
+    const challenge = await createWalletChallenge(address);
+    if (!challenge.ok) throw new Error(challenge.error);
+    const signature = await signMessage(chain, challenge.message);
+    const linked = await verifyAndLinkWallet(challenge.challengeId, signature, "MetaMask");
+    if (!linked.ok) throw new Error(linked.error);
+  }
+
   async function connect() {
     if (!chain) return;
     setConnecting(true);
     setWalletError(null);
     try {
-      setWallet(await connectWallet(chain));
+      const w = await connectWallet(chain);
+      setWallet(w);
+      if (account) {
+        await saveToAccount(w.address);
+        setSaved(true);
+      }
     } catch (e) {
       setWalletError(walletErrorText(e));
     } finally {
       setConnecting(false);
     }
   }
+
 
   return (
     <main className="scroll-thin fixed inset-0 overflow-y-auto bg-void">
@@ -102,8 +124,19 @@ export function OperatorDashboard({ initial, chain, account }: { initial: Escrow
               </Link>
             )}
             {wallet ? (
-              <span className="mono text-ink" title={wallet.address}>
-                {shortHash(wallet.address)} · {formatUSD(usdcToUsd(wallet.balance), { suffix: false })} {chain?.mockUsdc ? "mUSDC" : "USDC"}
+              <span className="flex items-center gap-2">
+                <span className="mono text-ink" title={wallet.address}>
+                  {shortHash(wallet.address)} · {formatUSD(usdcToUsd(wallet.balance), { suffix: false })} {chain?.mockUsdc ? "mUSDC" : "USDC"}
+                </span>
+                {saved ? (
+                  <span className="text-[11.5px] text-ok">✓ guardada en tu cuenta</span>
+                ) : !account ? (
+                  <span className="text-[11.5px] text-faint">iniciá sesión para guardarla</span>
+                ) : (
+                  <button type="button" onClick={connect} className="cursor-pointer text-[11.5px] text-cyan underline underline-offset-2">
+                    guardar en mi cuenta
+                  </button>
+                )}
               </span>
             ) : (
               <Button size="sm" onClick={connect} disabled={!chain || connecting} title={chain ? undefined : "No hay contrato configurado"}>
