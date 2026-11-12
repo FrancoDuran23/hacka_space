@@ -33,7 +33,7 @@ export function Providers({ children }: { children: ReactNode }) {
         redirectTo="/cuenta"
       >
         <TooltipProvider>{children}</TooltipProvider>
-        <Toaster />
+        <Toaster theme="dark" />
       </AuthProvider>
     </QueryClientProvider>
   );

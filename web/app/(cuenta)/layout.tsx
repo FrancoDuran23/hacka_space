@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { GeistMono } from "geist/font/mono";
+import { GeistPixelSquare } from "geist/font/pixel";
 import { GeistSans } from "geist/font/sans";
 import Link from "next/link";
 
@@ -22,16 +23,17 @@ const RANDOM_UUID_POLYFILL = `(function(){var c=globalThis.crypto;if(!c||typeof 
 
 export default function CuentaLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="es" className={`${GeistSans.variable} ${GeistMono.variable} h-full antialiased`}>
+    <html lang="es" className={`dark ${GeistSans.variable} ${GeistMono.variable} ${GeistPixelSquare.variable} h-full antialiased`}>
       <head>
         {/* Must run before the auth chunks evaluate: see RANDOM_UUID_POLYFILL. */}
         <script dangerouslySetInnerHTML={{ __html: RANDOM_UUID_POLYFILL }} />
       </head>
       <body className="min-h-full flex flex-col">
         <Providers>
-          <header className="flex items-center justify-between gap-4 border-b border-border px-4 py-3 sm:px-6">
-            <Link href="/" className="text-lg font-semibold tracking-tight">
-              Orbit<span className="text-[#E84142]">Clear</span>
+          <header className="flex items-center justify-between gap-4 border-b border-border px-5 py-4 sm:px-6">
+            <Link href="/" className="flex items-baseline gap-3">
+              <span className="font-pixel text-[24px] leading-none tracking-[0.12em] text-white">ORBITCLEAR</span>
+              <span className="hidden text-[12.5px] text-muted-foreground sm:inline">Deorbit deposit escrow</span>
             </Link>
             <nav className="flex items-center gap-2">
               <Button variant="ghost" asChild>
