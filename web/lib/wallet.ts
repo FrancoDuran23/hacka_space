@@ -63,9 +63,18 @@ async function signer(chain: PublicChain) {
   return new BrowserProvider(eth).getSigner();
 }
 
-export async function connectWallet(chain: PublicChain): Promise<WalletState> {
+/** `pickAccount` asks the wallet to show its account picker, so another account can be added. */
+export async function connectWallet(chain: PublicChain, pickAccount = false): Promise<WalletState> {
   const eth = getEth();
   if (!eth) throw new Error("No hay wallet en el navegador: instalá Core o MetaMask");
+  if (pickAccount) {
+    try {
+      await eth.request({ method: "wallet_requestPermissions", params: [{ eth_accounts: {} }] });
+    } catch (e) {
+      // wallets without EIP-2255 just keep the selected account
+      if ((e as { code?: number }).code !== -32601) throw e;
+    }
+  }
   await eth.request({ method: "eth_requestAccounts" });
   const s = await signer(chain);
   return readWallet(chain, await s.getAddress());

@@ -108,12 +108,13 @@ export function OperatorDashboard({ initial, chain, account }: { initial: Escrow
     if (!linked.ok) throw new Error(linked.error);
   }
 
-  async function connect() {
+  async function connect(pickAccount = false) {
     if (!chain) return;
     setConnecting(true);
     setWalletError(null);
     try {
-      const w = await connectWallet(chain);
+      const w = await connectWallet(chain, pickAccount);
+      setSaved(false);
       setWallet(w);
       if (account) {
         await saveToAccount(w.address);
@@ -161,13 +162,18 @@ export function OperatorDashboard({ initial, chain, account }: { initial: Escrow
                 ) : !account ? (
                   <span className="text-[11.5px] text-faint">iniciá sesión para guardarla</span>
                 ) : (
-                  <button type="button" onClick={connect} className="cursor-pointer text-[11.5px] text-cyan underline underline-offset-2">
+                  <button type="button" onClick={() => connect()} className="cursor-pointer text-[11.5px] text-cyan underline underline-offset-2">
                     guardar en mi cuenta
                   </button>
                 )}
               </span>
+            ) : null}
+            {wallet || myWallets.length > 0 ? (
+              <Button size="sm" onClick={() => connect(true)} disabled={!chain || connecting} title="Elegí otra cuenta en tu wallet y firmá para sumarla">
+                {connecting ? "Conectando…" : "+ Agregar wallet"}
+              </Button>
             ) : (
-              <Button size="sm" onClick={connect} disabled={!chain || connecting} title={chain ? undefined : "No hay contrato configurado"}>
+              <Button size="sm" onClick={() => connect()} disabled={!chain || connecting} title={chain ? undefined : "No hay contrato configurado"}>
                 {connecting ? "Conectando…" : "Conectar wallet"}
               </Button>
             )}
@@ -254,7 +260,7 @@ export function OperatorDashboard({ initial, chain, account }: { initial: Escrow
                   chain={chain}
                   wallet={wallet}
                   connecting={connecting}
-                  onConnect={connect}
+                  onConnect={() => connect()}
                   onWallet={setWallet}
                   onClose={() => setSelectedId(null)}
                 />
