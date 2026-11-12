@@ -11,6 +11,7 @@ import type { EscrowSnapshot, PublicChain } from "@/lib/types";
 import { connectWallet, type WalletState } from "@/lib/wallet";
 import { Button } from "@/components/ui/button";
 import { SatelliteDetail } from "./SatelliteDetail";
+import { RegisterSatellite } from "./RegisterSatellite";
 import { SatelliteCards } from "./SatelliteCards";
 import { usdcToUsd, walletErrorText } from "./shared";
 
@@ -24,31 +25,38 @@ const CardCanvas = dynamic(() => import("./CardModel").then((m) => m.CardCanvas)
 export function OperatorDashboard({ initial, chain }: { initial: EscrowSnapshot; chain: PublicChain | null }) {
   const [snap, setSnap] = useState(initial);
   const [selectedId, setSelectedId] = useState<number | null>(null);
+  const [adding, setAdding] = useState(false);
   const [wallet, setWallet] = useState<WalletState | null>(null);
   const [walletError, setWalletError] = useState<string | null>(null);
   const [connecting, setConnecting] = useState(false);
   const now = useRealTime();
 
+  async function refresh() {
+    try {
+      const res = await fetch("/api/escrows", { cache: "no-store" });
+      if (res.ok) setSnap((await res.json()) as EscrowSnapshot);
+    } catch {
+      /* offline: keep what we have */
+    }
+  }
+
   useEffect(() => {
-    const h = setInterval(async () => {
-      try {
-        const res = await fetch("/api/escrows", { cache: "no-store" });
-        if (res.ok) setSnap((await res.json()) as EscrowSnapshot);
-      } catch {
-        /* offline: keep what we have */
-      }
-    }, REFRESH_MS);
+    const h = setInterval(refresh, REFRESH_MS);
     return () => clearInterval(h);
   }, []);
 
   useEffect(() => {
-    const onKey = (e: KeyboardEvent) => e.key === "Escape" && setSelectedId(null);
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key !== "Escape") return;
+      setSelectedId(null);
+      setAdding(false);
+    };
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
   }, []);
 
   const mine = useMemo(
-    () => snap.objects.filter((o) => o.owner === OPERATOR).sort((a, b) => Date.parse(a.deadline) - Date.parse(b.deadline)),
+    () => snap.objects.filter((o) => o.owner === OPERATOR || o.fromChain).sort((a, b) => Date.parse(a.deadline) - Date.parse(b.deadline)),
     [snap.objects],
   );
   const t = now || Date.parse(snap.fetchedAt);
@@ -126,14 +134,14 @@ export function OperatorDashboard({ initial, chain }: { initial: EscrowSnapshot;
         </section>
 
         <div className="mt-6">
-          <SatelliteCards objects={mine} now={t} onOpen={setSelectedId} />
+          <SatelliteCards objects={mine} now={t} onOpen={setSelectedId} onAdd={() => (setSelectedId(null), setAdding(true))} />
         </div>
       </div>
 
       <CardCanvas />
 
       <AnimatePresence>
-        {selected && (
+        {(selected || adding) && (
           <>
             <motion.div
               key="backdrop"
@@ -141,28 +149,39 @@ export function OperatorDashboard({ initial, chain }: { initial: EscrowSnapshot;
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
-              onClick={() => setSelectedId(null)}
+              onClick={() => (setSelectedId(null), setAdding(false))}
             />
             <motion.aside
-              key={`detail-${selected.objectId}`}
+              key={selected ? `detail-${selected.objectId}` : "register"}
               role="dialog"
-              aria-label={`Detalle de ${selected.name}`}
+              aria-label={selected ? `Detalle de ${selected.name}` : "Dar de alta un satélite"}
               className="panel scroll-thin fixed top-4 right-4 bottom-4 z-40 !bg-[rgb(6_10_20/0.94)] w-[min(440px,calc(100vw-2rem))] overflow-y-auto"
               initial={{ opacity: 0, x: 40 }}
               animate={{ opacity: 1, x: 0, transition: { duration: 0.4, ease: [0.2, 0.8, 0.2, 1] } }}
               exit={{ opacity: 0, x: 40, transition: { duration: 0.25 } }}
             >
-              <SatelliteDetail
-                object={selected}
-                now={now}
-                explorer={snap.explorer}
-                chain={chain}
-                wallet={wallet}
-                connecting={connecting}
-                onConnect={connect}
-                onWallet={setWallet}
-                onClose={() => setSelectedId(null)}
-              />
+              {selected ? (
+                <SatelliteDetail
+                  object={selected}
+                  now={now}
+                  explorer={snap.explorer}
+                  chain={chain}
+                  wallet={wallet}
+                  connecting={connecting}
+                  onConnect={connect}
+                  onWallet={setWallet}
+                  onClose={() => setSelectedId(null)}
+                />
+              ) : (
+                <RegisterSatellite
+                  chain={chain}
+                  onClose={() => setAdding(false)}
+                  onRegistered={() => {
+                    refresh();
+                    setTimeout(refresh, 8_000);
+                  }}
+                />
+              )}
             </motion.aside>
           </>
         )}

@@ -4,17 +4,23 @@ import dynamic from "next/dynamic";
 import { formatUSD, utcDate } from "@/lib/format";
 import { STATUS_LABEL, statusAt } from "@/lib/status";
 import type { DebrisObject } from "@/lib/types";
+import { Button } from "@/components/ui/button";
 import { BAND_LABEL, KIND_LABEL, deadlineLeft } from "./shared";
 
 // three.js only runs in the browser
 const CardModel = dynamic(() => import("./CardModel").then((m) => m.CardModel), { ssr: false });
 
-export function SatelliteCards({ objects, now, onOpen }: { objects: DebrisObject[]; now: number; onOpen: (id: number) => void }) {
+export function SatelliteCards({ objects, now, onOpen, onAdd }: { objects: DebrisObject[]; now: number; onOpen: (id: number) => void; onAdd: () => void }) {
   return (
     <section>
-      <div className="mb-3 flex items-baseline justify-between">
-        <h2 className="panel-title">Satélites</h2>
-        <span className="text-[11.5px] text-dim">ordenados por plazo de retiro · click para ver el detalle</span>
+      <div className="mb-3 flex flex-wrap items-center justify-between gap-3">
+        <div className="flex items-baseline gap-3">
+          <h2 className="panel-title">Satélites</h2>
+          <span className="text-[11.5px] text-dim">ordenados por plazo de retiro · click para ver el detalle</span>
+        </div>
+        <Button size="sm" onClick={onAdd}>
+          + Dar de alta un satélite
+        </Button>
       </div>
       <div className="grid grid-cols-[repeat(auto-fill,minmax(250px,1fr))] gap-4">
         {objects.map((o) => {

@@ -2,7 +2,9 @@ import "server-only";
 import { Contract, Interface, JsonRpcProvider, Network, formatUnits, type Result } from "ethers";
 import { ORBITCLEAR_ESCROW_ABI, USDC_DECIMALS } from "./abi";
 import { loadContractConfig, loadEscrowsFile, SNOWTRACE, type ContractConfig, type EscrowsFile } from "./config";
-import { cacheVersion, demoEpoch, reentries } from "./live-store";
+import { CelestrakError, currentTle, satcatRecord } from "./celestrak";
+import { cacheVersion, demoEpoch, reentries, registeredHere } from "./live-store";
+import { OBJECT_KIND } from "./registration";
 import { computeStats, netBalanceAt } from "./status";
 import type { Band, DebrisObject, EscrowSnapshot, EscrowStatus, HistoryItem, HistoryType, Stats } from "./types";
 
@@ -113,10 +115,22 @@ async function readChain(cfg: ContractConfig, file: EscrowsFile): Promise<Escrow
     contractEvents(cfg, logReader).catch(() => scanned(cfg).byObject()),
   ]);
 
+  // Satellites registered on-chain that the demo dataset does not list (e.g. given of alta from the operator panel).
+  const listed = new Set(file.objects.map((o) => o.objectId));
+  const extraIds = [...new Set([...events.keys(), ...registeredHere()])].filter((id) => !listed.has(id));
+  const extras = (
+    await Promise.all(
+      extraIds.map(async (id) => {
+        const [e, o] = await Promise.all([c.getFunction("escrowOf")(id) as Promise<ChainEscrow>, chainListedObject(id)]);
+        return o ? { o, e } : null;
+      }),
+    )
+  ).filter((x) => x !== null);
+
   const now = Date.now();
   const shift = demoShift(file);
   let registered = 0;
-  const objects = rows.map(({ o, e }) => {
+  const objects = [...rows, ...extras].map(({ o, e }) => {
     const status = CHAIN_STATUS[Number(e.state)];
     if (!status) return demoObject(o, shift, now);
     registered++;
@@ -147,6 +161,55 @@ async function readChain(cfg: ContractConfig, file: EscrowsFile): Promise<Escrow
     fetchedAt: new Date(now).toISOString(),
     objects,
   };
+}
+
+const META_WAIT_MS = 3_000;
+const META_RETRY_MS = 10 * 60_000;
+const metaCache = new Map<number, Promise<FileObject | null>>();
+
+/**
+ * Metadata for a registered satellite outside the dataset, from CelesTrak (cached in lib/celestrak).
+ * A slow answer does not hold up the snapshot: the object shows up on a later refresh. A miss or a
+ * CelesTrak error is retried after META_RETRY_MS, never on every refresh.
+ */
+function chainListedObject(norad: number): Promise<FileObject | null> {
+  let pending = metaCache.get(norad);
+  if (!pending) {
+    pending = loadChainListedObject(norad).catch(() => null);
+    pending.then((o) => o || setTimeout(() => metaCache.delete(norad), META_RETRY_MS));
+    metaCache.set(norad, pending);
+  }
+  return Promise.race([pending, new Promise<null>((r) => setTimeout(() => r(null), META_WAIT_MS))]);
+}
+
+async function loadChainListedObject(norad: number): Promise<FileObject | null> {
+  try {
+    const [record, tle] = await Promise.all([satcatRecord(norad), currentTle(norad)]);
+    // without current elements there is nothing to draw (it re-entered or is lost)
+    if (!record || !tle) return null;
+    return {
+      objectId: norad,
+      name: record.OBJECT_NAME,
+      kind: OBJECT_KIND[record.OBJECT_TYPE] ?? "fragment",
+      owner: record.OWNER,
+      country: record.OWNER,
+      massKg: 0,
+      tle,
+      band: 0,
+      createdAt: new Date().toISOString(),
+      deadline: new Date().toISOString(),
+      status: "ACTIVE",
+      deposit: 0,
+      netBalance: 0,
+      riskPerDay: 0,
+      settledAt: null,
+      fromChain: true,
+      history: [],
+    };
+  } catch (e) {
+    if (e instanceof CelestrakError) return null;
+    throw e;
+  }
 }
 
 /** Events already read from the contract. Logs never change, so each refresh only scans the new blocks. */

@@ -46,7 +46,8 @@ export function SatelliteDetail({
         <div className="min-w-0">
           <div className="truncate text-[18px] font-medium leading-tight text-white">{o.name}</div>
           <div className="truncate text-[12.5px] text-dim">
-            NORAD {o.objectId} · {KIND_LABEL[o.kind]} · {o.massKg.toLocaleString("es-AR")} kg
+            NORAD {o.objectId} · {KIND_LABEL[o.kind]}
+            {o.massKg > 0 && ` · ${o.massKg.toLocaleString("es-AR")} kg`}
           </div>
         </div>
         <div className="flex shrink-0 flex-col items-end gap-1">

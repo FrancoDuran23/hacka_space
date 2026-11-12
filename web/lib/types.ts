@@ -38,6 +38,8 @@ export interface DebrisObject {
   settledAt: string | null;
   /** The escrow exists in the deployed contract (its transactions link to the explorer). */
   onChain: boolean;
+  /** Not in the demo dataset: listed because it is registered in the contract (metadata from CelesTrak). */
+  fromChain?: boolean;
   history: HistoryItem[];
 }
 
