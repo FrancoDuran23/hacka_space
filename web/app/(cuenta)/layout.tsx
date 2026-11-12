@@ -4,8 +4,7 @@ import { GeistPixelSquare } from "geist/font/pixel";
 import { GeistSans } from "geist/font/sans";
 import Link from "next/link";
 
-import { UserButton } from "@/components/auth/user/user-button";
-import { Button } from "@/components/cuenta-ui/button";
+import { AccountNav } from "@/components/auth/account-nav";
 import "./cuenta.css";
 import { Providers } from "./providers";
 
@@ -35,12 +34,7 @@ export default function CuentaLayout({ children }: { children: React.ReactNode }
               <span className="font-pixel text-[24px] leading-none tracking-[0.12em] text-white">ORBITCLEAR</span>
               <span className="hidden text-[12.5px] text-muted-foreground sm:inline">Deorbit deposit escrow</span>
             </Link>
-            <nav className="flex items-center gap-2">
-              <Button variant="ghost" asChild>
-                <Link href="/cuenta">Mi cuenta</Link>
-              </Button>
-              <UserButton size="icon" />
-            </nav>
+            <AccountNav />
           </header>
           {children}
         </Providers>
