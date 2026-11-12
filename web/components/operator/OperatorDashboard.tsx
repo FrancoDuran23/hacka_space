@@ -22,7 +22,7 @@ const REFRESH_MS = 20_000;
 // three.js only runs in the browser
 const CardCanvas = dynamic(() => import("./CardModel").then((m) => m.CardCanvas), { ssr: false });
 
-export function OperatorDashboard({ initial, chain }: { initial: EscrowSnapshot; chain: PublicChain | null }) {
+export function OperatorDashboard({ initial, chain, account }: { initial: EscrowSnapshot; chain: PublicChain | null; account: { name: string } | null }) {
   const [snap, setSnap] = useState(initial);
   const [selectedId, setSelectedId] = useState<number | null>(null);
   const [adding, setAdding] = useState(false);
@@ -92,6 +92,15 @@ export function OperatorDashboard({ initial, chain }: { initial: EscrowSnapshot;
             <Link href="/" className="text-dim hover:text-cyan">
               Consola orbital
             </Link>
+            {account ? (
+              <Link href="/cuenta" className="text-dim hover:text-cyan" title="Configuración de la cuenta">
+                Mi cuenta · <span className="text-ink">{account.name}</span>
+              </Link>
+            ) : (
+              <Link href="/login" className="text-dim hover:text-cyan">
+                Iniciar sesión
+              </Link>
+            )}
             {wallet ? (
               <span className="mono text-ink" title={wallet.address}>
                 {shortHash(wallet.address)} · {formatUSD(usdcToUsd(wallet.balance), { suffix: false })} {chain?.mockUsdc ? "mUSDC" : "USDC"}

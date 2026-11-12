@@ -30,7 +30,7 @@ export function Providers({ children }: { children: ReactNode }) {
           else router.push(target);
         }}
         Link={Link}
-        redirectTo="/cuenta"
+        redirectTo="/operador"
       >
         <TooltipProvider>{children}</TooltipProvider>
         <Toaster theme="dark" />

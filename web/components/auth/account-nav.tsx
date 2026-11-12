@@ -13,6 +13,9 @@ export function AccountNav() {
   return (
     <nav className="flex items-center gap-2">
       <Button variant="ghost" asChild>
+        <Link href="/operador">Panel del operador</Link>
+      </Button>
+      <Button variant="ghost" asChild>
         <Link href="/cuenta">Mi cuenta</Link>
       </Button>
       <UserButton size="icon" />
