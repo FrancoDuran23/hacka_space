@@ -32,7 +32,8 @@ const mem = new Map<number, { at: number; v: LiveTle | null }>();
 
 async function fetchTleRemote(catnr: number): Promise<LiveTle | null> {
   try {
-    const res = await fetch(`${CELESTRAK_GP}?CATNR=${catnr}&FORMAT=tle`, { cache: "no-store" });
+    // bounded: a CelesTrak that hangs must not hang the page (a miss is remembered in `mem` for MEM_MS)
+    const res = await fetch(`${CELESTRAK_GP}?CATNR=${catnr}&FORMAT=tle`, { cache: "no-store", signal: AbortSignal.timeout(8_000) });
     if (!res.ok) return null;
     const lines = (await res.text())
       .split("\n")

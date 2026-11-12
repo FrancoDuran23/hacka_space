@@ -13,6 +13,7 @@ import type { Band, DebrisObject, EscrowSnapshot, EscrowStatus, HistoryItem, His
 
 const CACHE_MS = 15_000;
 const RPC_TIMEOUT_MS = 9_000;
+const TLE_TIMEOUT_MS = 6_000;
 /** Fuji's public RPC caps eth_getLogs at 100 blocks per request, and rejects them in JSON-RPC batches. */
 const LOG_WINDOW = 100;
 /** Windows scanned per refresh, one request at a time (the public RPC rate-limits bursts). */
@@ -37,8 +38,15 @@ export async function getEscrows(): Promise<EscrowSnapshot> {
         : demoSnapshot(file, `fuji unreachable: ${(e as Error).message?.slice(0, 120)}`);
     }
   }
-  // Swap baked TLEs for the freshest CelesTrak elements, whatever the escrow source.
-  snap.tle = await refreshTles(snap.objects);
+  // Swap baked TLEs for the freshest CelesTrak elements, whatever the escrow source. Bounded: if CelesTrak is
+  // slow the page goes out with the elements it already has, and the refresh finishes for the next request.
+  const tles = refreshTles(snap.objects);
+  try {
+    snap.tle = await withTimeout(tles, TLE_TIMEOUT_MS);
+  } catch {
+    tles.catch(() => {});
+    snap.tle = cache?.snap.tle ?? snap.tle;
+  }
   cache = { at: Date.now(), version: cacheVersion(), snap };
   return snap;
 }
