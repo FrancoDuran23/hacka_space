@@ -8,7 +8,7 @@ import { CelestrakError, currentTle, satcatRecord } from "@/lib/celestrak";
 import { FUJI_CHAIN_ID } from "@/lib/chain";
 import { loadContractConfig, type ContractConfig } from "@/lib/config";
 import { db } from "@/lib/db";
-import { wallets } from "@/lib/db/schema";
+import { satelliteRegistrations, wallets } from "@/lib/db/schema";
 import { recordRegistration } from "@/lib/live-store";
 import { satellitesOwnedBy, type OwnedSatellite } from "@/lib/operator-catalog";
 import { registrationTerms } from "@/lib/registration";
@@ -206,6 +206,12 @@ export async function registerSatellite(norad: number, walletAddress: string, li
     // once sent it is the chain's call: a slow confirmation still returns the hash to follow it
     await Promise.race([tx.wait(), new Promise((r) => setTimeout(r, TX_TIMEOUT_MS))]);
     recordRegistration(norad);
+    // the escrow lives on-chain; this row lets the panel list it without waiting for an indexer
+    await db
+      .insert(satelliteRegistrations)
+      .values({ norad, escrow: p.cfg.address!, txHash: tx.hash, operator, userId: user.id })
+      .onConflictDoNothing()
+      .catch(() => {});
     const explorer = p.cfg.explorer;
     return { ok: true, txHash: tx.hash, explorerUrl: explorer ? `${explorer}/tx/${tx.hash}` : null };
   } catch (e) {

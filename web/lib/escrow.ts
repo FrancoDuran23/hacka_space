@@ -5,6 +5,8 @@ import { refreshTles } from "./celestrak";
 import { loadContractConfig, loadEscrowsFile, SNOWTRACE, type ContractConfig, type EscrowsFile } from "./config";
 import { CelestrakError, currentTle, satcatRecord } from "./celestrak";
 import { cacheVersion, demoEpoch, reentries, registeredHere } from "./live-store";
+import { db } from "./db";
+import { satelliteRegistrations } from "./db/schema";
 import { OBJECT_KIND } from "./registration";
 import { computeStats, netBalanceAt } from "./status";
 import type { Band, DebrisObject, EscrowSnapshot, EscrowStatus, HistoryItem, HistoryType, Stats } from "./types";
@@ -128,8 +130,17 @@ async function readChain(cfg: ContractConfig, file: EscrowsFile): Promise<Escrow
   ]);
 
   // Satellites registered on-chain that the demo dataset does not list (e.g. given of alta from the operator panel).
+  // Registrations made here are also in the database, with their transaction: their Registered event comes
+  // from the receipt, so the panel does not depend on the indexer catching up.
+  const stored = await storedRegistrations(cfg);
+  await Promise.all(
+    stored.map(async (r) => {
+      if ((events.get(r.norad) ?? []).some((h) => h.txHash.toLowerCase() === r.txHash.toLowerCase())) return;
+      for (const item of await receiptEvents(logReader, r.txHash)) events.set(item.id, [...(events.get(item.id) ?? []), item.h]);
+    }),
+  );
   const listed = new Set(file.objects.map((o) => o.objectId));
-  const extraIds = [...new Set([...events.keys(), ...registeredHere()])].filter((id) => !listed.has(id));
+  const extraIds = [...new Set([...events.keys(), ...registeredHere(), ...stored.map((r) => r.norad)])].filter((id) => !listed.has(id));
   const extras = (
     await Promise.all(
       extraIds.map(async (id) => {
@@ -224,6 +235,38 @@ async function loadChainListedObject(norad: number): Promise<FileObject | null> 
     if (e instanceof CelestrakError) return null;
     throw e;
   }
+}
+
+async function storedRegistrations(cfg: ContractConfig): Promise<{ norad: number; txHash: string }[]> {
+  try {
+    const rows = await db.select({ norad: satelliteRegistrations.norad, txHash: satelliteRegistrations.txHash, escrow: satelliteRegistrations.escrow }).from(satelliteRegistrations);
+    return rows.filter((r) => r.escrow.toLowerCase() === cfg.address!.toLowerCase());
+  } catch {
+    return [];
+  }
+}
+
+/** A transaction's escrow events, read from its receipt (immutable once mined, so cached for good). */
+const receiptCache = new Map<string, Promise<{ id: number; h: ChainEvent }[]>>();
+
+function receiptEvents(provider: JsonRpcProvider, txHash: string): Promise<{ id: number; h: ChainEvent }[]> {
+  let pending = receiptCache.get(txHash);
+  if (!pending) {
+    pending = (async () => {
+      const receipt = await provider.getTransactionReceipt(txHash);
+      if (!receipt) throw new Error("receipt not mined yet");
+      const at = ((await provider.getBlock(receipt.blockNumber))?.timestamp ?? Date.now() / 1000) * 1000;
+      return receipt.logs.flatMap((log) => {
+        const parsed = escrowInterface.parseLog({ topics: [...log.topics], data: log.data });
+        const item = parsed && toHistory(parsed.name, parsed.args, at, txHash);
+        return item ? [item] : [];
+      });
+    })();
+    // a receipt that is not there yet is asked again on the next refresh
+    pending.catch(() => receiptCache.delete(txHash));
+    receiptCache.set(txHash, pending);
+  }
+  return pending.catch(() => []);
 }
 
 /** Events already read from the contract. Logs never change, so each refresh only scans the new blocks. */
