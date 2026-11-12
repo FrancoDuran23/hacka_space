@@ -6,7 +6,7 @@ import { AnimatePresence } from "framer-motion";
 import { applySnapshot } from "@/lib/actions";
 import { statusAt } from "@/lib/status";
 import { app, pushFeed, sim, useApp, useSimTime, type FeedLine } from "@/lib/store";
-import type { EscrowSnapshot, EscrowStatus, HistoryType } from "@/lib/types";
+import type { CatalogSnapshot, EscrowSnapshot, EscrowStatus, HistoryType } from "@/lib/types";
 import { Boot } from "./hud/Boot";
 import { Controls, Hint } from "./hud/Controls";
 import { DetailPanel } from "./hud/DetailPanel";
@@ -57,6 +57,30 @@ export function Console({ initial }: { initial: EscrowSnapshot }) {
 
   const booted = useApp((s) => s.booted);
   const selected = useApp((s) => (s.selectedId == null ? null : (s.objects.find((o) => o.objectId === s.selectedId) ?? null)));
+
+  // live CelesTrak group: the satellite cloud behind the escrows (retried until it lands)
+  useEffect(() => {
+    let live = true;
+    const load = async () => {
+      try {
+        const res = await fetch("/api/catalog?group=visual", { cache: "no-store" });
+        if (!res.ok || !live) return;
+        const json = (await res.json()) as CatalogSnapshot;
+        app.set({ catalog: json.objects, catalogGroup: json.group });
+        pushFeed({ tone: "sys", label: "Live catalog · CelesTrak GP", target: `${json.objects.length} ${json.group} objects` });
+      } catch {
+        /* keep the escrow layer only */
+      }
+    };
+    load();
+    const h = setInterval(() => {
+      if (!app.get().catalog.length) load();
+    }, 20_000);
+    return () => {
+      live = false;
+      clearInterval(h);
+    };
+  }, []);
 
   // keep in sync with the ledger
   useEffect(() => {

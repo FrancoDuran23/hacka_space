@@ -27,6 +27,19 @@ export const positions = new Map<number, THREE.Vector3>();
 /** Objects currently moved by the deorbit effect instead of SGP4. */
 export const fxDriven = new Set<number>();
 
+/** True when the segment camera → point crosses the unit sphere. */
+export function behindEarth(cam: THREE.Vector3, p: THREE.Vector3, d: THREE.Vector3): boolean {
+  d.copy(p).sub(cam);
+  const len = d.length();
+  d.divideScalar(len);
+  const b = cam.dot(d);
+  const c = cam.lengthSq() - 1;
+  const disc = b * b - c;
+  if (disc < 0) return false;
+  const t = -b - Math.sqrt(disc);
+  return t > 0 && t < len;
+}
+
 export const STATE_RGB = {
   ACTIVE: new THREE.Color("#a6e9ff"),
   EXPIRING: new THREE.Color("#58a6ff"),

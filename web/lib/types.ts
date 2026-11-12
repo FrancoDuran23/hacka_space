@@ -72,6 +72,20 @@ export interface Stats {
   operators: { name: string; amount: number }[];
 }
 
+/** Object from a live CelesTrak group — tracked on the globe but not escrowed. */
+export interface CatalogObject {
+  objectId: number;
+  name: string;
+  tle: [string, string];
+  tleEpoch?: string;
+}
+
+export interface CatalogSnapshot {
+  group: string;
+  fetchedAt: string;
+  objects: CatalogObject[];
+}
+
 export interface ReentryResult {
   ok: boolean;
   objectId: number;

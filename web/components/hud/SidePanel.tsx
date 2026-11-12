@@ -14,6 +14,8 @@ export function SidePanel() {
   const objects = useApp((s) => s.objects);
   const feed = useApp((s) => s.feed);
   const tle = useApp((s) => s.tle);
+  const catalog = useApp((s) => s.catalog);
+  const catalogGroup = useApp((s) => s.catalogGroup);
   const source = useApp((s) => s.source);
   const simTime = useSimTime();
   // deadlines only matter to the minute: recompute once per simulated minute
@@ -149,7 +151,8 @@ export function SidePanel() {
       <div className="hairline my-4" />
       <div className="shrink-0 text-[11px] leading-relaxed text-faint">
         <div>
-          Orbit data · <span className={tle?.live ? "text-cyan" : undefined}>CelesTrak GP{tle ? ` · ${tle.live}/${tle.total} live TLEs` : " snapshot"}</span> · SGP4
+          Orbit data · <span className={tle?.live ? "text-cyan" : undefined}>CelesTrak GP{tle ? ` · ${tle.live}/${tle.total} live TLEs` : " snapshot"}</span>
+          {catalog.length > 0 && <span> · {catalog.length} {catalogGroup} catalog</span>} · SGP4
         </div>
         <div>Ledger · {source === "fuji" ? "Avalanche Fuji" : source === "local" ? "local node" : "demo dataset"}</div>
       </div>

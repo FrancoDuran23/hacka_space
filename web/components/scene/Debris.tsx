@@ -10,7 +10,7 @@ import { formatUSD } from "@/lib/format";
 import { STATUS_LABEL, statusAt } from "@/lib/status";
 import { app, sim, useApp } from "@/lib/store";
 import type { DebrisObject } from "@/lib/types";
-import { STATE_RGB, U, createSprites, fxDriven, positions } from "./shared";
+import { STATE_RGB, U, behindEarth, createSprites, fxDriven, positions } from "./shared";
 
 const TRAIL_STEPS = 28;
 const TRAIL_MINUTES = 13;
@@ -199,19 +199,6 @@ export function DebrisField() {
       <HoverCard />
     </group>
   );
-}
-
-/** True when the segment camera → point crosses the unit sphere. */
-function behindEarth(cam: THREE.Vector3, p: THREE.Vector3, d: THREE.Vector3): boolean {
-  d.copy(p).sub(cam);
-  const len = d.length();
-  d.divideScalar(len);
-  const b = cam.dot(d);
-  const c = cam.lengthSq() - 1;
-  const disc = b * b - c;
-  if (disc < 0) return false;
-  const t = -b - Math.sqrt(disc);
-  return t > 0 && t < len;
 }
 
 function HoverCard() {

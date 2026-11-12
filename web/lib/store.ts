@@ -1,7 +1,7 @@
 "use client";
 
 import { useSyncExternalStore } from "react";
-import type { DataSource, DebrisObject, TleInfo } from "./types";
+import type { CatalogObject, DataSource, DebrisObject, TleInfo } from "./types";
 
 /** Stages of a DEORBIT run for one object. */
 export type DeorbitPhase = "verifying" | "falling" | "burned" | "failed";
@@ -38,10 +38,15 @@ export interface AppState {
   source: DataSource;
   /** Orbital data provenance (CelesTrak live TLE coverage). */
   tle: TleInfo | null;
+  /** Live CelesTrak group rendered as background satellites. */
+  catalog: CatalogObject[];
+  catalogGroup: string | null;
   contract: string | null;
   explorer: string;
   selectedId: number | null;
   hoveredId: number | null;
+  /** Catalog satellite under the cursor (not an escrow). */
+  hoveredCatalog: number | null;
   runs: Record<number, DeorbitRun>;
   feed: FeedLine[];
   /** boot sequence finished: scene fades in, panels assemble */
@@ -57,10 +62,13 @@ let state: AppState = {
   objects: [],
   source: "demo",
   tle: null,
+  catalog: [],
+  catalogGroup: null,
   contract: null,
   explorer: "",
   selectedId: null,
   hoveredId: null,
+  hoveredCatalog: null,
   runs: {},
   feed: [],
   booted: false,
