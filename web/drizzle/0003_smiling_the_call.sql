@@ -1,0 +1,1 @@
+ALTER TABLE "catalog_object" ADD COLUMN "source" text DEFAULT 'celestrak' NOT NULL;
