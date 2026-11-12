@@ -29,10 +29,10 @@ Un solo deploy. Cada NORAD tiene su propio escrow aislado dentro del contrato.
 
 | Función | Quién | Qué hace |
 |---|---|---|
-| `register(noradId, operator, launchedAt, band, dataHash)` | relayer | Crea el escrow, calcula `deadline = launchedAt + años(band)`, cobra el depósito con `SafeERC20` |
+| `register(noradId, operator, launchedAt, missionEndsAt, band, dataHash)` | relayer | Crea el escrow, calcula `deadline = missionEndsAt + años(band)` (fin de misión declarado, ADR 0004), cobra el depósito con `SafeERC20` |
 | `attestReentry(noradId, decayDate, dataHash)` | relayer | Si `decayDate <= deadline` devuelve al operador; si no, decomisa al fondo |
 | `closeExpired(noradId)` | cualquiera | Plazo vencido sin reingreso → decomisa al fondo. No depende del relayer |
-| `escrowOf(noradId)` / `isExpired(noradId)` / `deadlineFor(launchedAt, band)` | vista | Lectura para el relayer y la UI |
+| `escrowOf(noradId)` / `isExpired(noradId)` / `deadlineFor(missionEndsAt, band)` | vista | Lectura para el relayer y la UI |
 
 Inmutables: `usdc`, `relayer`, `fund`. Las reglas quedan fijadas en el constructor y no
 hay `owner` que las cambie: es a propósito.
@@ -118,14 +118,17 @@ Usa la red simulada `local` (`edr-simulated`) y escribe `deployments/local.json`
 
 ## Deploy actual en Fuji
 
-Desplegado y verificado el 2026-11-11, `MODE=mock`:
+Desplegado el 2026-11-12, `MODE=mock`, con el plazo desde el fin de misión declarado (ADR 0004):
 
 | Qué | Dirección |
 |---|---|
-| `OrbitClearEscrow` | [`0xA5aeCF58Fac272e9E4CC5D473A2767C56019CbB2`](https://explorer-test.avax.network/c-chain/address/0xA5aeCF58Fac272e9E4CC5D473A2767C56019CbB2) |
-| `MockUSDC` | [`0xD8A34cF239aD17d50a912044E38B15d08D5Befa9`](https://explorer-test.avax.network/c-chain/address/0xD8A34cF239aD17d50a912044E38B15d08D5Befa9) |
+| `OrbitClearEscrow` | [`0xeE7C5D5C0D7103C220d640EEb7B2788ab27CEf59`](https://explorer-test.avax.network/c-chain/address/0xeE7C5D5C0D7103C220d640EEb7B2788ab27CEf59) |
+| `MockUSDC` | [`0x8fA9BF84D9C89966dd95e85672412eaA2B6C47EC`](https://explorer-test.avax.network/c-chain/address/0x8fA9BF84D9C89966dd95e85672412eaA2B6C47EC) |
 | Relayer | `0xdE2d066e6f1831783C1aC43f865EdE88c0d7b9b0` |
 | Fondo de remoción | `0xdE2d066e6f1831783C1aC43f865EdE88c0d7b9b0` |
+
+El deploy anterior (plazo anclado al lanzamiento, ADR 0001) queda como histórico en
+`deployments/fuji-v1.json`: escrow `0xA5aeCF58Fac272e9E4CC5D473A2767C56019CbB2`.
 
 La clave del relayer está en `~/.config/orbitclear/fuji-demo-wallet.txt` (permisos 600).
 **No la borres**: el relayer es inmutable en el contrato, y sin esa clave el contrato
@@ -133,18 +136,16 @@ desplegado no acepta más registros ni acreditaciones.
 
 ## Los dos casos reales, en cadena
 
-| Caso | Satélite | Plazo | Transacciones |
-|---|---|---|---|
-| Decomiso por vencimiento | **ENVISAT** · NORAD 27386 · 762 km · lanzado 2002-03-01 | 2012-02-27 | [`register`](https://explorer-test.avax.network/c-chain/tx/0x63dbb9d9437dd95a69ddbd132a714cf008bfa06c18148793efe37fa05e08fe6d) → [`closeExpired`](https://explorer-test.avax.network/c-chain/tx/0x5febad4954b6e586ebbd628d954745f1f52d6aa51b7445d6dfbdf141081af190) |
-| Decomiso por reingreso tardío | **THORAD AGENA D DEB** · NORAD 4133 · 209 km · lanzado 1969-09-30, decayó 2026-10-31 | 1974-12-31 | [`register`](https://explorer-test.avax.network/c-chain/tx/0xf0529f9e7bf49ff09d83b4fe869987692496de66128f459b1fb0a15af3ed0acd) → [`attestReentry`](https://explorer-test.avax.network/c-chain/tx/0x1ff6672e2fe6aa1cd94f443cddfa3375a2a81b7ba1714306c0c97b74ca311704) |
+| Caso | Satélite | Fin de misión declarado | Plazo | Transacciones |
+|---|---|---|---|---|
+| Decomiso por vencimiento | **ENVISAT** · NORAD 27386 · 762 km · lanzado 2002-03-01 | 2012-05-09 (ESA da por terminada la misión) | 2022-05-07 | [`register`](https://explorer-test.avax.network/c-chain/tx/0x99a0244f4bd88951dc264affd15ddc6f347dfc92be7fda9b251e694532b5ce4f) → [`closeExpired`](https://explorer-test.avax.network/c-chain/tx/0xdeb93fd2beb87ea0304b22daf90a31dca18d398df80a30c968e332f7f2c7ed75) |
+| Decomiso por reingreso tardío | **THORAD AGENA D DEB** · NORAD 4133 · 209 km · lanzado 1969-09-30, decayó 2026-10-31 | el lanzamiento (etapa de cohete) | 1974-12-31 | [`register`](https://explorer-test.avax.network/c-chain/tx/0xf8740c323efe8099407e11f2f53f999462ce80c75a21109815db3ffc4eba2058) → [`attestReentry`](https://explorer-test.avax.network/c-chain/tx/0xb7f8954c81e8b8bfd942e133b0ba63010edfc1d954acbae91864f8891d2ba59f) |
 
-Estado leído de la cadena después de las cuatro transacciones: los dos escrows en
-`Forfeited`, `totalDeposited` 400.000, `totalForfeited` 400.000, y el contrato retiene 0.
+El plazo se corre dos días respecto de "10 años exactos" porque el contrato cuenta años de 365 días.
 
 **Falta un caso de devolución con datos reales.** Hace falta un objeto que haya decayado
 DENTRO de su propio plazo, o sea lanzado y caído dentro de la ventana de su banda (un
-Starlink que falló y cayó en menos de 5 años sirve). Con el plazo anclado al lanzamiento,
-casi todo lo que decae en el catálogo lo hace tarde. La devolución está cubierta por los
+Starlink que falló y cayó en menos de 5 años sirve). Con el fin de misión declarado, un satélite que reingresa dentro de su banda después de dejar de operar sirve. La devolución está cubierta por los
 tests (`reingreso dentro del plazo devuelve el deposito`) pero todavía no por un objeto
 real. Candidato a buscar antes de grabar el video.
 

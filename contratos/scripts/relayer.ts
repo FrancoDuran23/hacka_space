@@ -6,7 +6,8 @@ import { network } from "hardhat";
 // objeto ya decayo. Nunca inventa datos: todo sale del registro crudo, y su
 // keccak256 queda on-chain para que cualquiera lo audite.
 //
-// Uso:  NORAD=27386 npx hardhat run scripts/relayer.ts --network fuji
+// Uso:  NORAD=27386 MISSION_END=2012-05-09 npx hardhat run scripts/relayer.ts --network fuji
+//       MISSION_END es el fin de mision declarado por el operador; sin el, se toma el lanzamiento.
 
 const SATCAT_URL = "https://celestrak.org/satcat/records.php";
 const TX_EXPLORER = "https://explorer-test.avax.network/c-chain/tx";
@@ -54,6 +55,10 @@ const dataHash = ethers.keccak256(ethers.toUtf8Bytes(JSON.stringify(record)));
 const launchedMs = Date.parse(record.LAUNCH_DATE);
 const preEpoch = launchedMs < 0;
 const launchedAt = BigInt(Math.max(Math.floor(launchedMs / 1000), 1));
+// Fin de mision declarado: no viene de CelesTrak, lo declara el operador (ADR 0004).
+const missionEndMs = process.env.MISSION_END ? Date.parse(process.env.MISSION_END) : NaN;
+if (process.env.MISSION_END && Number.isNaN(missionEndMs)) throw new Error(`MISSION_END invalido: ${process.env.MISSION_END}`);
+const missionEndsAt = Number.isNaN(missionEndMs) ? launchedAt : BigInt(Math.max(Math.floor(missionEndMs / 1000), Number(launchedAt)));
 if (preEpoch) {
   console.log("  aviso:    lanzado antes de 1970, se ancla al epoch (el hash conserva la fecha real)");
 }
@@ -61,7 +66,8 @@ if (preEpoch) {
 // 2. Banda orbital por apogeo: <600 baja, 600-900 media, >900 alta.
 const apogee = Number(record.APOGEE);
 const band = apogee < 600 ? 0 : apogee <= 900 ? 1 : 2;
-console.log(`  banda:    ${band} (${deployment.bandYears[band]} anos, plazo anclado al lanzamiento)`);
+console.log(`  banda:    ${band} (${deployment.bandYears[band]} anos desde el fin de mision)`);
+console.log(`  fin de mision declarado: ${new Date(Number(missionEndsAt) * 1000).toISOString().slice(0, 10)}`);
 
 const current = await escrow.escrowOf(norad);
 const deposit = BigInt(deployment.bandAmounts[band]);
@@ -85,7 +91,7 @@ async function registerEscrow() {
   await ensureFunds();
   console.log(`\nRegistrando escrow con deposito ${ethers.formatUnits(deposit, 6)} y hash ${dataHash}`);
 
-  const tx = await escrow.register(norad, operatorAddress, launchedAt, band, dataHash);
+  const tx = await escrow.register(norad, operatorAddress, launchedAt, missionEndsAt, band, dataHash);
   console.log(`  tx enviada: ${tx.hash}`);
   const receipt = await tx.wait();
   console.log(`  confirmada en bloque ${receipt?.blockNumber}`);

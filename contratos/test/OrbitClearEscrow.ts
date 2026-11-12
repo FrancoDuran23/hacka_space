@@ -8,6 +8,8 @@ const YEAR = 365 * 24 * 60 * 60;
 const ENVISAT = 27386;
 // 2002-03-01T00:00:00Z, tal como lo devuelve SATCAT para ENVISAT.
 const ENVISAT_LAUNCH = 1014940800;
+// ESA declaro el fin de la mision el 2012-05-09, despues de perder contacto en abril.
+const ENVISAT_MISSION_END = 1336521600;
 // Objeto del catalogo que ya decayo (SATCAT DECAY_DATE 2026-10-31).
 const DECAYED = 4133;
 
@@ -55,13 +57,14 @@ describe("OrbitClearEscrow", function () {
       const dataHash = hashOf("envisat-satcat-record");
 
       await expect(
-        escrow.connect(relayer).register(ENVISAT, operator.address, launchedAt, 0, dataHash),
+        escrow.connect(relayer).register(ENVISAT, operator.address, launchedAt, launchedAt, 0, dataHash),
       )
         .to.emit(escrow, "Registered")
         .withArgs(
           ENVISAT,
           operator.address,
           0,
+          launchedAt,
           launchedAt,
           launchedAt + 5 * YEAR,
           BAND_AMOUNT[0],
@@ -84,7 +87,7 @@ describe("OrbitClearEscrow", function () {
       const { escrow, relayer, operator, now } =
         await networkHelpers.loadFixture(deployFixture);
 
-      await escrow.connect(relayer).register(ENVISAT, operator.address, now - YEAR, 2, hashOf("alta"));
+      await escrow.connect(relayer).register(ENVISAT, operator.address, now - YEAR, now - YEAR, 2, hashOf("alta"));
 
       const e = await escrow.escrowOf(ENVISAT);
       expect(e.deposit).to.equal(BAND_AMOUNT[2]);
@@ -96,7 +99,7 @@ describe("OrbitClearEscrow", function () {
         await networkHelpers.loadFixture(deployFixture);
 
       await expect(
-        escrow.connect(stranger).register(ENVISAT, operator.address, now - YEAR, 0, hashOf("x")),
+        escrow.connect(stranger).register(ENVISAT, operator.address, now - YEAR, now - YEAR, 0, hashOf("x")),
       )
         .to.be.revertedWithCustomError(escrow, "NotRelayer");
     });
@@ -105,10 +108,10 @@ describe("OrbitClearEscrow", function () {
       const { escrow, relayer, operator, now } =
         await networkHelpers.loadFixture(deployFixture);
 
-      await escrow.connect(relayer).register(ENVISAT, operator.address, now - YEAR, 0, hashOf("x"));
+      await escrow.connect(relayer).register(ENVISAT, operator.address, now - YEAR, now - YEAR, 0, hashOf("x"));
 
       await expect(
-        escrow.connect(relayer).register(ENVISAT, operator.address, now - YEAR, 0, hashOf("y")),
+        escrow.connect(relayer).register(ENVISAT, operator.address, now - YEAR, now - YEAR, 0, hashOf("y")),
       )
         .to.be.revertedWithCustomError(escrow, "AlreadyRegistered")
         .withArgs(ENVISAT);
@@ -119,35 +122,73 @@ describe("OrbitClearEscrow", function () {
         await networkHelpers.loadFixture(deployFixture);
 
       await expect(
-        escrow.connect(relayer).register(ENVISAT, operator.address, now - YEAR, 3, hashOf("x")),
+        escrow.connect(relayer).register(ENVISAT, operator.address, now - YEAR, now - YEAR, 3, hashOf("x")),
       )
         .to.be.revertedWithCustomError(escrow, "InvalidBand")
         .withArgs(3);
 
       await expect(
-        escrow.connect(relayer).register(ENVISAT, operator.address, now + 86400, 0, hashOf("x")),
+        escrow.connect(relayer).register(ENVISAT, operator.address, now + 86400, now + 86400, 0, hashOf("x")),
       ).to.be.revertedWithCustomError(escrow, "InvalidLaunchDate");
     });
   });
 
-  describe("plazo anclado al lanzamiento", function () {
+  describe("plazo desde el fin de mision", function () {
     it("Envisat nace vencido: lanzado en 2002, banda media, plazo 2012", async function () {
       const { escrow, relayer, operator } = await networkHelpers.loadFixture(deployFixture);
 
       await escrow
         .connect(relayer)
-        .register(ENVISAT, operator.address, ENVISAT_LAUNCH, 1, hashOf("envisat-satcat"));
+        .register(ENVISAT, operator.address, ENVISAT_LAUNCH, ENVISAT_LAUNCH, 1, hashOf("envisat-satcat"));
 
       const e = await escrow.escrowOf(ENVISAT);
       expect(e.deadline).to.equal(BigInt(ENVISAT_LAUNCH + 10 * YEAR));
       expect(await escrow.isExpired(ENVISAT)).to.equal(true);
     });
 
+    it("Envisat con su fin de mision real (2012) vence en 2022, igual sigue vencido hoy", async function () {
+      const { escrow, relayer, operator } = await networkHelpers.loadFixture(deployFixture);
+
+      await escrow
+        .connect(relayer)
+        .register(ENVISAT, operator.address, ENVISAT_LAUNCH, ENVISAT_MISSION_END, 1, hashOf("envisat-satcat"));
+
+      const e = await escrow.escrowOf(ENVISAT);
+      expect(e.missionEndsAt).to.equal(BigInt(ENVISAT_MISSION_END));
+      expect(e.deadline).to.equal(BigInt(ENVISAT_MISSION_END + 10 * YEAR));
+      expect(await escrow.isExpired(ENVISAT)).to.equal(true);
+    });
+
+    it("un fin de mision futuro corre el plazo: un satelite viejo en operacion no nace vencido", async function () {
+      const { escrow, relayer, operator, now } =
+        await networkHelpers.loadFixture(deployFixture);
+
+      // lanzado hace 6 anios en banda baja (5 anios): contado desde el lanzamiento ya venceria
+      const launchedAt = now - 6 * YEAR;
+      const missionEndsAt = now + 3 * YEAR;
+      await expect(
+        escrow.connect(relayer).register(ENVISAT, operator.address, launchedAt, missionEndsAt, 0, hashOf("activo")),
+      )
+        .to.emit(escrow, "Registered")
+        .withArgs(ENVISAT, operator.address, 0, launchedAt, missionEndsAt, missionEndsAt + 5 * YEAR, BAND_AMOUNT[0], hashOf("activo"));
+
+      expect(await escrow.isExpired(ENVISAT)).to.equal(false);
+    });
+
+    it("rechaza un fin de mision anterior al lanzamiento", async function () {
+      const { escrow, relayer, operator, now } =
+        await networkHelpers.loadFixture(deployFixture);
+
+      await expect(
+        escrow.connect(relayer).register(ENVISAT, operator.address, now - YEAR, now - 2 * YEAR, 0, hashOf("x")),
+      ).to.be.revertedWithCustomError(escrow, "InvalidMissionEnd");
+    });
+
     it("un satelite recien lanzado no esta vencido", async function () {
       const { escrow, relayer, operator, now } =
         await networkHelpers.loadFixture(deployFixture);
 
-      await escrow.connect(relayer).register(ENVISAT, operator.address, now, 0, hashOf("nuevo"));
+      await escrow.connect(relayer).register(ENVISAT, operator.address, now, now, 0, hashOf("nuevo"));
 
       expect(await escrow.isExpired(ENVISAT)).to.equal(false);
     });
@@ -170,7 +211,7 @@ describe("OrbitClearEscrow", function () {
         await networkHelpers.loadFixture(deployFixture);
 
       const launchedAt = now - YEAR;
-      await escrow.connect(relayer).register(DECAYED, operator.address, launchedAt, 0, hashOf("gp"));
+      await escrow.connect(relayer).register(DECAYED, operator.address, launchedAt, launchedAt, 0, hashOf("gp"));
 
       const before = await token.balanceOf(operator.address);
 
@@ -190,7 +231,7 @@ describe("OrbitClearEscrow", function () {
         await networkHelpers.loadFixture(deployFixture);
 
       const launchedAt = now - 6 * YEAR;
-      await escrow.connect(relayer).register(DECAYED, operator.address, launchedAt, 0, hashOf("gp"));
+      await escrow.connect(relayer).register(DECAYED, operator.address, launchedAt, launchedAt, 0, hashOf("gp"));
 
       const before = await token.balanceOf(fund.address);
 
@@ -206,7 +247,7 @@ describe("OrbitClearEscrow", function () {
       const { escrow, relayer, operator, stranger, now } =
         await networkHelpers.loadFixture(deployFixture);
 
-      await escrow.connect(relayer).register(DECAYED, operator.address, now - YEAR, 0, hashOf("gp"));
+      await escrow.connect(relayer).register(DECAYED, operator.address, now - YEAR, now - YEAR, 0, hashOf("gp"));
 
       await expect(escrow.connect(stranger).attestReentry(DECAYED, now, hashOf("x")))
         .to.be.revertedWithCustomError(escrow, "NotRelayer");
@@ -226,7 +267,7 @@ describe("OrbitClearEscrow", function () {
 
       await escrow
         .connect(relayer)
-        .register(ENVISAT, operator.address, ENVISAT_LAUNCH, 1, hashOf("envisat-satcat"));
+        .register(ENVISAT, operator.address, ENVISAT_LAUNCH, ENVISAT_LAUNCH, 1, hashOf("envisat-satcat"));
 
       const before = await token.balanceOf(fund.address);
 
@@ -243,7 +284,7 @@ describe("OrbitClearEscrow", function () {
       const { escrow, relayer, operator, now } =
         await networkHelpers.loadFixture(deployFixture);
 
-      await escrow.connect(relayer).register(ENVISAT, operator.address, now, 0, hashOf("x"));
+      await escrow.connect(relayer).register(ENVISAT, operator.address, now, now, 0, hashOf("x"));
 
       await expect(escrow.closeExpired(ENVISAT))
         .to.be.revertedWithCustomError(escrow, "NotExpired")
@@ -254,7 +295,7 @@ describe("OrbitClearEscrow", function () {
       const { escrow, relayer, operator, now } =
         await networkHelpers.loadFixture(deployFixture);
 
-      await escrow.connect(relayer).register(ENVISAT, operator.address, now, 0, hashOf("x"));
+      await escrow.connect(relayer).register(ENVISAT, operator.address, now, now, 0, hashOf("x"));
 
       expect(await escrow.isExpired(ENVISAT)).to.equal(false);
 

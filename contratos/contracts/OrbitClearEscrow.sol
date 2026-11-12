@@ -7,8 +7,10 @@ import {ReentrancyGuard} from "@openzeppelin/contracts/utils/ReentrancyGuard.sol
 
 /// @title OrbitClearEscrow
 /// @notice Garantia de desorbitado por satelite. Cada NORAD tiene su propio escrow.
-/// El operador deposita USDC al registrar el satelite. Si el relayer acredita un
-/// reingreso (SATCAT DECAY_DATE) dentro del plazo, el deposito vuelve al operador.
+/// El operador deposita USDC al registrar el satelite y declara el fin de su mision.
+/// El plazo de retiro corre desde ese fin de mision (como la regla de la FCC). Si el
+/// relayer acredita un reingreso (SATCAT DECAY_DATE) dentro del plazo, el deposito
+/// vuelve al operador.
 /// Si el plazo vence con el objeto en orbita, el deposito pasa al fondo de remocion.
 contract OrbitClearEscrow is ReentrancyGuard {
     using SafeERC20 for IERC20;
@@ -28,6 +30,7 @@ contract OrbitClearEscrow is ReentrancyGuard {
     struct Escrow {
         address operator;
         uint64 launchedAt;
+        uint64 missionEndsAt;
         uint64 deadline;
         uint128 deposit;
         uint8 band;
@@ -57,6 +60,7 @@ contract OrbitClearEscrow is ReentrancyGuard {
     error EscrowNotActive(uint32 noradId);
     error InvalidBand(uint8 band);
     error InvalidLaunchDate();
+    error InvalidMissionEnd();
     error InvalidDecayDate();
     error NotExpired(uint32 noradId);
 
@@ -65,6 +69,7 @@ contract OrbitClearEscrow is ReentrancyGuard {
         address indexed operator,
         uint8 band,
         uint64 launchedAt,
+        uint64 missionEndsAt,
         uint64 deadline,
         uint128 deposit,
         bytes32 dataHash
@@ -101,12 +106,15 @@ contract OrbitClearEscrow is ReentrancyGuard {
     /// @param noradId Numero de catalogo NORAD.
     /// @param operator Operador responsable, origen y destinatario del deposito.
     /// @param launchedAt Fecha de lanzamiento en segundos (SATCAT LAUNCH_DATE).
+    /// @param missionEndsAt Fin de mision declarado por el operador, en segundos. No puede
+    /// ser anterior al lanzamiento; el plazo de retiro corre desde aca.
     /// @param band Banda orbital: 0 baja, 1 media, 2 alta.
     /// @param dataHash keccak256 del registro crudo de CelesTrak usado.
     function register(
         uint32 noradId,
         address operator,
         uint64 launchedAt,
+        uint64 missionEndsAt,
         uint8 band,
         bytes32 dataHash
     ) external onlyRelayer nonReentrant {
@@ -114,13 +122,15 @@ contract OrbitClearEscrow is ReentrancyGuard {
         if (band >= BAND_COUNT) revert InvalidBand(band);
         if (operator == address(0)) revert ZeroAddress();
         if (launchedAt == 0 || launchedAt > block.timestamp) revert InvalidLaunchDate();
+        if (missionEndsAt < launchedAt) revert InvalidMissionEnd();
 
-        uint64 deadline = launchedAt + uint64(bandYears[band]) * YEAR;
+        uint64 deadline = missionEndsAt + uint64(bandYears[band]) * YEAR;
         uint128 deposit = bandAmount[band];
 
         _escrows[noradId] = Escrow({
             operator: operator,
             launchedAt: launchedAt,
+            missionEndsAt: missionEndsAt,
             deadline: deadline,
             deposit: deposit,
             band: band,
@@ -129,7 +139,7 @@ contract OrbitClearEscrow is ReentrancyGuard {
 
         totalDeposited += deposit;
 
-        emit Registered(noradId, operator, band, launchedAt, deadline, deposit, dataHash);
+        emit Registered(noradId, operator, band, launchedAt, missionEndsAt, deadline, deposit, dataHash);
 
         usdc.safeTransferFrom(operator, address(this), deposit);
     }
@@ -189,9 +199,9 @@ contract OrbitClearEscrow is ReentrancyGuard {
         return escrow.state == State.Active && block.timestamp > escrow.deadline;
     }
 
-    function deadlineFor(uint64 launchedAt, uint8 band) public view returns (uint64) {
+    function deadlineFor(uint64 missionEndsAt, uint8 band) public view returns (uint64) {
         if (band >= BAND_COUNT) revert InvalidBand(band);
-        return launchedAt + uint64(bandYears[band]) * YEAR;
+        return missionEndsAt + uint64(bandYears[band]) * YEAR;
     }
 
     function _activeEscrow(uint32 noradId) private view returns (Escrow storage escrow) {

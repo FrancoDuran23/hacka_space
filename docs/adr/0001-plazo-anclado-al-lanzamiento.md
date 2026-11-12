@@ -1,3 +1,7 @@
+---
+status: superseded by ADR-0004
+---
+
 # El plazo de retiro se ancla a la fecha de lanzamiento, no al registro
 
 Los operadores podrían registrarse tarde y pedir un plazo nuevo, y el prototipo necesita mostrar un decomiso con datos reales antes de la entrega. Decidimos que el plazo de retiro es `LAUNCH_DATE` de SATCAT más los años de la banda orbital: el operador no elige la fecha, ni tampoco el momento desde el que se cuenta.

@@ -23,9 +23,9 @@ Hoy abandonar un satélite sale gratis, porque la sanción llega tarde o no lleg
 | 8 | El mismo modelo muestra que con el bono se lanzan más satélites, no menos. Fuentes: [Nature Communications 2026](https://doi.org/10.1038/s41467-026-77660-4). | Responde a "esto frena a la industria". |
 | 9 | El EU Space Act está en trámite en el Parlamento Europeo, con voto en comisión previsto para este mes. El Reino Unido ata la responsabilidad a la sostenibilidad desde el 1 de diciembre. Fuentes: [Comisión Europea](https://defence-industry-space.ec.europa.eu/eu-space-act_en), [Gobierno del Reino Unido](https://www.gov.uk/government/consultations/consultation-on-orbital-liabilities-insurance-charging-and-space-sustainability/outcome/space-regulatory-financial-tools-package-including-government-response-to-the-liability-insurance-charging-and-space-sustainability-consultation). | La regulación se está moviendo este mes. |
 | 10 | El 9 de noviembre se anunció que la NYSE liquidará su plataforma de valores tokenizados sobre una red propia de Avalanche. Fuentes: [CoinDesk](https://www.coindesk.com/business/2026/11/09/nyse-picks-avalanche-to-settle-tokenized-stocks-amid-wall-street-s-blockchain-race). | Una institución regulada eligiendo la misma tecnología, esta semana. |
-| 11 | El contrato está desplegado en Fuji y tiene registrado a Envisat, un satélite real de la ESA muerto a unos 760 km. Fuentes: [explorer de Fuji](https://explorer-test.avax.network/c-chain/address/0xA5aeCF58Fac272e9E4CC5D473A2767C56019CbB2). | No es una maqueta: es verificable en el explorer. |
+| 11 | El contrato está desplegado en Fuji y tiene registrado a Envisat, un satélite real de la ESA muerto a unos 760 km. Fuentes: [explorer de Fuji](https://explorer-test.avax.network/c-chain/address/0xeE7C5D5C0D7103C220d640EEb7B2788ab27CEf59). | No es una maqueta: es verificable en el explorer. |
 
-Contrato en Fuji: `0xA5aeCF58Fac272e9E4CC5D473A2767C56019CbB2`.
+Contrato en Fuji: `0xeE7C5D5C0D7103C220d640EEb7B2788ab27CEf59`.
 
 **De reserva, si piden un choque real entre satélites:** el 10 de febrero de 2009 el Cosmos 2251, un satélite ruso muerto, chocó con el Iridium 33, que estaba activo. Fue el primer choque entre dos satélites y dejó cerca de 2.200 fragmentos catalogados. Fuentes: [análisis de la NASA](https://ntrs.nasa.gov/api/citations/20150003820/downloads/20150003820.pdf).
 

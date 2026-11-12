@@ -17,8 +17,12 @@ La empresa u organismo responsable del satélite y dueño de su depósito.
 _Avoid_: cliente, usuario, dueño
 
 **Plazo de retiro**:
-La fecha límite para que el satélite reingrese, calculada como fecha de lanzamiento más los años de su banda orbital. No la elige el operador.
+La fecha límite para que el satélite reingrese: su fin de misión declarado más los años de su banda orbital.
 _Avoid_: vencimiento, deadline, fecha de retiro
+
+**Fin de misión declarado**:
+La fecha en que el operador declara que el satélite deja de operar. Es una declaración, no un dato verificable; queda registrada junto al escrow.
+_Avoid_: vida útil, fin de vida, end of life
 
 **Banda orbital**:
 Franja de altitud que fija el plazo de retiro y el monto del depósito. Más arriba, el satélite tarda más en caer solo y la zona está más cargada, así que el depósito sube.

@@ -75,7 +75,7 @@ Esto no es una maqueta. El contrato está desplegado en Fuji, la red de pruebas 
 Aclarar si preguntan: son objetos reales cargados para mostrar los tres caminos; ningún operador depositó de verdad. Los montos están en USDC de prueba.
 
 Fuentes:
-- Contrato en Fuji: <https://explorer-test.avax.network/c-chain/address/0xA5aeCF58Fac272e9E4CC5D473A2767C56019CbB2>
+- Contrato en Fuji: <https://explorer-test.avax.network/c-chain/address/0xeE7C5D5C0D7103C220d640EEb7B2788ab27CEf59>
 - Datos de los satélites: catálogo SATCAT de CelesTrak, <https://celestrak.org/satcat/>
 
 ## 8. Por qué blockchain

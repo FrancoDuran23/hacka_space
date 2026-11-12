@@ -157,7 +157,7 @@ Queda afuera: recomendaciones de trayectoria, pagos entre operadores por maniobr
 
 Entregables del track (viernes 13/11, 09:00 — tercera jornada): contrato desplegado en Fuji **o en una L1 del equipo**, con link al explorer; video de 1 a 3 minutos con una acción on-chain; deck de 5 a 7 slides con una de "por qué blockchain"; y repo o link del proyecto. Las dos redes son válidas. El track lo dice explícito: *"Un MVP que funciona le gana a algo ambicioso que no corre."* [Sitio del track](https://avalanche-track.vercel.app/), verificado el 11/11/2026.
 
-Estado del MVP al 11/11/2026: el escrow está implementado y desplegado en Fuji, en [`0xA5aeCF58Fac272e9E4CC5D473A2767C56019CbB2`](https://explorer-test.avax.network/c-chain/address/0xA5aeCF58Fac272e9E4CC5D473A2767C56019CbB2). Ver `contratos/README.md`.
+Estado del MVP al 12/11/2026: el escrow está implementado y desplegado en Fuji (plazo desde el fin de misión declarado, ADR 0004), en [`0xeE7C5D5C0D7103C220d640EEb7B2788ab27CEf59`](https://explorer-test.avax.network/c-chain/address/0xeE7C5D5C0D7103C220d640EEb7B2788ab27CEf59). Ver `contratos/README.md`.
 
 ## 12. Ideas que descartamos
 
