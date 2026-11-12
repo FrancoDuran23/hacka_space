@@ -9,7 +9,7 @@ import { computeStats, statusAt } from "@/lib/status";
 import { useRealTime } from "@/lib/store";
 import type { EscrowSnapshot, PublicChain } from "@/lib/types";
 import { getAddress } from "ethers";
-import { createWalletChallenge, listMyWallets, verifyAndLinkWallet } from "@/lib/wallets/actions";
+import { createWalletChallenge, listMyWallets, unlinkWallet, verifyAndLinkWallet } from "@/lib/wallets/actions";
 import { connectWallet, signMessage, type WalletState } from "@/lib/wallet";
 import { Button } from "@/components/ui/button";
 import { SatelliteDetail } from "./SatelliteDetail";
@@ -32,6 +32,7 @@ export function OperatorDashboard({ initial, chain, account }: { initial: Escrow
   const [walletError, setWalletError] = useState<string | null>(null);
   /** The connected wallet is saved to the signed-in account (verified by signature). */
   const [saved, setSaved] = useState(false);
+  const [myWallets, setMyWallets] = useState<{ id: string; address: string; label: string | null }[]>([]);
   const [connecting, setConnecting] = useState(false);
   const now = useRealTime();
 
@@ -69,7 +70,31 @@ export function OperatorDashboard({ initial, chain, account }: { initial: Escrow
   const onChain = mine.filter((o) => o.onChain).length;
   const selected = mine.find((o) => o.objectId === selectedId) ?? null;
 
-  /** Links the wallet to the account with the same signed challenge as /cuenta/wallets, unless it already is. */
+  async function loadMyWallets() {
+    if (!account) return;
+    try {
+      setMyWallets((await listMyWallets()).map((w) => ({ id: w.id, address: w.address, label: w.label })));
+    } catch {
+      /* session expired: the header already offers to sign in */
+    }
+  }
+
+  useEffect(() => {
+    if (!account) return;
+    listMyWallets()
+      .then((rows) => setMyWallets(rows.map((w) => ({ id: w.id, address: w.address, label: w.label }))))
+      .catch(() => {});
+  }, [account]);
+
+  async function unlink(id: string, address: string) {
+    if (!window.confirm(`¿Desvincular ${shortHash(address)} de tu cuenta? Vas a tener que firmar de nuevo para volver a usarla.`)) return;
+    const r = await unlinkWallet(id);
+    if (!r.ok) setWalletError(r.error);
+    if (wallet && getAddress(wallet.address) === getAddress(address)) setSaved(false);
+    await loadMyWallets();
+  }
+
+  /** Links the wallet to the account with a signed one-time challenge, unless it already is. */
   async function saveToAccount(address: string) {
     if (!chain) return;
     const mine = await listMyWallets();
@@ -91,6 +116,7 @@ export function OperatorDashboard({ initial, chain, account }: { initial: Escrow
       if (account) {
         await saveToAccount(w.address);
         setSaved(true);
+        await loadMyWallets();
       }
     } catch (e) {
       setWalletError(walletErrorText(e));
@@ -115,7 +141,7 @@ export function OperatorDashboard({ initial, chain, account }: { initial: Escrow
               Consola orbital
             </Link>
             {account ? (
-              <Link href="/cuenta" className="text-dim hover:text-cyan" title="Configuración de la cuenta">
+              <Link href="/account/account" className="text-dim hover:text-cyan" title="Perfil y seguridad de la cuenta">
                 Mi cuenta · <span className="text-ink">{account.name}</span>
               </Link>
             ) : (
@@ -153,6 +179,22 @@ export function OperatorDashboard({ initial, chain, account }: { initial: Escrow
             {OPERATOR}
             {mine[0] && <span className="ml-2 text-[13px] font-normal text-dim">{mine[0].country}</span>}
           </h1>
+          {account && myWallets.length > 0 && (
+            <div className="mt-3 flex flex-wrap items-center gap-2 text-[12px]">
+              <span className="label">Wallets de tu cuenta</span>
+              {myWallets.map((w) => (
+                <span key={w.id} className="flex items-center gap-2 rounded-full bg-white/[0.04] px-3 py-[3px]">
+                  <span className="mono text-ink" title={w.address}>
+                    {shortHash(w.address)}
+                  </span>
+                  {w.label && <span className="text-faint">{w.label}</span>}
+                  <button type="button" onClick={() => unlink(w.id, w.address)} className="cursor-pointer text-faint hover:text-bad" aria-label={`Desvincular ${w.address}`}>
+                    Desvincular
+                  </button>
+                </span>
+              ))}
+            </div>
+          )}
         </section>
 
         {expiring.length > 0 && (

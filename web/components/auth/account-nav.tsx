@@ -16,7 +16,7 @@ export function AccountNav() {
         <Link href="/operador">Panel del operador</Link>
       </Button>
       <Button variant="ghost" asChild>
-        <Link href="/cuenta">Mi cuenta</Link>
+        <Link href="/account/account">Mi cuenta</Link>
       </Button>
       <UserButton size="icon" />
     </nav>

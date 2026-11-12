@@ -15,7 +15,8 @@ import {
   wallets,
 } from "@/lib/db/schema";
 
-const WALLETS_PATH = "/cuenta/wallets";
+// Wallets are linked and listed from the operator panel.
+const WALLETS_PATH = "/operador";
 
 async function currentUser() {
   try {

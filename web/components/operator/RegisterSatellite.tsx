@@ -169,11 +169,8 @@ export function RegisterSatellite({ chain, onClose, onRegistered }: { chain: Pub
           <h3 className="panel-title mb-2">Wallet que paga el depósito</h3>
           {wallets.length === 0 ? (
             <p className="text-[12.5px] text-dim">
-              No tenés wallets verificadas.{" "}
-              <Link href="/cuenta/wallets" className="text-cyan underline underline-offset-2">
-                Verificá una
-              </Link>{" "}
-              y volvé a consultar.
+              No tenés wallets guardadas en tu cuenta. Cerrá este panel, tocá <span className="text-ink">Conectar wallet</span> arriba a la
+              derecha, firmá el mensaje y volvé a consultar.
             </p>
           ) : (
             <div className="space-y-2" role="radiogroup" aria-label="Wallet">
