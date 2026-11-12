@@ -9,6 +9,7 @@ import type { PublicChain } from "@/lib/types";
 import { approveDeposit, connectWallet, mintTestUsdc } from "@/lib/wallet";
 import { Button } from "@/components/ui/button";
 import { TxHash } from "@/components/hud/bits";
+import { OwnerSatellites } from "./OwnerSatellites";
 import { BAND_LABEL, usdcToUsd, walletErrorText } from "./shared";
 
 type Busy = "quote" | "mint" | "approve" | "register" | null;
@@ -23,7 +24,18 @@ const OBJECT_TYPE = { PAY: "satélite", "R/B": "cuerpo de cohete", DEB: "fragmen
  * Alta de un satélite: CelesTrak da los datos, el operador autoriza el depósito exacto de la banda desde
  * una wallet verificada en su cuenta, y el relayer firma register() en el servidor.
  */
-export function RegisterSatellite({ chain, onClose, onRegistered }: { chain: PublicChain | null; onClose: () => void; onRegistered: () => void }) {
+export function RegisterSatellite({
+  chain,
+  owner,
+  onClose,
+  onRegistered,
+}: {
+  chain: PublicChain | null;
+  /** The operator: SATCAT OWNER code and display name, for the preloaded list. */
+  owner: { code: string; label: string };
+  onClose: () => void;
+  onRegistered: () => void;
+}) {
   const [norad, setNorad] = useState("");
   const [quote, setQuote] = useState<SatelliteQuote | null>(null);
   const [wallets, setWallets] = useState<WalletFunds[]>([]);
@@ -144,6 +156,17 @@ export function RegisterSatellite({ chain, onClose, onRegistered }: { chain: Pub
         </Button>
       </form>
       {busy === "quote" && <p className="mt-2 text-[11.5px] text-faint">CelesTrak puede tardar unos segundos.</p>}
+
+      {!quote && !done && (
+        <OwnerSatellites
+          owner={owner.code}
+          label={owner.label}
+          onPick={(id) => {
+            setNorad(String(id));
+            lookUp(id);
+          }}
+        />
+      )}
 
       {quote && (
         <section className="mt-5">

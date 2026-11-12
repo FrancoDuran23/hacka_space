@@ -19,6 +19,8 @@ import { usdcToUsd, walletErrorText } from "./shared";
 
 /** The dashboard belongs to one operator. ESA owns the only real escrow on Fuji (ENVISAT), so the demo shows live data. */
 const OPERATOR = "ESA";
+/** The operator's OWNER code in CelesTrak's SATCAT (same as its name for ESA). */
+const OPERATOR_SATCAT = "ESA";
 const REFRESH_MS = 20_000;
 
 // three.js only runs in the browser
@@ -259,6 +261,7 @@ export function OperatorDashboard({ initial, chain, account }: { initial: Escrow
               ) : (
                 <RegisterSatellite
                   chain={chain}
+                  owner={{ code: OPERATOR_SATCAT, label: OPERATOR }}
                   onClose={() => setAdding(false)}
                   onRegistered={() => {
                     refresh();

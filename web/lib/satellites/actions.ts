@@ -10,6 +10,7 @@ import { loadContractConfig, type ContractConfig } from "@/lib/config";
 import { db } from "@/lib/db";
 import { wallets } from "@/lib/db/schema";
 import { recordRegistration } from "@/lib/live-store";
+import { satellitesOwnedBy, type OwnedSatellite } from "@/lib/operator-catalog";
 import { registrationTerms } from "@/lib/registration";
 import type { Band } from "@/lib/types";
 
@@ -98,6 +99,38 @@ async function prepare(norad: number) {
     launchedAt: Number(terms.launchedAt),
   };
   return { ok: true as const, cfg, quote, terms, amount, escrow, usdc, provider };
+}
+
+export type OperatorSatellitesResult = { ok: true; satellites: OwnedSatellite[] } | Fail;
+
+const ACTIVE_OPS = new Set(["+", "P", "B", "S", "X"]);
+
+/**
+ * The operator's satellites (SATCAT OWNER code) that have no escrow yet, to pick one instead of typing its
+ * NORAD. Operational ones first, newest launch first.
+ */
+export async function operatorSatellites(owner: string): Promise<OperatorSatellitesResult> {
+  if (!/^[A-Z0-9]{1,6}$/.test(owner)) return fail("input", "Código de operadora inválido.");
+  const cfg = await loadContractConfig();
+  if (!cfg?.address) return fail("chain", "No hay un contrato configurado.");
+  let owned: OwnedSatellite[];
+  try {
+    owned = await satellitesOwnedBy(owner);
+  } catch (e) {
+    return fail("data", (e as Error).message || "No se pudo leer el catálogo de CelesTrak.");
+  }
+  // which of them already have an escrow; Fuji's public RPC answers 500 to batches of ~100 calls, so 20 per batch
+  const net = Network.from(cfg.chainId);
+  const escrow = new Contract(cfg.address, ORBITCLEAR_ESCROW_ABI, new JsonRpcProvider(cfg.rpcUrl, net, { staticNetwork: net, batchMaxCount: 20 }));
+  let states: bigint[];
+  try {
+    states = await Promise.all(owned.map((o) => escrow.getFunction("escrowOf")(o.norad).then((e: { state: bigint }) => e.state)));
+  } catch {
+    return fail("chain", "No se pudo consultar el contrato en Fuji. Probá de nuevo en unos segundos.");
+  }
+  const free = owned.filter((_, i) => states[i] === 0n);
+  free.sort((a, b) => Number(ACTIVE_OPS.has(b.ops)) - Number(ACTIVE_OPS.has(a.ops)) || b.launchDate.localeCompare(a.launchDate));
+  return { ok: true, satellites: free };
 }
 
 /** Max declared mission length: past this a declaration only stretches the deadline. */
