@@ -32,7 +32,7 @@ Abrí http://localhost:3000. Parámetros útiles: `?boot=0` saltea la boot seque
 - Todo se muestra en USD. Los hashes solo llevan link al explorer cuando el escrow existe on-chain; los de demo son simulados y no enlazan.
 - Estados: `ACTIVE`, `EXPIRING` (menos de 24 h al plazo), `REFUNDED` (reingreso verificado, el depósito vuelve al operador) y `FORFEITED` (plazo vencido, el depósito va al fondo de remoción). Pasado el plazo, el contrato permite que cualquiera llame a `closeExpired`.
 - El contrato no enumera escrows: la consola consulta los NORAD de `data/escrows.json`. En Fuji hoy solo ENVISAT (27386) está registrado; THORAD AGENA D DEB (4133) también, pero ya reingresó y no tiene TLE para dibujarlo.
-- El RPC público de Fuji rechaza `eth_getLogs` en batch y limita ráfagas: los eventos se escanean de a una ventana de 100 bloques, de forma incremental desde `deployBlock`.
+- Los eventos del contrato se leen del indexador de Routescan (el del explorer de Avalanche) en una sola llamada. Si falla, se escanea el RPC de a 100 bloques desde `deployBlock`: el RPC público de Fuji rechaza `eth_getLogs` en batch y corta ráfagas con 429.
 - El post-procesado usa el pipeline de nodos de three (bloom, blur de foco, aberración cromática, viñeta) porque `@react-three/postprocessing` solo funciona con WebGLRenderer, no con WebGPURenderer.
 - El sol es "cinematográfico": al cargar se ubica para que sea de noche sobre Salta (luces de ciudades visibles) y después queda fijo en el espacio inercial, así WARP TIME muestra ciclos día/noche.
 - El balance neto es un modelo de la demo: depósito que respalda la remoción − riesgo de colisión acumulado por día mientras el objeto sigue en órbita.

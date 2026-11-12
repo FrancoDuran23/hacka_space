@@ -1,5 +1,5 @@
 import "server-only";
-import { Contract, JsonRpcProvider, Network, formatUnits, type EventLog, type Log } from "ethers";
+import { Contract, Interface, JsonRpcProvider, Network, formatUnits, type Result } from "ethers";
 import { ORBITCLEAR_ESCROW_ABI, USDC_DECIMALS } from "./abi";
 import { loadContractConfig, loadEscrowsFile, SNOWTRACE, type ContractConfig, type EscrowsFile } from "./config";
 import { cacheVersion, demoEpoch, reentries } from "./live-store";
@@ -177,9 +177,50 @@ function scanned(cfg: ContractConfig): EventScan {
   return scan;
 }
 
-/** Scans forward from the deploy block (or the last scanned one), up to LOG_WINDOWS windows per call. */
+/**
+ * Routescan (the indexer behind Avalanche's explorer) returns every log of the contract in one call,
+ * instead of thousands of 100-block eth_getLogs windows that trip the public RPC's rate limit.
+ */
+const INDEXER: Record<number, string> = {
+  43113: "https://api.routescan.io/v2/network/testnet/evm/43113/etherscan/api",
+  43114: "https://api.routescan.io/v2/network/mainnet/evm/43114/etherscan/api",
+};
+const INDEXER_TIMEOUT_MS = 6_000;
+const escrowInterface = new Interface(ORBITCLEAR_ESCROW_ABI);
+
+interface IndexedLog {
+  topics: string[];
+  data: string;
+  timeStamp: string;
+  transactionHash: string;
+  logIndex: string;
+}
+
+async function indexedEvents(cfg: ContractConfig): Promise<Map<number, ChainEvent[]> | null> {
+  const base = INDEXER[cfg.chainId];
+  if (!base || cfg.deployBlock == null) return null;
+  const url = `${base}?module=logs&action=getLogs&address=${cfg.address}&fromBlock=${cfg.deployBlock}&toBlock=latest`;
+  const res = await fetch(url, { cache: "no-store", signal: AbortSignal.timeout(INDEXER_TIMEOUT_MS) });
+  if (!res.ok) throw new Error(`indexer responded ${res.status}`);
+  const body = (await res.json()) as { message?: string; result?: IndexedLog[] | string };
+  if (!Array.isArray(body.result)) {
+    if (body.message === "No records found") return new Map();
+    throw new Error(`indexer: ${body.message ?? "unexpected response"}`);
+  }
+  const st = scanned(cfg);
+  for (const l of body.result) {
+    const parsed = escrowInterface.parseLog({ topics: l.topics, data: l.data });
+    const item = parsed && toHistory(parsed.name, parsed.args, Number(l.timeStamp) * 1000, l.transactionHash);
+    if (item) st.events.set(`${l.transactionHash}:${Number(l.logIndex)}`, item);
+  }
+  return st.byObject();
+}
+
+/** Indexer first; if it is down, scan the RPC forward from the deploy block, up to LOG_WINDOWS windows per call. */
 function contractEvents(cfg: ContractConfig, provider: JsonRpcProvider): Promise<Map<number, ChainEvent[]>> {
   scanning ??= (async () => {
+    const indexed = await indexedEvents(cfg).catch(() => null);
+    if (indexed) return indexed;
     const st = scanned(cfg);
     const c = new Contract(cfg.address!, ORBITCLEAR_ESCROW_ABI, provider);
     const latest = await provider.getBlockNumber();
@@ -193,7 +234,7 @@ function contractEvents(cfg: ContractConfig, provider: JsonRpcProvider): Promise
         if (blk) times.set(b, blk.timestamp * 1000);
       }
       for (const log of logs) {
-        const item = toHistory(log, times.get(log.blockNumber) ?? Date.now());
+        const item = "fragment" in log && log.fragment ? toHistory(log.fragment.name, log.args, times.get(log.blockNumber) ?? Date.now(), log.transactionHash) : null;
         if (item) st.events.set(`${log.transactionHash}:${log.index}`, item);
       }
       st.from = from = to + 1;
@@ -203,18 +244,16 @@ function contractEvents(cfg: ContractConfig, provider: JsonRpcProvider): Promise
   return scanning;
 }
 
-function toHistory(log: EventLog | Log, at: number): { id: number; h: ChainEvent } | null {
-  if (!("fragment" in log) || !log.fragment) return null;
-  const a = log.args;
+function toHistory(name: string, a: Result, at: number, txHash: string): { id: number; h: ChainEvent } | null {
   const map: Record<string, () => { type: HistoryType; amount: number; dataHash?: string }> = {
     Registered: () => ({ type: "REGISTERED", amount: usd(a[5]), dataHash: String(a[6]) }),
     ReentryAttested: () => ({ type: "REENTRY_ATTESTED", amount: 0, dataHash: String(a[2]) }),
     Refunded: () => ({ type: "REFUNDED", amount: usd(a[2]) }),
     Forfeited: () => ({ type: "FORFEITED", amount: usd(a[2]) }),
   };
-  const fn = map[log.fragment.name];
+  const fn = map[name];
   if (!fn) return null;
-  return { id: Number(a[0]), h: { at: new Date(at).toISOString(), txHash: log.transactionHash, ...fn() } };
+  return { id: Number(a[0]), h: { at: new Date(at).toISOString(), txHash, ...fn() } };
 }
 
 function withTimeout<T>(p: Promise<T>, ms: number): Promise<T> {
