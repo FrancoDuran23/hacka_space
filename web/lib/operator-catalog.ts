@@ -1,12 +1,17 @@
 import "server-only";
+import { mkdir, readFile, stat, writeFile } from "node:fs/promises";
+import path from "node:path";
 
 /**
  * The full SATCAT, to list an operator's satellites: CelesTrak's records endpoint does not filter by OWNER.
- * About 7 MB, downloaded at most once a day per server (CelesTrak's usage policy), parsed once.
+ * About 7 MB, downloaded at most once a day and kept on disk. CelesTrak answers 403 to repeated downloads of
+ * its files, so a refused download falls back to the last copy and is not retried for RETRY_MS.
  */
 const SATCAT_CSV = "https://celestrak.org/pub/satcat.csv";
 const TTL_MS = 24 * 3_600_000;
+const RETRY_MS = 2 * 3_600_000;
 const TIMEOUT_MS = 60_000;
+const CACHE_FILE = path.join(process.cwd(), ".cache", "satcat.csv");
 
 export interface OwnedSatellite {
   norad: number;
@@ -20,6 +25,8 @@ export interface OwnedSatellite {
 type Row = Record<string, string>;
 
 let cache: { at: number; rows: Promise<Row[]> } | null = null;
+/** Do not ask CelesTrak again before this instant (after a refused download). */
+let blockedUntil = 0;
 
 /** RFC 4180: quoted fields may hold commas and doubled quotes. */
 function parseCsv(text: string): Row[] {
@@ -47,18 +54,41 @@ function parseCsv(text: string): Row[] {
   return rest.map((r) => Object.fromEntries(header.map((h, i) => [h, r[i] ?? ""])));
 }
 
+async function diskCopy(): Promise<{ text: string; age: number } | null> {
+  try {
+    const [info, text] = await Promise.all([stat(CACHE_FILE), readFile(CACHE_FILE, "utf8")]);
+    return { text, age: Date.now() - info.mtimeMs };
+  } catch {
+    return null;
+  }
+}
+
+async function loadSatcat(): Promise<Row[]> {
+  const disk = await diskCopy();
+  if (disk && (disk.age < TTL_MS || Date.now() < blockedUntil)) return parseCsv(disk.text);
+  try {
+    const res = await fetch(SATCAT_CSV, {
+      headers: { "User-Agent": "orbitclear/1.0 (Argentina Space hackathon)" },
+      cache: "no-store",
+      signal: AbortSignal.timeout(TIMEOUT_MS),
+    });
+    if (!res.ok) throw new Error(`CelesTrak respondió ${res.status} al catálogo completo.`);
+    const text = await res.text();
+    await mkdir(path.dirname(CACHE_FILE), { recursive: true });
+    await writeFile(CACHE_FILE, text);
+    return parseCsv(text);
+  } catch (e) {
+    blockedUntil = Date.now() + RETRY_MS;
+    if (disk) return parseCsv(disk.text);
+    throw new Error(`${(e as Error).message} Se reintenta en 2 horas.`);
+  }
+}
+
 function satcat(): Promise<Row[]> {
   if (cache && Date.now() - cache.at < TTL_MS) return cache.rows;
-  const rows = fetch(SATCAT_CSV, {
-    headers: { "User-Agent": "orbitclear/1.0 (Argentina Space hackathon)" },
-    cache: "no-store",
-    signal: AbortSignal.timeout(TIMEOUT_MS),
-  }).then(async (res) => {
-    if (!res.ok) throw new Error(`CelesTrak respondió ${res.status} al catálogo completo.`);
-    return parseCsv(await res.text());
-  });
+  const rows = loadSatcat();
   cache = { at: Date.now(), rows };
-  // a failed download is retried on the next request, not served for a day
+  // a failed load is retried on a later request (loadSatcat itself waits RETRY_MS before asking CelesTrak)
   rows.catch(() => {
     if (cache?.rows === rows) cache = null;
   });

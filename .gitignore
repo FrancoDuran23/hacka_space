@@ -14,3 +14,4 @@ ignition/deployments/chain-31337/
 next-env.d.ts
 *.tsbuildinfo
 !.env.example
+.cache/
