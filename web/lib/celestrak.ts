@@ -527,3 +527,33 @@ export function currentTle(norad: number): Promise<[string, string] | null> {
     return omm?.NORAD_CAT_ID ? ommToTle(omm) : null;
   });
 }
+
+/**
+ * Name, owner, kind and elements of a satellite, kept in the orbital tables so a registered satellite
+ * outside the dataset can still be listed while CelesTrak is slow or refusing requests.
+ */
+export async function rememberOrbital(record: SatcatRecord, tle: [string, string]): Promise<void> {
+  const catnr = record.NORAD_CAT_ID;
+  await writeTle(catnr, record.OBJECT_NAME, { tle, epoch: tleEpochISO(tle[0]) });
+  await writeSatcatRows({
+    catnr,
+    objectType: record.OBJECT_TYPE,
+    opsStatus: record.OPS_STATUS_CODE,
+    owner: record.OWNER,
+    decayDate: record.DECAY_DATE,
+    intlDes: record.OBJECT_ID,
+    launchDate: record.LAUNCH_DATE,
+    launchSite: String(record.LAUNCH_SITE ?? ""),
+    rcs: Number(record.RCS),
+  });
+}
+
+export async function storedOrbital(norad: number): Promise<{ name: string; owner: string; objectType: string; tle: [string, string] } | null> {
+  const [tles, metas] = await Promise.all([readTleRows([norad]), readSatcatRows([norad])]);
+  const t = tles.get(norad);
+  if (!t) return null;
+  const rows = await db.select({ name: orbitalTle.name }).from(orbitalTle).where(eq(orbitalTle.catnr, norad)).catch(() => []);
+  const m = metas.get(norad);
+  return { name: rows[0]?.name ?? `NORAD ${norad}`, owner: m?.owner ?? "—", objectType: m?.objectType ?? "PAY", tle: [t.line1, t.line2] };
+}
+

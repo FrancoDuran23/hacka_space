@@ -3,7 +3,7 @@ import { Contract, Interface, JsonRpcProvider, Network, formatUnits, type Result
 import { ORBITCLEAR_ESCROW_ABI, USDC_DECIMALS } from "./abi";
 import { refreshTles } from "./celestrak";
 import { loadContractConfig, loadEscrowsFile, SNOWTRACE, type ContractConfig, type EscrowsFile } from "./config";
-import { CelestrakError, currentTle, satcatRecord } from "./celestrak";
+import { CelestrakError, currentTle, rememberOrbital, satcatRecord, storedOrbital } from "./celestrak";
 import { cacheVersion, demoEpoch, reentries, registeredHere } from "./live-store";
 import { db } from "./db";
 import { satelliteRegistrations } from "./db/schema";
@@ -216,33 +216,39 @@ function chainListedObject(norad: number): Promise<FileObject | null> {
 }
 
 async function loadChainListedObject(norad: number): Promise<FileObject | null> {
+  let meta: { name: string; owner: string; objectType: string; tle: [string, string] } | null = null;
   try {
     const [record, tle] = await Promise.all([satcatRecord(norad), currentTle(norad)]);
-    // without current elements there is nothing to draw (it re-entered or is lost)
-    if (!record || !tle) return null;
-    return {
-      objectId: norad,
-      name: record.OBJECT_NAME,
-      kind: OBJECT_KIND[record.OBJECT_TYPE] ?? "fragment",
-      owner: record.OWNER,
-      country: record.OWNER,
-      massKg: 0,
-      tle,
-      band: 0,
-      createdAt: new Date().toISOString(),
-      deadline: new Date().toISOString(),
-      status: "ACTIVE",
-      deposit: 0,
-      netBalance: 0,
-      riskPerDay: 0,
-      settledAt: null,
-      fromChain: true,
-      history: [],
-    };
+    if (record && tle) {
+      meta = { name: record.OBJECT_NAME, owner: record.OWNER, objectType: record.OBJECT_TYPE, tle };
+      rememberOrbital(record, tle).catch(() => {});
+    }
   } catch (e) {
-    if (e instanceof CelestrakError) return null;
-    throw e;
+    if (!(e instanceof CelestrakError)) throw e;
   }
+  // CelesTrak slow or refusing: use the copy kept when it last answered
+  meta ??= await storedOrbital(norad).catch(() => null);
+  // without elements there is nothing to draw (it re-entered or is lost)
+  if (!meta) return null;
+  return {
+    objectId: norad,
+    name: meta.name,
+    kind: OBJECT_KIND[meta.objectType as keyof typeof OBJECT_KIND] ?? "fragment",
+    owner: meta.owner,
+    country: meta.owner,
+    massKg: 0,
+    tle: meta.tle,
+    band: 0,
+    createdAt: new Date().toISOString(),
+    deadline: new Date().toISOString(),
+    status: "ACTIVE",
+    deposit: 0,
+    netBalance: 0,
+    riskPerDay: 0,
+    settledAt: null,
+    fromChain: true,
+    history: [],
+  };
 }
 
 async function storedRegistrations(cfg: ContractConfig): Promise<{ norad: number; txHash: string }[]> {
