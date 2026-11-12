@@ -9,7 +9,7 @@ import { color, fract, max, mix, smoothstep, uniform, uv, vec2, vec4 } from "thr
 import { eciScene, periodMinutes, satrecFor } from "@/lib/orbit";
 import { statusAt } from "@/lib/status";
 import { app, sim, useApp } from "@/lib/store";
-import type { ObjectKind } from "@/lib/types";
+import type { DebrisObject, ObjectKind } from "@/lib/types";
 import { STATE_RGB, U, clamp01, positions } from "./shared";
 
 const MODEL_SCALE = 0.011;
@@ -54,8 +54,27 @@ function useMaterials() {
 
 type Mats = ReturnType<typeof useMaterials>;
 
-/** Real spacecraft models (assets/models-3d, compressed into public/models) used for defunct satellites. */
-const SATELLITE_MODELS = ["/models/landsat.glb", "/models/acrimsat.glb"];
+/** Real spacecraft models (public/assets/modelos-3d) matched to each tracked object. */
+const MODELS = {
+  radarsat: "/assets/modelos-3d/radarsat-1.glb",
+  sacc: "/assets/modelos-3d/sac-c.glb",
+  tdrs: "/assets/modelos-3d/tdrs-a.glb",
+  agena: "/assets/modelos-3d/agena-stage.glb",
+  asteroid: "/assets/modelos-3d/asteroid.glb",
+  landsat: "/assets/modelos-3d/landsat.glb",
+  acrimsat: "/assets/modelos-3d/acrimsat.glb",
+} as const;
+
+/** Model closest to the real object: radar sats, comm sats, stages, fragments. */
+function modelForObject(o: DebrisObject): string {
+  const n = o.name.toUpperCase();
+  if (o.kind === "rocket-body") return MODELS.agena;
+  if (o.kind === "fragment") return MODELS.asteroid;
+  if (/ENVISAT|SEASAT/.test(n)) return MODELS.radarsat;
+  if (/SAOCOM/.test(n)) return MODELS.sacc;
+  if (/IRIDIUM|COSMOS/.test(n)) return MODELS.tdrs;
+  return o.objectId % 2 ? MODELS.landsat : MODELS.acrimsat;
+}
 const modelCache = new Map<string, Promise<THREE.Group>>();
 
 function loadSpacecraft(url: string): Promise<THREE.Group> {
@@ -133,7 +152,8 @@ function buildModel(kind: ObjectKind, m: Mats): THREE.Group {
 /** Detail view: the selected point becomes a 3D model and its full orbit is drawn in its state colour. */
 export function DetailModel() {
   const id = useApp((s) => s.selectedId);
-  const kind = useApp((s) => s.objects.find((o) => o.objectId === s.selectedId)?.kind ?? null);
+  const target = useApp((s) => (s.selectedId == null ? null : (s.objects.find((o) => o.objectId === s.selectedId) ?? null)));
+  const kind = target?.kind ?? null;
   const m = useMaterials();
   const { camera } = useThree();
   const holder = useRef<THREE.Group>(null);
@@ -148,8 +168,8 @@ export function DetailModel() {
     [procedural],
   );
 
-  // defunct satellites use a real model once it has loaded; the procedural one covers the wait (or a failed load)
-  const url = kind === "satellite" && id != null ? SATELLITE_MODELS[id % SATELLITE_MODELS.length] : null;
+  // real GLB matched to the object once it has loaded; the procedural one covers the wait (or a failed load)
+  const url = target ? modelForObject(target) : null;
   const [loaded, setLoaded] = useState<{ url: string; scene: THREE.Group } | null>(null);
   useEffect(() => {
     if (!url) return;
