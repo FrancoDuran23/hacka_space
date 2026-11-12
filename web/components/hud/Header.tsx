@@ -7,6 +7,7 @@ import { useApp, useRealTime } from "@/lib/store";
 export function Header() {
   const booted = useApp((s) => s.booted);
   const source = useApp((s) => s.source);
+  const tle = useApp((s) => s.tle);
   const renderer = useApp((s) => s.renderer);
   const now = useRealTime();
   const live = source !== "demo";
@@ -24,6 +25,10 @@ export function Header() {
       <div className="flex items-center gap-5 text-[12.5px]">
         <span className="mono hidden text-dim md:inline">
           {now ? `${utcDate(now)} · ${utcClock(now)}` : "---------- · --:--:--"} UTC
+        </span>
+        <span className={`hidden items-center gap-2 font-medium sm:flex ${tle?.live ? "text-cyan" : "text-faint"}`}>
+          <span className={`inline-block h-[7px] w-[7px] rounded-full bg-current ${tle?.live ? "blink-soft" : ""}`} />
+          {tle?.live ? `CelesTrak GP · ${tle.live}/${tle.total} live TLEs` : "TLE snapshot"}
         </span>
         <span className={`flex items-center gap-2 font-medium ${live ? "text-ok" : "text-warn"}`}>
           <span className="blink-soft inline-block h-[7px] w-[7px] rounded-full bg-current" />

@@ -46,7 +46,9 @@ export function Console({ initial }: { initial: EscrowSnapshot }) {
   if (!ready.current) {
     ready.current = true;
     sim.time = Date.now();
-    app.set({ objects: initial.objects, source: initial.source, contract: initial.contract, explorer: initial.explorer, feed: seedFeed(initial) });
+    app.set({ objects: initial.objects, source: initial.source, tle: initial.tle, contract: initial.contract, explorer: initial.explorer, feed: seedFeed(initial) });
+    if (initial.tle?.live)
+      pushFeed({ tone: "sys", label: "Orbital data · CelesTrak GP", target: `${initial.tle.live}/${initial.tle.total} live TLEs` });
   }
   // ?boot=0 skips the power-on sequence (handy while iterating)
   useEffect(() => {

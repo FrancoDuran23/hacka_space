@@ -1,6 +1,7 @@
 import "server-only";
 import { Contract, JsonRpcProvider, Network, formatUnits, type EventLog, type Log } from "ethers";
 import { ORBITCLEAR_ESCROW_ABI, USDC_DECIMALS } from "./abi";
+import { refreshTles } from "./celestrak";
 import { loadContractConfig, loadEscrowsFile, SNOWTRACE, type ContractConfig, type EscrowsFile } from "./config";
 import { cacheVersion, demoEpoch, reentries } from "./live-store";
 import { computeStats, netBalanceAt } from "./status";
@@ -32,6 +33,8 @@ export async function getEscrows(): Promise<EscrowSnapshot> {
         : demoSnapshot(file, `fuji unreachable: ${(e as Error).message?.slice(0, 120)}`);
     }
   }
+  // Swap baked TLEs for the freshest CelesTrak elements, whatever the escrow source.
+  snap.tle = await refreshTles(snap.objects);
   cache = { at: Date.now(), version: cacheVersion(), snap };
   return snap;
 }
@@ -68,7 +71,15 @@ function demoSnapshot(file: EscrowsFile, reason: string): EscrowSnapshot {
   const now = Date.now();
   const shift = demoShift(file);
   const objects = file.objects.map((o) => demoObject(o, shift, now));
-  return { source: "demo", contract: null, explorer: SNOWTRACE, fetchedAt: new Date(now).toISOString(), reason, objects };
+  return {
+    source: "demo",
+    contract: null,
+    explorer: SNOWTRACE,
+    fetchedAt: new Date(now).toISOString(),
+    reason,
+    tle: { live: 0, total: objects.length, oldestEpoch: null, fetchedAt: "" },
+    objects,
+  };
 }
 
 /** Reentries attested while this server runs (the simulated ones only live here). */
@@ -145,6 +156,7 @@ async function readChain(cfg: ContractConfig, file: EscrowsFile): Promise<Escrow
     contract: cfg.address,
     explorer: cfg.explorer ?? (cfg.chainId === 43113 ? SNOWTRACE : ""),
     fetchedAt: new Date(now).toISOString(),
+    tle: { live: 0, total: objects.length, oldestEpoch: null, fetchedAt: "" },
     objects,
   };
 }

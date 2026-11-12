@@ -3,8 +3,8 @@
 import { useMemo } from "react";
 import { motion } from "framer-motion";
 import { requestDeorbit } from "@/lib/actions";
-import { countdown, formatUSD, initials, utcDate } from "@/lib/format";
-import { satrecFor, telemetry } from "@/lib/orbit";
+import { countdown, formatUSD, initials, utcClock, utcDate } from "@/lib/format";
+import { perigeeApogeeKm, satrecFor, telemetry, tleFields } from "@/lib/orbit";
 import { STATUS_LABEL, balanceSeries, netBalanceAt, statusAt } from "@/lib/status";
 import { app, useApp, useSimTime } from "@/lib/store";
 import type { DebrisObject, HistoryType } from "@/lib/types";
@@ -37,6 +37,12 @@ export function DetailPanel({ object: o }: { object: DebrisObject }) {
   const net = netBalanceAt(o, now);
   const lockedNow = st === "ACTIVE" || st === "EXPIRING" ? o.deposit : 0;
   const tm = useMemo(() => telemetry(satrecFor(o.tle), new Date(now)), [o.tle, now]);
+  const orbit = useMemo(() => {
+    const f = tleFields(o.tle);
+    if (!f) return null;
+    const { perigee, apogee } = perigeeApogeeKm(satrecFor(o.tle));
+    return { ...f, perigee, apogee, periodMin: f.meanMotionRevDay > 0 ? 1440 / f.meanMotionRevDay : 0 };
+  }, [o.tle]);
   const inFlight = run?.phase === "falling" || run?.phase === "burned" || st === "REFUNDED";
   const left = Date.parse(o.deadline) - now;
   const canDeorbit = (st === "ACTIVE" || st === "EXPIRING") && (!run || run.phase === "failed");
@@ -99,6 +105,25 @@ export function DetailPanel({ object: o }: { object: DebrisObject }) {
           <Mini label="Velocity" value={inFlight || !tm ? "—" : `${tm.speedKms.toFixed(2)} km/s`} />
           <Mini label="NORAD ID" value={String(o.objectId)} />
         </dl>
+        {orbit && (
+          <>
+            <div className="mt-4 flex items-baseline justify-between">
+              <div className="label">Orbit · CelesTrak GP</div>
+              <div className="mono text-[10.5px] text-faint">
+                epoch {orbit.epochISO ? `${utcDate(Date.parse(orbit.epochISO))} ${utcClock(Date.parse(orbit.epochISO))}` : "—"}
+                {o.tleEpoch ? "" : " · snapshot"}
+              </div>
+            </div>
+            <dl className="mt-2 grid grid-cols-3 gap-x-3 gap-y-3">
+              <Mini label="Inclination" value={`${orbit.inclinationDeg.toFixed(2)}°`} />
+              <Mini label="Period" value={`${orbit.periodMin.toFixed(1)} min`} />
+              <Mini label="Eccentricity" value={orbit.eccentricity.toFixed(5)} />
+              <Mini label="Perigee" value={`${orbit.perigee.toFixed(0)} km`} />
+              <Mini label="Apogee" value={`${orbit.apogee.toFixed(0)} km`} />
+              <Mini label="BSTAR" value={orbit.bstar.toExponential(2)} />
+            </dl>
+          </>
+        )}
 
         <div className="hairline my-5" />
 

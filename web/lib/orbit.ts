@@ -73,6 +73,44 @@ export function periodMinutes(rec: SatRec): number {
   return (2 * Math.PI) / rec.no;
 }
 
+/** TLE epoch (cols 18–32 of line 1) as ISO. */
+export function tleEpochISO(l1: string): string | null {
+  const s = l1.slice(17, 32).trim();
+  const yy = Number(s.slice(0, 2));
+  const day = Number(s.slice(2));
+  if (!s || Number.isNaN(yy) || Number.isNaN(day)) return null;
+  const year = yy < 57 ? 2000 + yy : 1900 + yy;
+  return new Date(Date.UTC(year, 0, 1) + (day - 1) * 86_400_000).toISOString();
+}
+
+/** Element set decoded from the TLE lines — the same numbers CelesTrak serves as OMM JSON. */
+export interface TleFields {
+  epochISO: string | null;
+  inclinationDeg: number;
+  raanDeg: number;
+  eccentricity: number;
+  meanMotionRevDay: number;
+  revAtEpoch: number;
+  /** Drag term (1/earth-radii). */
+  bstar: number;
+}
+
+export function tleFields(tle: readonly [string, string]): TleFields | null {
+  const [l1, l2] = tle;
+  if (!l1?.startsWith("1 ") || !l2?.startsWith("2 ")) return null;
+  const num = (a: number, b: number) => Number(l2.slice(a, b).trim());
+  const bs = /^([+-]?)(\d{5})([+-]\d)$/.exec(l1.slice(53, 61).trim());
+  return {
+    epochISO: tleEpochISO(l1),
+    inclinationDeg: num(8, 16),
+    raanDeg: num(17, 25),
+    eccentricity: Number(`0.${l2.slice(26, 33).trim()}`),
+    meanMotionRevDay: num(52, 63),
+    revAtEpoch: num(63, 68),
+    bstar: bs ? Number(`${bs[1]}0.${bs[2]}e${bs[3]}`) : 0,
+  };
+}
+
 export function perigeeApogeeKm(rec: SatRec): { perigee: number; apogee: number } {
   const n = rec.no / 60; // rad/s
   const a = Math.cbrt(MU / (n * n));

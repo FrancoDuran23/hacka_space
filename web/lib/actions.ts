@@ -56,6 +56,7 @@ export function applySnapshot(snap: EscrowSnapshot) {
     const prev = new Map(s.objects.map((o) => [o.objectId, o] as const));
     return {
       source: snap.source,
+      tle: snap.tle,
       contract: snap.contract,
       explorer: snap.explorer,
       objects: snap.objects.map((o) => (busy.has(o.objectId) && prev.has(o.objectId) ? prev.get(o.objectId)! : o)),

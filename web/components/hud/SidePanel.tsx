@@ -13,6 +13,8 @@ const DOT: Record<FeedLine["tone"], string> = { ok: "bg-ok", warn: "bg-warn", ba
 export function SidePanel() {
   const objects = useApp((s) => s.objects);
   const feed = useApp((s) => s.feed);
+  const tle = useApp((s) => s.tle);
+  const source = useApp((s) => s.source);
   const simTime = useSimTime();
   // deadlines only matter to the minute: recompute once per simulated minute
   const minute = Math.floor(simTime / 60_000) * 60_000 || Date.now();
@@ -143,6 +145,14 @@ export function SidePanel() {
           </li>
         ))}
       </ul>
+
+      <div className="hairline my-4" />
+      <div className="shrink-0 text-[11px] leading-relaxed text-faint">
+        <div>
+          Orbit data · <span className={tle?.live ? "text-cyan" : undefined}>CelesTrak GP{tle ? ` · ${tle.live}/${tle.total} live TLEs` : " snapshot"}</span> · SGP4
+        </div>
+        <div>Ledger · {source === "fuji" ? "Avalanche Fuji" : source === "local" ? "local node" : "demo dataset"}</div>
+      </div>
     </motion.aside>
   );
 }

@@ -1,7 +1,7 @@
 "use client";
 
 import { useSyncExternalStore } from "react";
-import type { DataSource, DebrisObject } from "./types";
+import type { DataSource, DebrisObject, TleInfo } from "./types";
 
 /** Stages of a DEORBIT run for one object. */
 export type DeorbitPhase = "verifying" | "falling" | "burned" | "failed";
@@ -36,6 +36,8 @@ export type RendererKind = "WEBGPU" | "WEBGL2";
 export interface AppState {
   objects: DebrisObject[];
   source: DataSource;
+  /** Orbital data provenance (CelesTrak live TLE coverage). */
+  tle: TleInfo | null;
   contract: string | null;
   explorer: string;
   selectedId: number | null;
@@ -54,6 +56,7 @@ const listeners = new Set<Listener>();
 let state: AppState = {
   objects: [],
   source: "demo",
+  tle: null,
   contract: null,
   explorer: "",
   selectedId: null,

@@ -21,6 +21,8 @@ export interface DebrisObject {
   country: string;
   massKg: number;
   tle: [string, string];
+  /** Epoch of the TLE currently driving the position (ISO). Absent when using the baked file TLE. */
+  tleEpoch?: string;
   band: Band;
   /** Registro del escrow. */
   createdAt: string;
@@ -41,12 +43,21 @@ export interface DebrisObject {
 
 export type DataSource = "fuji" | "local" | "demo";
 
+/** Orbital data provenance: how many objects got a fresh TLE from CelesTrak this refresh. */
+export interface TleInfo {
+  live: number;
+  total: number;
+  oldestEpoch: string | null;
+  fetchedAt: string;
+}
+
 export interface EscrowSnapshot {
   source: DataSource;
   contract: string | null;
   explorer: string;
   fetchedAt: string;
   reason?: string;
+  tle: TleInfo;
   objects: DebrisObject[];
 }
 

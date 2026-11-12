@@ -15,6 +15,7 @@ export function Boot() {
   const renderer = useApp((s) => s.renderer);
   const source = useApp((s) => s.source);
   const objects = useApp((s) => s.objects);
+  const tle = useApp((s) => s.tle);
 
   const lines = useMemo(() => {
     const locked = computeStats(objects, Date.now()).totalLocked;
@@ -23,11 +24,11 @@ export function Boot() {
       ["ORBITCLEAR OS 1.0 // DEORBIT DEPOSIT ESCROW", ""],
       ["INIT RENDER PIPELINE", renderer ?? "…"],
       ["CONNECTING TO AVALANCHE", chain],
-      ["SYNCING ORBITAL DATA", `${objects.length} OBJECTS · SGP4`],
+      ["SYNCING ORBITAL DATA", tle?.live ? `CELESTRAK GP · ${tle.live}/${tle.total} LIVE TLE` : `${objects.length} OBJECTS · SGP4`],
       ["LOADING DEPOSIT LEDGER", `${formatUSD(locked)} LOCKED`],
       ["ARGENTINA SPACE · SALTA UPLINK", "NOMINAL"],
     ] as const;
-  }, [objects, source, renderer]);
+  }, [objects, source, renderer, tle]);
 
   const [elapsed, setElapsed] = useState(0);
   useEffect(() => {
