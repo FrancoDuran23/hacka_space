@@ -41,3 +41,15 @@ Chequeo de dos afirmaciones que queríamos usar en el pitch: "si se obliga a no 
 
 - Financiamiento de CRD2 (JAXA y Astroscale).
 - Si la ley británica alcanza a nacionales que lanzan desde el exterior: lo creemos, no lo verificamos.
+
+## Aporte de mauricio (2026-11-12 02:48)
+
+Quién pierde plata hoy con la basura, además del contribuyente:
+
+- **Operadores que sí cumplen.** La OCDE estima que protegerse de la basura cuesta entre 5 y 10% del costo de una misión geoestacionaria, y más en órbita baja (citado por la ESA; no leímos el informe original). El valor en riesgo en órbita baja sería de USD 191.000 millones según el informe de 2022.
+- **Maniobras.** SpaceX informó a la FCC 144.404 maniobras de esquive en el semestre a mayo de 2025 y 148.696 en el siguiente: unas 300.000 en el año. Usa un umbral más estricto que el resto, así que no es comparable con otros operadores.
+- **Aseguradoras.** En 2021 varias dejaron de cubrir órbita baja o excluyeron el choque con basura (Reuters, vía Insurance Journal). Notas más recientes hablan de primas más altas y de solo unos 300 satélites asegurados en órbita sobre casi 13.000; son fuentes de prensa especializada, sin verificar.
+
+**Interpretación:** no hay una sola víctima con una factura grande. Es un costo repartido entre muchos, y por eso nadie lo resuelve solo y hace falta una regla. Es el argumento para el regulador, no una lista de clientes.
+
+Fuentes: https://www.esa.int/Space_Safety/Space_Debris/The_cost_of_space_debris · https://www.newscientist.com/article/2512470-spacexs-starlink-dodged-300000-satellite-collisions-in-2025 · https://www.insurancejournal.com/news/national/2021/09/01/629684.htm · https://www.insurancebusinessmag.com/us/news/breaking-news/satellite-insurance-in-freefall-as-space-risks-multiply--report-540870.aspx
