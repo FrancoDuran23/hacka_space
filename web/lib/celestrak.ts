@@ -353,6 +353,7 @@ async function readCatalogRows(g: string): Promise<{ objects: CatalogObject[]; f
         launchDate: r.launchDate ?? undefined,
         launchSite: r.launchSite ?? undefined,
         rcs: r.rcs ?? undefined,
+        source: r.source,
       })),
     };
   } catch {
@@ -381,6 +382,7 @@ async function writeCatalogRows(g: string, objects: CatalogObject[]) {
           launchDate: o.launchDate ?? null,
           launchSite: o.launchSite ?? null,
           rcs: o.rcs ?? null,
+          source: o.source ?? "celestrak",
           fetchedAt: now,
         })),
       )
@@ -399,6 +401,7 @@ async function writeCatalogRows(g: string, objects: CatalogObject[]) {
           launchDate: sql`excluded.launch_date`,
           launchSite: sql`excluded.launch_site`,
           rcs: sql`excluded.rcs`,
+          source: sql`excluded.source`,
           fetchedAt: sql`excluded.fetched_at`,
         },
       });
@@ -438,6 +441,7 @@ export async function getCatalog(group: string): Promise<CatalogSnapshot> {
         o.launchDate = m?.launchDate;
         o.launchSite = m?.launchSite;
         o.rcs = m && Number.isFinite(m.rcs) ? m.rcs : undefined;
+        o.source = "celestrak";
       }
       objects = parsed;
       await writeCatalogRows(g, parsed);

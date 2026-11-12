@@ -5,7 +5,6 @@ import { Canvas, extend, useFrame, useThree, type ThreeToJSXElements } from "@re
 import * as THREE from "three/webgpu";
 import { gmstAt, latLonToLocal } from "@/lib/orbit";
 import { app, sim, useApp } from "@/lib/store";
-import { CatalogField } from "./Catalog";
 import { DebrisField } from "./Debris";
 import { DeorbitFX } from "./DeorbitFX";
 import { DetailModel } from "./DetailModel";
@@ -110,7 +109,6 @@ export default function Scene() {
         <Earth />
       </Suspense>
       <DebrisField />
-      <CatalogField />
       <DetailModel />
       <DeorbitFX />
       <Post />

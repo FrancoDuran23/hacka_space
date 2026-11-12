@@ -38,6 +38,8 @@ export const catalogObject = pgTable(
     groupName: text("group_name").notNull(),
     catnr: integer("catnr").notNull(),
     name: text("name").notNull(),
+    /** Procedencia del registro: "celestrak" = importado de la API. */
+    source: text("source").notNull().default("celestrak"),
     line1: text("line1").notNull(),
     line2: text("line2").notNull(),
     epoch: text("epoch"),

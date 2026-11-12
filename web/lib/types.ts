@@ -113,6 +113,8 @@ export interface CatalogObject {
   launchSite?: string;
   /** Radar cross-section en m² — proxy de tamaño → costo de remoción */
   rcs?: number;
+  /** Procedencia del registro ("celestrak" = traído de la API) */
+  source?: string;
 }
 
 export interface CatalogSnapshot {

@@ -1,5 +1,5 @@
 {
-  "id": "6eac0dd3-e04c-4fcc-91a5-8c7ac7dc670d",
+  "id": "2ec3cd63-5cd2-4940-ac9d-f3742df5edeb",
   "prevId": "77a9b0ac-120b-4582-bc37-10aedd27b4b4",
   "version": "7",
   "dialect": "postgresql",
@@ -320,6 +320,13 @@
           "primaryKey": false,
           "notNull": true
         },
+        "source": {
+          "name": "source",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "'celestrak'"
+        },
         "line1": {
           "name": "line1",
           "type": "text",
@@ -528,71 +535,6 @@
       },
       "indexes": {},
       "foreignKeys": {},
-      "compositePrimaryKeys": {},
-      "uniqueConstraints": {},
-      "policies": {},
-      "checkConstraints": {},
-      "isRLSEnabled": false
-    },
-    "public.satellite_registrations": {
-      "name": "satellite_registrations",
-      "schema": "",
-      "columns": {
-        "norad": {
-          "name": "norad",
-          "type": "integer",
-          "primaryKey": true,
-          "notNull": true
-        },
-        "escrow": {
-          "name": "escrow",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "tx_hash": {
-          "name": "tx_hash",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "operator": {
-          "name": "operator",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "user_id": {
-          "name": "user_id",
-          "type": "uuid",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "created_at": {
-          "name": "created_at",
-          "type": "timestamp with time zone",
-          "primaryKey": false,
-          "notNull": true,
-          "default": "now()"
-        }
-      },
-      "indexes": {},
-      "foreignKeys": {
-        "satellite_registrations_user_id_user_id_fk": {
-          "name": "satellite_registrations_user_id_user_id_fk",
-          "tableFrom": "satellite_registrations",
-          "tableTo": "user",
-          "schemaTo": "neon_auth",
-          "columnsFrom": [
-            "user_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
-          "onDelete": "set null",
-          "onUpdate": "no action"
-        }
-      },
       "compositePrimaryKeys": {},
       "uniqueConstraints": {},
       "policies": {},
