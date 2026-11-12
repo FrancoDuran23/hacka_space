@@ -51,9 +51,9 @@ export function DetailPanel({ object: o }: { object: DebrisObject }) {
   const history = useMemo(() => [...o.history].sort((a, b) => b.at.localeCompare(a.at)), [o.history]);
 
   return (
-    <motion.aside
+    <motion.div
       data-status={st}
-      className="panel pointer-events-auto fixed right-4 top-[76px] bottom-4 z-20 flex w-[30vw] min-w-[350px] max-w-[440px] flex-col px-6 py-6"
+      className="panel m-4 mt-3 flex min-h-0 flex-1 flex-col px-6 py-6"
       initial={{ opacity: 0, x: 40 }}
       animate={{ opacity: 1, x: 0, transition: { duration: 0.55, delay: 0.55, ease: [0.2, 0.8, 0.2, 1] } }}
       exit={{ opacity: 0, x: 40, transition: { duration: 0.3 } }}
@@ -179,7 +179,7 @@ export function DetailPanel({ object: o }: { object: DebrisObject }) {
           </Button>
         </div>
       </div>
-    </motion.aside>
+    </motion.div>
   );
 }
 

@@ -1,7 +1,7 @@
 import "server-only";
 import { readFile } from "node:fs/promises";
 import path from "node:path";
-import type { DebrisObject } from "./types";
+import type { DebrisObject, PublicChain } from "./types";
 
 export interface ContractConfig {
   network: string;
@@ -12,6 +12,8 @@ export interface ContractConfig {
   usdc: string | null;
   relayer: string | null;
   fund: string | null;
+  /** "mock" = MockUSDC with open mint; "usdc" = Circle's USDC. */
+  mode: string | null;
   deployBlock: number | null;
 }
 
@@ -43,11 +45,21 @@ export async function loadContractConfig(): Promise<ContractConfig | null> {
       usdc: c.usdc ?? null,
       relayer: c.relayer ?? null,
       fund: c.fund ?? null,
+      mode: c.mode ?? null,
       deployBlock: c.deployBlock ?? null,
     };
   } catch {
     return null;
   }
+}
+
+/** What the browser needs to sign against the escrow: public addresses only. */
+export async function publicChain(): Promise<PublicChain | null> {
+  const c = await loadContractConfig();
+  if (!c?.address || !c.usdc) return null;
+  // Never the FUJI_RPC env var: it may carry a provider key.
+  const rpcUrl = c.chainId === 43113 ? FUJI_RPC_DEFAULT : "http://127.0.0.1:8545";
+  return { chainId: c.chainId, rpcUrl, explorer: c.explorer, escrow: c.address, usdc: c.usdc, mockUsdc: c.mode === "mock" };
 }
 
 export async function loadEscrowsFile(): Promise<EscrowsFile> {

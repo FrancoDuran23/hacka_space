@@ -1,9 +1,11 @@
 import "server-only";
-import { Contract, JsonRpcProvider, Network, formatUnits, type EventLog, type Log } from "ethers";
+import { Contract, Interface, JsonRpcProvider, Network, formatUnits, type Result } from "ethers";
 import { ORBITCLEAR_ESCROW_ABI, USDC_DECIMALS } from "./abi";
 import { refreshTles } from "./celestrak";
 import { loadContractConfig, loadEscrowsFile, SNOWTRACE, type ContractConfig, type EscrowsFile } from "./config";
-import { cacheVersion, demoEpoch, reentries } from "./live-store";
+import { CelestrakError, currentTle, satcatRecord } from "./celestrak";
+import { cacheVersion, demoEpoch, reentries, registeredHere } from "./live-store";
+import { OBJECT_KIND } from "./registration";
 import { computeStats, netBalanceAt } from "./status";
 import type { Band, DebrisObject, EscrowSnapshot, EscrowStatus, HistoryItem, HistoryType, Stats } from "./types";
 
@@ -124,10 +126,22 @@ async function readChain(cfg: ContractConfig, file: EscrowsFile): Promise<Escrow
     contractEvents(cfg, logReader).catch(() => scanned(cfg).byObject()),
   ]);
 
+  // Satellites registered on-chain that the demo dataset does not list (e.g. given of alta from the operator panel).
+  const listed = new Set(file.objects.map((o) => o.objectId));
+  const extraIds = [...new Set([...events.keys(), ...registeredHere()])].filter((id) => !listed.has(id));
+  const extras = (
+    await Promise.all(
+      extraIds.map(async (id) => {
+        const [e, o] = await Promise.all([c.getFunction("escrowOf")(id) as Promise<ChainEscrow>, chainListedObject(id)]);
+        return o ? { o, e } : null;
+      }),
+    )
+  ).filter((x) => x !== null);
+
   const now = Date.now();
   const shift = demoShift(file);
   let registered = 0;
-  const objects = rows.map(({ o, e }) => {
+  const objects = [...rows, ...extras].map(({ o, e }) => {
     const status = CHAIN_STATUS[Number(e.state)];
     if (!status) return demoObject(o, shift, now);
     registered++;
@@ -161,6 +175,55 @@ async function readChain(cfg: ContractConfig, file: EscrowsFile): Promise<Escrow
   };
 }
 
+const META_WAIT_MS = 3_000;
+const META_RETRY_MS = 10 * 60_000;
+const metaCache = new Map<number, Promise<FileObject | null>>();
+
+/**
+ * Metadata for a registered satellite outside the dataset, from CelesTrak (cached in lib/celestrak).
+ * A slow answer does not hold up the snapshot: the object shows up on a later refresh. A miss or a
+ * CelesTrak error is retried after META_RETRY_MS, never on every refresh.
+ */
+function chainListedObject(norad: number): Promise<FileObject | null> {
+  let pending = metaCache.get(norad);
+  if (!pending) {
+    pending = loadChainListedObject(norad).catch(() => null);
+    pending.then((o) => o || setTimeout(() => metaCache.delete(norad), META_RETRY_MS));
+    metaCache.set(norad, pending);
+  }
+  return Promise.race([pending, new Promise<null>((r) => setTimeout(() => r(null), META_WAIT_MS))]);
+}
+
+async function loadChainListedObject(norad: number): Promise<FileObject | null> {
+  try {
+    const [record, tle] = await Promise.all([satcatRecord(norad), currentTle(norad)]);
+    // without current elements there is nothing to draw (it re-entered or is lost)
+    if (!record || !tle) return null;
+    return {
+      objectId: norad,
+      name: record.OBJECT_NAME,
+      kind: OBJECT_KIND[record.OBJECT_TYPE] ?? "fragment",
+      owner: record.OWNER,
+      country: record.OWNER,
+      massKg: 0,
+      tle,
+      band: 0,
+      createdAt: new Date().toISOString(),
+      deadline: new Date().toISOString(),
+      status: "ACTIVE",
+      deposit: 0,
+      netBalance: 0,
+      riskPerDay: 0,
+      settledAt: null,
+      fromChain: true,
+      history: [],
+    };
+  } catch (e) {
+    if (e instanceof CelestrakError) return null;
+    throw e;
+  }
+}
+
 /** Events already read from the contract. Logs never change, so each refresh only scans the new blocks. */
 interface EventScan {
   address: string;
@@ -189,9 +252,50 @@ function scanned(cfg: ContractConfig): EventScan {
   return scan;
 }
 
-/** Scans forward from the deploy block (or the last scanned one), up to LOG_WINDOWS windows per call. */
+/**
+ * Routescan (the indexer behind Avalanche's explorer) returns every log of the contract in one call,
+ * instead of thousands of 100-block eth_getLogs windows that trip the public RPC's rate limit.
+ */
+const INDEXER: Record<number, string> = {
+  43113: "https://api.routescan.io/v2/network/testnet/evm/43113/etherscan/api",
+  43114: "https://api.routescan.io/v2/network/mainnet/evm/43114/etherscan/api",
+};
+const INDEXER_TIMEOUT_MS = 6_000;
+const escrowInterface = new Interface(ORBITCLEAR_ESCROW_ABI);
+
+interface IndexedLog {
+  topics: string[];
+  data: string;
+  timeStamp: string;
+  transactionHash: string;
+  logIndex: string;
+}
+
+async function indexedEvents(cfg: ContractConfig): Promise<Map<number, ChainEvent[]> | null> {
+  const base = INDEXER[cfg.chainId];
+  if (!base || cfg.deployBlock == null) return null;
+  const url = `${base}?module=logs&action=getLogs&address=${cfg.address}&fromBlock=${cfg.deployBlock}&toBlock=latest`;
+  const res = await fetch(url, { cache: "no-store", signal: AbortSignal.timeout(INDEXER_TIMEOUT_MS) });
+  if (!res.ok) throw new Error(`indexer responded ${res.status}`);
+  const body = (await res.json()) as { message?: string; result?: IndexedLog[] | string };
+  if (!Array.isArray(body.result)) {
+    if (body.message === "No records found") return new Map();
+    throw new Error(`indexer: ${body.message ?? "unexpected response"}`);
+  }
+  const st = scanned(cfg);
+  for (const l of body.result) {
+    const parsed = escrowInterface.parseLog({ topics: l.topics, data: l.data });
+    const item = parsed && toHistory(parsed.name, parsed.args, Number(l.timeStamp) * 1000, l.transactionHash);
+    if (item) st.events.set(`${l.transactionHash}:${Number(l.logIndex)}`, item);
+  }
+  return st.byObject();
+}
+
+/** Indexer first; if it is down, scan the RPC forward from the deploy block, up to LOG_WINDOWS windows per call. */
 function contractEvents(cfg: ContractConfig, provider: JsonRpcProvider): Promise<Map<number, ChainEvent[]>> {
   scanning ??= (async () => {
+    const indexed = await indexedEvents(cfg).catch(() => null);
+    if (indexed) return indexed;
     const st = scanned(cfg);
     const c = new Contract(cfg.address!, ORBITCLEAR_ESCROW_ABI, provider);
     const latest = await provider.getBlockNumber();
@@ -205,7 +309,7 @@ function contractEvents(cfg: ContractConfig, provider: JsonRpcProvider): Promise
         if (blk) times.set(b, blk.timestamp * 1000);
       }
       for (const log of logs) {
-        const item = toHistory(log, times.get(log.blockNumber) ?? Date.now());
+        const item = "fragment" in log && log.fragment ? toHistory(log.fragment.name, log.args, times.get(log.blockNumber) ?? Date.now(), log.transactionHash) : null;
         if (item) st.events.set(`${log.transactionHash}:${log.index}`, item);
       }
       st.from = from = to + 1;
@@ -215,18 +319,16 @@ function contractEvents(cfg: ContractConfig, provider: JsonRpcProvider): Promise
   return scanning;
 }
 
-function toHistory(log: EventLog | Log, at: number): { id: number; h: ChainEvent } | null {
-  if (!("fragment" in log) || !log.fragment) return null;
-  const a = log.args;
-  const map: Record<string, () => { type: HistoryType; amount: number }> = {
-    Registered: () => ({ type: "REGISTERED", amount: usd(a[5]) }),
-    ReentryAttested: () => ({ type: "REENTRY_ATTESTED", amount: 0 }),
+function toHistory(name: string, a: Result, at: number, txHash: string): { id: number; h: ChainEvent } | null {
+  const map: Record<string, () => { type: HistoryType; amount: number; dataHash?: string }> = {
+    Registered: () => ({ type: "REGISTERED", amount: usd(a[5]), dataHash: String(a[6]) }),
+    ReentryAttested: () => ({ type: "REENTRY_ATTESTED", amount: 0, dataHash: String(a[2]) }),
     Refunded: () => ({ type: "REFUNDED", amount: usd(a[2]) }),
     Forfeited: () => ({ type: "FORFEITED", amount: usd(a[2]) }),
   };
-  const fn = map[log.fragment.name];
+  const fn = map[name];
   if (!fn) return null;
-  return { id: Number(a[0]), h: { at: new Date(at).toISOString(), txHash: log.transactionHash, ...fn() } };
+  return { id: Number(a[0]), h: { at: new Date(at).toISOString(), txHash, ...fn() } };
 }
 
 function withTimeout<T>(p: Promise<T>, ms: number): Promise<T> {

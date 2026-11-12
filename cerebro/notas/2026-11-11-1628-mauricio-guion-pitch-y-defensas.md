@@ -54,3 +54,6 @@ Guion hablado de unos dos minutos y medio, siguiendo `skills/idea/modelo-de-nego
 - El guion dice "pagar su remoción", pero el contrato desplegado solo decomisa al fondo; no paga a un removedor (decisión de Mayko, 15:46, que revierte el punto 1 de las decisiones de Samuel de 13:50). No prometer el pago de remoción en la demo.
 - Verificar antes de grabar: 4.517 satélites en 2025, 40% de Nature, fecha del voto del EU Space Act y qué transacción de Envisat se muestra.
 - Definir el modelo de ingresos: la comisión de 0,5% es un supuesto.
+
+## Aporte de mayko (2026-11-11 16:40)
+- Sobre "más de 4.500 satélites el año pasado": el catálogo SATCAT de CelesTrak (descargado el 11-nov-2026, incluye los que ya reingresaron) registra **4.483** cargas útiles con fecha de lanzamiento en 2025. Con esa fuente, la frase segura es "casi 4.500". El 4.517 puede salir de otro conteo; si se usa, citar de dónde viene. Detalle en `2026-11-11-1626-mayko-avance-basura-espacial-y-proyecciones.md`.

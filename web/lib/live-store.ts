@@ -10,9 +10,10 @@ export interface ReentryRecord {
 }
 
 // Survives hot reloads in dev; resets when the server restarts (the chain is the source of truth).
-const g = globalThis as unknown as { __orbitclearReentries?: Map<number, ReentryRecord>; __orbitclearBust?: number; __orbitclearEpoch?: number };
+const g = globalThis as unknown as { __orbitclearReentries?: Map<number, ReentryRecord>; __orbitclearRegistered?: Set<number>; __orbitclearBust?: number; __orbitclearEpoch?: number };
 g.__orbitclearEpoch ??= Date.now();
 g.__orbitclearReentries ??= new Map();
+g.__orbitclearRegistered ??= new Set();
 g.__orbitclearBust ??= 0;
 
 export function recordReentry(r: ReentryRecord) {
@@ -22,6 +23,16 @@ export function recordReentry(r: ReentryRecord) {
 
 export function reentries(): Map<number, ReentryRecord> {
   return g.__orbitclearReentries!;
+}
+
+/** Satellites registered from this server: listed before the indexer catches up with their event. */
+export function recordRegistration(norad: number) {
+  g.__orbitclearRegistered!.add(norad);
+  g.__orbitclearBust = (g.__orbitclearBust ?? 0) + 1;
+}
+
+export function registeredHere(): Set<number> {
+  return g.__orbitclearRegistered!;
 }
 
 export function cacheVersion(): number {

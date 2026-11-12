@@ -21,6 +21,8 @@ Abrí http://localhost:3000. Parámetros útiles: `?boot=0` saltea la boot seque
 |---|---|
 | `components/scene/` | Escena 3D: cielo (nebulosa horneada, 10.000 estrellas, meteoros), Tierra, objetos en órbita, vista de detalle, efecto DEORBIT, cámara y post-procesado |
 | `components/hud/` | HUD: boot sequence, header, panel lateral, panel de detalle, controles |
+| `app/(console)/operador`, `components/operator/` | Panel del operador (`/operador`): selector de operador (ESA por defecto), totales, alerta de plazo < 24 h, cards de satélites con modelo 3D (un solo canvas con `View` de drei por card) y, al hacer click, el detalle con historial, hash del dato crudo y altitud. Con wallet (`lib/wallet.ts`): saldo, `approve` del depósito exacto de la banda para escrows simulados y faucet de mUSDC si el contrato usa MockUSDC |
+| `components/operator/RegisterSatellite.tsx`, `lib/satellites/actions.ts` | Alta de un satélite desde `/operador`: el operador escribe el NORAD, el servidor consulta CelesTrak (`lib/celestrak.ts`, con caché) y calcula banda, depósito y plazo con las mismas reglas que `relayer.ts` (`lib/registration.ts`). Pide sesión y una wallet verificada en `/cuenta/wallets`: el depósito se cobra solo a esa wallet. El operador autoriza el depósito desde el navegador y el relayer firma `register` con `RELAYER_PRIVATE_KEY`. Si el plazo ya venció, avisa y pide confirmación |
 | `lib/store.ts` | Estado de la UI y reloj de simulación (WARP TIME) |
 | `lib/escrow.ts`, `app/api/escrows` | Datos: `escrowOf` de cada NORAD del dataset contra el contrato; lo que no está registrado se muestra con datos de demo |
 | `lib/reentry.ts`, `app/api/relayer` | Botón DEORBIT: verifica el reingreso con SGP4 y llama a `attestReentry` firmado por el relayer (`RELAYER_PRIVATE_KEY`, ver `.env.example`). Sin clave, o si el objeto no está on-chain, el reingreso es simulado |
@@ -30,8 +32,8 @@ Abrí http://localhost:3000. Parámetros útiles: `?boot=0` saltea la boot seque
 
 - Todo se muestra en USD. Los hashes solo llevan link al explorer cuando el escrow existe on-chain; los de demo son simulados y no enlazan.
 - Estados: `ACTIVE`, `EXPIRING` (menos de 24 h al plazo), `REFUNDED` (reingreso verificado, el depósito vuelve al operador) y `FORFEITED` (plazo vencido, el depósito va al fondo de remoción). Pasado el plazo, el contrato permite que cualquiera llame a `closeExpired`.
-- El contrato no enumera escrows: la consola consulta los NORAD de `data/escrows.json`. En Fuji hoy solo ENVISAT (27386) está registrado; THORAD AGENA D DEB (4133) también, pero ya reingresó y no tiene TLE para dibujarlo.
-- El RPC público de Fuji rechaza `eth_getLogs` en batch y limita ráfagas: los eventos se escanean de a una ventana de 100 bloques, de forma incremental desde `deployBlock`.
+- El contrato no enumera escrows: la consola consulta los NORAD de `data/escrows.json` más los que aparecen en eventos `Registered` (sus datos salen de CelesTrak; los que ya no tienen TLE, como 4133, no se dibujan). En Fuji hoy solo ENVISAT (27386) está registrado; THORAD AGENA D DEB (4133) también, pero ya reingresó y no tiene TLE para dibujarlo.
+- Los eventos del contrato se leen del indexador de Routescan (el del explorer de Avalanche) en una sola llamada. Si falla, se escanea el RPC de a 100 bloques desde `deployBlock`: el RPC público de Fuji rechaza `eth_getLogs` en batch y corta ráfagas con 429.
 - El post-procesado usa el pipeline de nodos de three (bloom, blur de foco, aberración cromática, viñeta) porque `@react-three/postprocessing` solo funciona con WebGLRenderer, no con WebGPURenderer.
 - El sol es "cinematográfico": al cargar se ubica para que sea de noche sobre Salta (luces de ciudades visibles) y después queda fijo en el espacio inercial, así WARP TIME muestra ciclos día/noche.
 - El balance neto es un modelo de la demo: depósito que respalda la remoción − riesgo de colisión acumulado por día mientras el objeto sigue en órbita.
@@ -44,13 +46,14 @@ La app tiene dos root layouts: `app/(console)/` es la consola de arriba (en `/`)
 
 | Ruta | Qué es |
 |---|---|
-| `/auth/*` | Login, registro y recupero de contraseña (Better Auth UI) |
+| `/login` | Iniciar sesión (`/auth/sign-in` redirige acá) |
+| `/auth/*` | Registro y recupero de contraseña (Better Auth UI) |
 | `/cuenta` | Panel del usuario |
 | `/cuenta/wallets` | Vincular una wallet de Fuji firmando un mensaje (no cuesta gas). Desafío de un solo uso, 10 min, verificado con ethers en el servidor |
 | `/cuenta/contratos` | Registro compartido de direcciones importantes (escrow, oráculo, token, tesorería) |
 | `/account/*` | Perfil y seguridad |
 
-`proxy.ts` protege `/cuenta` y `/account`. `app/api/auth/[...path]` es el proxy al servidor de Auth.
+`proxy.ts` protege `/cuenta` y `/account` y manda a `/login` si no hay sesión. Neon Auth rechaza con "Invalid origin" los pedidos desde un dominio que no esté en su lista de dominios de confianza (Neon Console → Auth → Configuration): `localhost` funciona; para otro host o puerto hay que agregarlo ahí. `app/api/auth/[...path]` es el proxy al servidor de Auth.
 
 ### Setup en Neon (una vez, una persona)
 

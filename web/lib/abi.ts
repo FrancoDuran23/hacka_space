@@ -8,10 +8,17 @@ export const ORBITCLEAR_ESCROW_ABI = [
   "function closeExpired(uint32 noradId)",
   "function escrowOf(uint32 noradId) view returns (tuple(address operator, uint64 launchedAt, uint64 deadline, uint128 deposit, uint8 band, uint8 state))",
   "function isExpired(uint32 noradId) view returns (bool)",
+  "function bandYears(uint256 band) view returns (uint32)",
+  "function bandAmount(uint256 band) view returns (uint128)",
   "event Registered(uint32 indexed noradId, address indexed operator, uint8 band, uint64 launchedAt, uint64 deadline, uint128 deposit, bytes32 dataHash)",
   "event ReentryAttested(uint32 indexed noradId, uint64 decayDate, bytes32 dataHash)",
   "event Refunded(uint32 indexed noradId, address indexed operator, uint128 amount)",
   "event Forfeited(uint32 indexed noradId, address indexed fund, uint128 amount, uint8 reason)",
+] as const;
+
+export const ERC20_ABI = [
+  "function balanceOf(address) view returns (uint256)",
+  "function allowance(address owner, address spender) view returns (uint256)",
 ] as const;
 
 /** 1 USD = 1 USDC = 10^6 units. */

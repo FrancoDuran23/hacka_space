@@ -14,7 +14,7 @@ export function Controls() {
   const drifted = ahead > 90_000;
   return (
     <motion.div
-      className="pointer-events-auto fixed bottom-4 left-4 z-20 flex items-end gap-3"
+      className="pointer-events-auto absolute bottom-4 left-4 z-20 flex items-end gap-3"
       initial={{ opacity: 0, y: 30 }}
       animate={{ opacity: 1, y: 0, transition: { duration: 0.6, delay: 1.1, ease: [0.2, 0.8, 0.2, 1] } }}
       exit={{ opacity: 0, y: 30, transition: { duration: 0.25 } }}
@@ -44,7 +44,7 @@ export function Controls() {
 export function Hint() {
   return (
     <motion.div
-      className="pointer-events-none fixed left-5 top-[54px] z-10 hidden text-[11.5px] text-faint lg:block"
+      className="pointer-events-none absolute left-5 top-[54px] z-10 hidden text-[11.5px] text-faint lg:block"
       initial={{ opacity: 0 }}
       animate={{ opacity: 1, transition: { delay: 2 } }}
       exit={{ opacity: 0 }}

@@ -28,6 +28,7 @@ if (process.env.DEMO === "1") {
     explorer: net.explorer,
     address: d.escrow,
     usdc: d.usdc,
+    mode: d.mode,
     relayer: d.relayer,
     fund: d.fund,
     deployBlock: d.deployBlock ?? null,

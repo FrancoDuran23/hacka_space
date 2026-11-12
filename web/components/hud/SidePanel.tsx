@@ -62,9 +62,9 @@ export function SidePanel() {
   const top = stats.operators.slice(0, 4);
 
   return (
-    <motion.aside
+    <motion.div
       data-status={stats.expiring > 0 ? "EXPIRING" : undefined}
-      className="panel pointer-events-auto fixed right-4 top-[76px] bottom-4 z-20 flex w-[27vw] min-w-[320px] max-w-[400px] flex-col px-6 py-6"
+      className="panel m-4 mt-3 flex flex-col px-6 py-6"
       initial={{ opacity: 0, x: 40 }}
       animate={{ opacity: 1, x: 0 }}
       exit={{ opacity: 0, x: 40, transition: { duration: 0.3 } }}
@@ -141,7 +141,7 @@ export function SidePanel() {
       <div className="hairline my-5" />
 
       <h2 className="panel-title mb-3">Activity</h2>
-      <ul className="scroll-thin -mr-3 min-h-0 flex-1 space-y-3 overflow-y-auto pr-3">
+      <ul className="space-y-3">
         {feed.map((l) => (
           <li key={l.key} className="grid grid-cols-[10px_1fr_auto] items-baseline gap-x-2 text-[12.5px]">
             <span className={`h-[6px] w-[6px] translate-y-[-1px] rounded-full ${DOT[l.tone]}`} />
@@ -159,7 +159,7 @@ export function SidePanel() {
         ))}
       </ul>
 
-      <div className="hairline my-4" />
+      <div className="hairline my-5" />
       <div className="shrink-0 text-[11px] leading-relaxed text-faint">
         <div>
           Orbit data · <span className={tle?.live ? "text-cyan" : undefined}>CelesTrak GP{tle ? ` · ${tle.live}/${tle.total} live TLEs` : " snapshot"}</span>
@@ -178,7 +178,7 @@ export function SidePanel() {
         )}
         <div>Ledger · {source === "fuji" ? "Avalanche Fuji" : source === "local" ? "local node" : "demo dataset"}</div>
       </div>
-    </motion.aside>
+    </motion.div>
   );
 }
 
