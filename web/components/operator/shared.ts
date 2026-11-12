@@ -34,6 +34,9 @@ export const usdcToUsd = (v: bigint) => Number(formatUnits(v, 6));
 export function walletErrorText(e: unknown): string {
   if (isError(e, "ACTION_REJECTED")) return "Firma rechazada en la wallet";
   if (isError(e, "CALL_EXCEPTION")) return `El contrato rechazó la transacción: ${e.reason ?? e.shortMessage}`;
-  const m = (e as { shortMessage?: string; message?: string }).shortMessage ?? (e as Error).message ?? String(e);
-  return m.slice(0, 160);
+  // ethers wraps wallet errors it does not recognise ("could not coalesce error"): show the wallet's own message
+  const err = e as { shortMessage?: string; message?: string; error?: { message?: string }; info?: { error?: { message?: string } } };
+  const inner = err.error?.message ?? err.info?.error?.message;
+  const m = (/could not coalesce/i.test(err.shortMessage ?? "") && inner ? `La wallet respondió: ${inner}` : null) ?? err.shortMessage ?? err.message ?? String(e);
+  return m.slice(0, 200);
 }

@@ -1,6 +1,6 @@
 "use client";
 
-import { BrowserProvider, Contract, toBeHex, type Eip1193Provider } from "ethers";
+import { BrowserProvider, Contract, JsonRpcProvider, Network, toBeHex, type Eip1193Provider } from "ethers";
 import type { Band, PublicChain } from "./types";
 
 const ERC20_ABI = [
@@ -27,12 +27,20 @@ function getEth(): Eip1193Provider | null {
 
 export const hasWallet = () => getEth() !== null;
 
+/** MetaMask sometimes nests the "unknown chain" code (4902) inside a -32603 error. */
+function isUnknownChain(e: unknown): boolean {
+  const err = e as { code?: number; data?: { originalError?: { code?: number } }; message?: string };
+  return err.code === 4902 || err.data?.originalError?.code === 4902 || /unrecognized chain/i.test(err.message ?? "");
+}
+
 async function ensureChain(eth: Eip1193Provider, chain: PublicChain) {
   const chainId = toBeHex(chain.chainId);
+  const current = (await eth.request({ method: "eth_chainId" })) as string;
+  if (BigInt(current) === BigInt(chain.chainId)) return;
   try {
     await eth.request({ method: "wallet_switchEthereumChain", params: [{ chainId }] });
   } catch (e) {
-    if ((e as { code?: number }).code !== 4902) throw e;
+    if (!isUnknownChain(e)) throw e;
     await eth.request({
       method: "wallet_addEthereumChain",
       params: [
@@ -63,8 +71,17 @@ export async function connectWallet(chain: PublicChain): Promise<WalletState> {
   return readWallet(chain, await s.getAddress());
 }
 
+/**
+ * Reads go through the public RPC, not the wallet's: a wallet whose Fuji RPC is slow or misconfigured
+ * answered with errors ethers could not parse ("could not coalesce error"). Only signing needs the wallet.
+ */
+function reader(chain: PublicChain): JsonRpcProvider {
+  const net = Network.from(chain.chainId);
+  return new JsonRpcProvider(chain.rpcUrl, net, { staticNetwork: net });
+}
+
 export async function readWallet(chain: PublicChain, address: string): Promise<WalletState> {
-  const usdc = new Contract(chain.usdc, ERC20_ABI, (await signer(chain)).provider);
+  const usdc = new Contract(chain.usdc, ERC20_ABI, reader(chain));
   const [balance, allowance] = await Promise.all([
     usdc.getFunction("balanceOf")(address) as Promise<bigint>,
     usdc.getFunction("allowance")(address, chain.escrow) as Promise<bigint>,
@@ -79,7 +96,7 @@ export async function signMessage(chain: PublicChain, message: string): Promise<
 
 /** The exact deposit the contract charges for a band (fixed in its constructor). */
 export async function bandDeposit(chain: PublicChain, band: Band): Promise<bigint> {
-  const escrow = new Contract(chain.escrow, BAND_ABI, (await signer(chain)).provider);
+  const escrow = new Contract(chain.escrow, BAND_ABI, reader(chain));
   return escrow.getFunction("bandAmount")(band) as Promise<bigint>;
 }
 
