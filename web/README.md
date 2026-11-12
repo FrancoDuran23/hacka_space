@@ -69,4 +69,4 @@ Las tres variables hacen falta también para `npm run dev` y `npm run build`: `p
 - `requireEmailVerification` está en `false` en `app/(cuenta)/providers.tsx`: tiene que coincidir con **Verify email at signup** en Neon.
 - La migración (`drizzle/`) solo crea tablas en `public` (`wallets`, `wallet_challenges`, `contract_addresses`, enum `contract_kind`) y las FKs a `neon_auth.user(id)`, que administra Neon. Si `db:migrate` falla en una FK, revisá el tipo de `neon_auth.user.id` con `\d neon_auth.user` (asumimos `uuid`).
 - **Registro abierto**: cualquier usuario registrado ve todas las direcciones de contratos con el email de quién las cargó. Para uso solo del equipo hay que restringir el registro en Neon Auth o con una allowlist de emails.
-- No hay link desde la consola a `/cuenta` todavía: falta sumarlo al header del HUD con su estilo.
+- Desde la consola, la sección de cuenta lleva a `/login` o, con sesión, al panel del operador; "Mi cuenta" del panel lleva a `/account`.
