@@ -24,8 +24,15 @@ export const KIND_LABEL = { "rocket-body": "cuerpo de cohete", satellite: "saté
 /** Time left to the deadline: days while it is far, a live countdown in the last two days. */
 export function deadlineLeft(ms: number): string {
   const days = Math.floor(Math.abs(ms) / DAY);
-  if (ms <= 0) return days > 0 ? `vencido hace ${days.toLocaleString("es-AR")} d` : "vencido";
-  return ms > 2 * DAY ? `faltan ${days.toLocaleString("es-AR")} d` : countdown(ms).replace("T−", "");
+  if (ms <= 0) return days > 0 ? `vencido hace ${span(days)}` : "vencido";
+  return ms > 2 * DAY ? `faltan ${span(days)}` : countdown(ms).replace("T−", "");
+}
+
+/** Whole years from a year on (365-day years, like the contract), days below that. */
+function span(days: number): string {
+  if (days < 365) return `${days.toLocaleString("es-AR")} ${days === 1 ? "día" : "días"}`;
+  const years = Math.floor(days / 365);
+  return `${years} ${years === 1 ? "año" : "años"}`;
 }
 
 /** USDC units (6 decimals) → USD number for formatUSD. */
