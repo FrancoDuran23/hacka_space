@@ -38,8 +38,8 @@ export function AccountSection() {
             <div className="truncate text-[13px] text-ink">{session.user.name || session.user.email}</div>
           </div>
           <div className="flex shrink-0 gap-2">
-            <Link href="/cuenta" className={buttonVariants({ size: "sm" })}>
-              Mi cuenta
+            <Link href="/operador" className={buttonVariants({ size: "sm" })}>
+              Ir al panel
             </Link>
             <Link href="/auth/sign-out" className={buttonVariants({ variant: "ghost", size: "sm" })}>
               Salir
