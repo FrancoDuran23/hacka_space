@@ -110,7 +110,7 @@ export function SidePanel() {
         <Row label="Devuelto a operadoras" hint={`${stats.refunded} ${stats.refunded === 1 ? "reingreso verificado" : "reingresos verificados"}`}>
           <RollingUsd value={stats.totalRefunded} ms={1400} suffix={false} />
         </Row>
-        <Row label="Enviado al fondo de remoción" hint={`${stats.forfeited} ${stats.forfeited === 1 ? "plazo incumplido" : "plazos incumplidos"}`}>
+        <Row label="Capital decomisado" hint={`${stats.forfeited} ${stats.forfeited === 1 ? "plazo incumplido" : "plazos incumplidos"}`}>
           <span>
             <RollingUsd value={stats.totalForfeited} ms={1400} suffix={false} />
           </span>
