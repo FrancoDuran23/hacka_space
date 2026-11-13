@@ -17,10 +17,10 @@ import { SidePanel } from "./hud/SidePanel";
 const Scene = dynamic(() => import("./scene/Scene"), { ssr: false });
 
 const HISTORY_FEED: Record<HistoryType, { tone: FeedLine["tone"]; label: string }> = {
-  REGISTERED: { tone: "info", label: "Satellite registered · deposit locked" },
-  REENTRY_ATTESTED: { tone: "info", label: "Reentry attested by relayer" },
-  REFUNDED: { tone: "ok", label: "Deposit refunded to operator" },
-  FORFEITED: { tone: "bad", label: "Deposit forfeited to removal fund" },
+  REGISTERED: { tone: "info", label: "Satélite registrado · depósito bloqueado" },
+  REENTRY_ATTESTED: { tone: "info", label: "Reingreso acreditado por el relayer" },
+  REFUNDED: { tone: "ok", label: "Depósito devuelto a la operadora" },
+  FORFEITED: { tone: "bad", label: "Depósito decomisado al fondo de remoción" },
 };
 
 /** Recent on-record events become the first lines of the terminal feed. */
@@ -49,7 +49,7 @@ export function Console({ initial }: { initial: EscrowSnapshot }) {
     sim.time = Date.now();
     app.set({ objects: initial.objects, source: initial.source, tle: initial.tle, contract: initial.contract, explorer: initial.explorer, feed: seedFeed(initial) });
     if (initial.tle?.live)
-      pushFeed({ tone: "sys", label: "Orbital data · CelesTrak GP", target: `${initial.tle.live}/${initial.tle.total} live TLEs` });
+      pushFeed({ tone: "sys", label: "Datos orbitales · CelesTrak GP", target: `${initial.tle.live}/${initial.tle.total} TLE en vivo` });
   }
   // ?boot=0 skips the power-on sequence (handy while iterating)
   useEffect(() => {
@@ -68,7 +68,7 @@ export function Console({ initial }: { initial: EscrowSnapshot }) {
         if (!res.ok || !live) return;
         const json = (await res.json()) as CatalogSnapshot;
         app.set({ catalog: json.objects, catalogGroup: json.group });
-        pushFeed({ tone: "sys", label: "Live catalog · CelesTrak GP", target: `${json.objects.length} ${json.group} objects` });
+        pushFeed({ tone: "sys", label: "Catálogo en vivo · CelesTrak GP", target: `${json.objects.length} objetos ${json.group}` });
       } catch {
         /* keep the escrow layer only */
       }
@@ -118,8 +118,8 @@ export function Console({ initial }: { initial: EscrowSnapshot }) {
       const was = prev.get(o.objectId);
       const is = next.get(o.objectId);
       if (!was || was === is) continue;
-      if (is === "EXPIRING") pushFeed({ tone: "warn", label: "Deadline under 24 h", target: `${o.name} #${o.objectId}`, amount: o.deposit });
-      if (is === "FORFEITED") pushFeed({ tone: "bad", label: "Deadline missed · deposit forfeited", target: `${o.name} #${o.objectId} · to removal fund`, amount: o.deposit });
+      if (is === "EXPIRING") pushFeed({ tone: "warn", label: "Vence en menos de 24 h", target: `${o.name} #${o.objectId}`, amount: o.deposit });
+      if (is === "FORFEITED") pushFeed({ tone: "bad", label: "Plazo incumplido · depósito decomisado", target: `${o.name} #${o.objectId} · al fondo de remoción`, amount: o.deposit });
     }
   }, [simTime]);
 

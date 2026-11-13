@@ -21,7 +21,7 @@ export function Header() {
       </div>
       <div className="flex flex-wrap items-center justify-end gap-x-5 gap-y-1 text-[12.5px]">
         <Link href="/ranking" className="pointer-events-auto text-dim hover:text-cyan">
-          Ranking
+          Top operadoras
         </Link>
         <span className="mono hidden text-dim md:inline">
           {now ? `${utcDate(now)} · ${utcClock(now)}` : "---------- · --:--:--"} UTC

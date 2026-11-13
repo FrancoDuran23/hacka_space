@@ -73,13 +73,13 @@ export function SidePanel() {
     >
       {/* headline */}
       <div>
-        <div className="label">Deorbit deposits locked</div>
+        <div className="label">Depósitos de desorbitado bloqueados</div>
         <div className="figure mt-1 text-[clamp(32px,2.9vw,42px)] leading-none text-white">
           <RollingUsd value={stats.totalLocked} ms={1400} suffix={false} />
           <span className="ml-2 text-[13px] font-normal tracking-normal text-dim">USD</span>
         </div>
         <div className="mt-2 text-[12.5px] text-dim">
-          across {open} open {open === 1 ? "escrow" : "escrows"} · {objects.length} tracked
+          en {open} {open === 1 ? "escrow abierto" : "escrows abiertos"} · {objects.length} en seguimiento
         </div>
       </div>
 
@@ -91,9 +91,9 @@ export function SidePanel() {
           <Bar n={stats.forfeited} of={total} className="bg-bad" />
         </div>
         <div className="mt-3 grid grid-cols-3 gap-2">
-          <Count n={stats.active} label="Active" className="text-ok" />
-          <Count n={stats.expiring} label="Under 24 h" className="blink-soft text-warn" />
-          <Count n={stats.forfeited} label="Forfeited" className="text-bad" />
+          <Count n={stats.active} label="Activos" className="text-ok" />
+          <Count n={stats.expiring} label="Menos de 24 h" className="blink-soft text-warn" />
+          <Count n={stats.forfeited} label="Decomisados" className="text-bad" />
         </div>
       </div>
 
@@ -102,25 +102,25 @@ export function SidePanel() {
       {/* the numbers worth acting on */}
       <dl className="space-y-3">
         {/* light blue = profit, indigo = loss */}
-        <Row label="Net balance" hint={`${winning} in profit · ${losing} at a loss`}>
+        <Row label="Balance neto" hint={`${winning} con ganancia · ${losing} con pérdida`}>
           <span className={net >= 0 ? "text-ok" : "text-bad"}>
             <RollingUsd value={net} ms={1400} sign suffix={false} />
           </span>
         </Row>
-        <Row label="Refunded to operators" hint={`${stats.refunded} verified ${stats.refunded === 1 ? "reentry" : "reentries"}`}>
+        <Row label="Devuelto a operadoras" hint={`${stats.refunded} ${stats.refunded === 1 ? "reingreso verificado" : "reingresos verificados"}`}>
           <RollingUsd value={stats.totalRefunded} ms={1400} suffix={false} />
         </Row>
-        <Row label="Sent to removal fund" hint={`${stats.forfeited} ${stats.forfeited === 1 ? "deadline" : "deadlines"} missed`}>
+        <Row label="Enviado al fondo de remoción" hint={`${stats.forfeited} ${stats.forfeited === 1 ? "plazo incumplido" : "plazos incumplidos"}`}>
           <span>
             <RollingUsd value={stats.totalForfeited} ms={1400} suffix={false} />
           </span>
         </Row>
-        <Row label="Expiring within 24 h" hint={`${stats.expiring} ${stats.expiring === 1 ? "escrow" : "escrows"}`}>
+        <Row label="Vencen en menos de 24 h" hint={`${stats.expiring} ${stats.expiring === 1 ? "escrow" : "escrows"}`}>
           {formatUSD(atRisk, { suffix: false })}
         </Row>
         {next && (
           <button type="button" className="block w-full cursor-pointer text-left" onClick={() => app.set({ selectedId: next.id, warpTarget: 1 })}>
-            <Row label="Next deadline" hint={`${next.name} · ${formatUSD(next.deposit, { suffix: false })}`}>
+            <Row label="Próximo vencimiento" hint={`${next.name} · ${formatUSD(next.deposit, { suffix: false })}`}>
               <span className="mono text-[14px] tracking-normal text-ink">{countdown(next.left).replace("T−", "")}</span>
             </Row>
           </button>
@@ -130,7 +130,7 @@ export function SidePanel() {
       <div className="hairline my-5" />
 
       <div className="mb-3 flex items-baseline justify-between gap-3">
-        <h2 className="panel-title">Top operators</h2>
+        <h2 className="panel-title">Top operadoras</h2>
         <Link href="/ranking" className="text-[11.5px] text-cyan underline underline-offset-2 hover:text-white">
           Ver todos
         </Link>
@@ -147,7 +147,7 @@ export function SidePanel() {
       <div className="hairline my-5" />
 
       <div className="mb-3 flex items-baseline justify-between gap-3">
-        <h2 className="panel-title">Activity</h2>
+        <h2 className="panel-title">Actividad</h2>
         <Link href="/actividad" className="text-[11.5px] text-cyan underline underline-offset-2 hover:text-white">
           Ver todas
         </Link>
@@ -173,21 +173,21 @@ export function SidePanel() {
       <div className="hairline my-5" />
       <div className="shrink-0 text-[11px] leading-relaxed text-faint">
         <div>
-          Orbit data · <span className={tle?.live ? "text-cyan" : undefined}>CelesTrak GP{tle ? ` · ${tle.live}/${tle.total} live TLEs` : " snapshot"}</span>
-          {catalog.length > 0 && <span> · {catalog.length} {catalogGroup} catalog</span>} · SGP4
+          Datos orbitales · <span className={tle?.live ? "text-cyan" : undefined}>CelesTrak GP{tle ? ` · ${tle.live}/${tle.total} TLE en vivo` : " copia fija"}</span>
+          {catalog.length > 0 && <span> · catálogo {catalogGroup}: {catalog.length}</span>} · SGP4
         </div>
         {catalog.length > 0 && (
           <div>
-            <span style={{ color: "#5fd4ff" }}>●</span> {kinds.active} active · <span style={{ color: "#ff8a5c" }}>●</span> {kinds.debris} debris
+            <span style={{ color: "#5fd4ff" }}>●</span> {kinds.active} activos · <span style={{ color: "#ff8a5c" }}>●</span> {kinds.debris} basura
             {kinds.out > 0 && (
               <>
                 {" "}
-                · <span className="text-faint">●</span> {kinds.out} decayed
+                · <span className="text-faint">●</span> {kinds.out} reingresados
               </>
             )}
           </div>
         )}
-        <div>Ledger · {source === "fuji" ? "Avalanche Fuji" : source === "local" ? "local node" : "demo dataset"}</div>
+        <div>Registro · {source === "fuji" ? "Avalanche Fuji" : source === "local" ? "nodo local" : "datos de demo"}</div>
       </div>
     </motion.div>
   );

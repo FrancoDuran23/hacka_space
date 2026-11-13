@@ -6,7 +6,7 @@ import { rankOperators } from "@/lib/ranking";
 
 export const dynamic = "force-dynamic";
 
-export const metadata: Metadata = { title: "OrbitClear · Ranking de operadoras" };
+export const metadata: Metadata = { title: "OrbitClear · Top operadoras" };
 
 export default async function RankingPage() {
   const snapshot = await getEscrows();
@@ -23,7 +23,7 @@ export default async function RankingPage() {
             <Link href="/" className="font-pixel text-[24px] leading-none tracking-[0.12em] text-white">
               ORBITCLEAR
             </Link>
-            <span className="text-[12.5px] text-dim">Ranking de operadoras</span>
+            <span className="text-[12.5px] text-dim">Top operadoras</span>
           </div>
           <Link href="/" className="text-[12.5px] text-dim hover:text-cyan">
             Consola orbital
