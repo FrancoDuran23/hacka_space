@@ -33,8 +33,8 @@ export function RegisterSatellite({
   onRegistered,
 }: {
   chain: PublicChain | null;
-  /** The operator: SATCAT OWNER code and display name, for the preloaded list. */
-  owner: { code: string; label: string };
+  /** The operator: SATCAT OWNER code and display name, for the preloaded list (null: no known code). */
+  owner: { code: string; label: string } | null;
   onClose: () => void;
   onRegistered: () => void;
 }) {
@@ -160,7 +160,7 @@ export function RegisterSatellite({
       </form>
       {busy === "quote" && <p className="mt-2 text-[11.5px] text-faint">CelesTrak puede tardar unos segundos.</p>}
 
-      {!quote && !done && (
+      {!quote && !done && owner && (
         <OwnerSatellites
           owner={owner.code}
           label={owner.label}

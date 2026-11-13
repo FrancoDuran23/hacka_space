@@ -104,6 +104,8 @@ async function prepare(norad: number) {
 export type OperatorSatellitesResult = { ok: true; satellites: OwnedSatellite[] } | Fail;
 
 const ACTIVE_OPS = new Set(["+", "P", "B", "S", "X"]);
+/** Escrow lookups are one eth_call each: cap the list. */
+const MAX_LISTED = 200;
 
 /**
  * The operator's satellites (SATCAT OWNER code) that have no escrow yet, to pick one instead of typing its
@@ -115,7 +117,10 @@ export async function operatorSatellites(owner: string): Promise<OperatorSatelli
   if (!cfg?.address) return fail("chain", "No hay un contrato configurado.");
   let owned: OwnedSatellite[];
   try {
-    owned = await satellitesOwnedBy(owner);
+    // country codes (US, PRC) own thousands of payloads: offer the newest operational ones
+    owned = (await satellitesOwnedBy(owner))
+      .sort((a, b) => Number(ACTIVE_OPS.has(b.ops)) - Number(ACTIVE_OPS.has(a.ops)) || b.launchDate.localeCompare(a.launchDate))
+      .slice(0, MAX_LISTED);
   } catch (e) {
     return fail("data", (e as Error).message || "No se pudo leer el catálogo de CelesTrak.");
   }

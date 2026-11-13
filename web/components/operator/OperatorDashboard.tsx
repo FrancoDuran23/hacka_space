@@ -17,16 +17,26 @@ import { RegisterSatellite } from "./RegisterSatellite";
 import { SatelliteCards } from "./SatelliteCards";
 import { usdcToUsd, walletErrorText } from "./shared";
 
-/** The dashboard belongs to one operator. ESA owns the only real escrow on Fuji (ENVISAT), so the demo shows live data. */
-const OPERATOR = "ESA";
-/** The operator's OWNER code in CelesTrak's SATCAT (same as its name for ESA). */
-const OPERATOR_SATCAT = "ESA";
 const REFRESH_MS = 20_000;
 
 // three.js only runs in the browser
 const CardCanvas = dynamic(() => import("./CardModel").then((m) => m.CardCanvas), { ssr: false });
 
-export function OperatorDashboard({ initial, chain, account }: { initial: EscrowSnapshot; chain: PublicChain | null; account: { name: string } | null }) {
+export function OperatorDashboard({
+  initial,
+  chain,
+  account,
+  operator,
+  satcat,
+}: {
+  initial: EscrowSnapshot;
+  chain: PublicChain | null;
+  account: { name: string } | null;
+  /** The signed-in account's operator (its name), or the public demo operator. */
+  operator: string;
+  /** Its OWNER code in SATCAT, for satellites registered outside the dataset and the preloaded list. */
+  satcat: string | null;
+}) {
   const [snap, setSnap] = useState(initial);
   const [selectedId, setSelectedId] = useState<number | null>(null);
   const [adding, setAdding] = useState(false);
@@ -63,8 +73,11 @@ export function OperatorDashboard({ initial, chain, account }: { initial: Escrow
   }, []);
 
   const mine = useMemo(
-    () => snap.objects.filter((o) => o.owner === OPERATOR || o.fromChain).sort((a, b) => Date.parse(a.deadline) - Date.parse(b.deadline)),
-    [snap.objects],
+    () =>
+      snap.objects
+        .filter((o) => o.owner === operator || (o.fromChain && satcat !== null && o.owner === satcat))
+        .sort((a, b) => Date.parse(a.deadline) - Date.parse(b.deadline)),
+    [snap.objects, operator, satcat],
   );
   const t = now || Date.parse(snap.fetchedAt);
   const stats = computeStats(mine, t);
@@ -184,7 +197,7 @@ export function OperatorDashboard({ initial, chain, account }: { initial: Escrow
         <section className="mt-6">
           <div className="label">Operador</div>
           <h1 className="mt-1 text-[22px] font-medium leading-tight text-white">
-            {OPERATOR}
+            {operator}
             {mine[0] && <span className="ml-2 text-[13px] font-normal text-dim">{mine[0].country}</span>}
           </h1>
           {account && myWallets.length > 0 && (
@@ -267,7 +280,7 @@ export function OperatorDashboard({ initial, chain, account }: { initial: Escrow
               ) : (
                 <RegisterSatellite
                   chain={chain}
-                  owner={{ code: OPERATOR_SATCAT, label: OPERATOR }}
+                  owner={satcat ? { code: satcat, label: operator } : null}
                   onClose={() => setAdding(false)}
                   onRegistered={() => {
                     refresh();
