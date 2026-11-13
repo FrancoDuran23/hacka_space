@@ -11,7 +11,8 @@ const SATCAT_CSV = "https://celestrak.org/pub/satcat.csv";
 const TTL_MS = 24 * 3_600_000;
 const RETRY_MS = 2 * 3_600_000;
 const TIMEOUT_MS = 60_000;
-const CACHE_FILE = path.join(process.cwd(), ".cache", "satcat.csv");
+// Vercel functions can only write to /tmp (and it does not survive cold starts); elsewhere, next to the app
+const CACHE_FILE = path.join(process.env.VERCEL ? "/tmp" : process.cwd(), ".cache", "satcat.csv");
 
 export interface OwnedSatellite {
   norad: number;
