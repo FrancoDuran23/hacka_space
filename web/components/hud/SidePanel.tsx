@@ -1,6 +1,7 @@
 "use client";
 
 import { useMemo } from "react";
+import Link from "next/link";
 import { motion } from "framer-motion";
 import { countdown, formatUSD, utcClock, utcDate } from "@/lib/format";
 import { computeStats, netBalanceAt, statusAt } from "@/lib/status";
@@ -128,7 +129,12 @@ export function SidePanel() {
 
       <div className="hairline my-5" />
 
-      <h2 className="panel-title mb-3">Top operators</h2>
+      <div className="mb-3 flex items-baseline justify-between gap-3">
+        <h2 className="panel-title">Top operators</h2>
+        <Link href="/ranking" className="text-[11.5px] text-cyan underline underline-offset-2 hover:text-white">
+          Ver todos
+        </Link>
+      </div>
       <ol className="space-y-[9px]">
         {top.map((f) => (
           <li key={f.name} className="flex items-baseline justify-between gap-3 text-[13px]">
@@ -140,7 +146,12 @@ export function SidePanel() {
 
       <div className="hairline my-5" />
 
-      <h2 className="panel-title mb-3">Activity</h2>
+      <div className="mb-3 flex items-baseline justify-between gap-3">
+        <h2 className="panel-title">Activity</h2>
+        <Link href="/actividad" className="text-[11.5px] text-cyan underline underline-offset-2 hover:text-white">
+          Ver todas
+        </Link>
+      </div>
       <ul className="space-y-3">
         {feed.map((l) => (
           <li key={l.key} className="grid grid-cols-[10px_1fr_auto] items-baseline gap-x-2 text-[12.5px]">
